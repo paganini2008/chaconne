@@ -2,19 +2,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 	
-	<groupId>org.springtribe.framework</groupId>
+	<groupId>indi.atlantis.framework</groupId>
 	<version>1.0-RC1</version>
-    <artifactId>jobslacker</artifactId>
+    <artifactId>jobhub</artifactId>
 	
     <modules>
-		<module>jobslacker-ui</module>
-		<module>jobslacker-spring-boot-starter</module>
+		<module>jobhub-ui</module>
+		<module>jobhub-spring-boot-starter</module>
     </modules>
 	
     <packaging>pom</packaging>
-    <name>jobslacker</name>
+    <name>jobhub</name>
     <description>Distributed Schedule System based on SpringBoot</description>
-	<url>https://github.com/paganini2008/jobslacker</url>
+	<url>https://github.com/paganini2008/jobhub</url>
 	
 	<licenses>
         <license>
@@ -31,9 +31,9 @@
     </developers>
 	
 	<scm>
-        <connection>https://github.com/paganini2008/jobslacker.git</connection>
-        <developerConnection>https://github.com/paganini2008/jobslacker.git</developerConnection>
-        <url>https://github.com/paganini2008/jobslacker</url>
+        <connection>https://github.com/paganini2008/jobhub.git</connection>
+        <developerConnection>https://github.com/paganini2008/jobhub.git</developerConnection>
+        <url>https://github.com/paganini2008/jobhub</url>
     </scm>
 	
 	<properties>
