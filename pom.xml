@@ -7,7 +7,8 @@
     <artifactId>jobhub</artifactId>
 	
     <modules>
-		<module>jobhub-ui</module>
+		<module>jobhub-console</module>
+		<module>jobhub-server</module>
 		<module>jobhub-spring-boot-starter</module>
     </modules>
 	
