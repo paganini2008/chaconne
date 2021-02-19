@@ -4,18 +4,18 @@
 	
 	<groupId>indi.atlantis.framework</groupId>
 	<version>1.0-RC1</version>
-    <artifactId>jobhub</artifactId>
+    <artifactId>jobby</artifactId>
 	
     <modules>
-		<module>jobhub-console</module>
-		<module>jobhub-server</module>
-		<module>jobhub-spring-boot-starter</module>
+		<module>jobby-console</module>
+		<module>jobby-scheduler</module>
+		<module>jobby-spring-boot-starter</module>
     </modules>
 	
     <packaging>pom</packaging>
-    <name>jobhub</name>
+    <name>jobby</name>
     <description>Distributed Schedule System based on SpringBoot</description>
-	<url>https://github.com/paganini2008/jobhub</url>
+	<url>https://github.com/paganini2008/jobby</url>
 	
 	<licenses>
         <license>
@@ -32,9 +32,9 @@
     </developers>
 	
 	<scm>
-        <connection>https://github.com/paganini2008/jobhub.git</connection>
-        <developerConnection>https://github.com/paganini2008/jobhub.git</developerConnection>
-        <url>https://github.com/paganini2008/jobhub</url>
+        <connection>https://github.com/paganini2008/jobby.git</connection>
+        <developerConnection>https://github.com/paganini2008/jobby.git</developerConnection>
+        <url>https://github.com/paganini2008/jobby</url>
     </scm>
 	
 	<properties>
