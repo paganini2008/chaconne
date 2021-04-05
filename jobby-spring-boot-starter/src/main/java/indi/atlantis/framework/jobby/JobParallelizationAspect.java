@@ -19,7 +19,7 @@ import indi.atlantis.framework.jobby.model.JobParallelizingResult;
 import indi.atlantis.framework.jobby.model.JobPeerResult;
 import indi.atlantis.framework.reditools.common.RedisCountDownLatch;
 import indi.atlantis.framework.reditools.messager.RedisMessageSender;
-import indi.atlantis.framework.seafloor.utils.ApplicationContextUtils;
+import indi.atlantis.framework.tridenter.utils.ApplicationContextUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**

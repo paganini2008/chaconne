@@ -14,8 +14,8 @@ import indi.atlantis.framework.jobby.JobAdmin;
 import indi.atlantis.framework.jobby.JobState;
 import indi.atlantis.framework.jobby.model.JobParam;
 import indi.atlantis.framework.jobby.model.JobResult;
-import indi.atlantis.framework.seafloor.ApplicationInfo;
-import indi.atlantis.framework.seafloor.InstanceId;
+import indi.atlantis.framework.tridenter.ApplicationInfo;
+import indi.atlantis.framework.tridenter.InstanceId;
 
 /**
  * 

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import indi.atlantis.framework.jobby.model.JobParam;
 import indi.atlantis.framework.reditools.messager.RedisMessageHandler;
-import indi.atlantis.framework.seafloor.Constants;
+import indi.atlantis.framework.tridenter.Constants;
 import lombok.extern.slf4j.Slf4j;
 
 /**

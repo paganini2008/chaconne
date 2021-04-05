@@ -3,7 +3,7 @@ package indi.atlantis.framework.jobby;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import indi.atlantis.framework.jobby.model.JobTriggerDetail;
-import indi.atlantis.framework.seafloor.utils.ApplicationContextUtils;
+import indi.atlantis.framework.tridenter.utils.ApplicationContextUtils;
 
 /**
  * 

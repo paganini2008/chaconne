@@ -7,8 +7,8 @@ import org.springframework.context.ApplicationListener;
 import com.github.paganini2008.devtools.ArrayUtils;
 
 import indi.atlantis.framework.jobby.model.JobKeyQuery;
-import indi.atlantis.framework.seafloor.election.ApplicationClusterRefreshedEvent;
-import indi.atlantis.framework.seafloor.utils.ApplicationContextUtils;
+import indi.atlantis.framework.tridenter.election.ApplicationClusterRefreshedEvent;
+import indi.atlantis.framework.tridenter.utils.ApplicationContextUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**

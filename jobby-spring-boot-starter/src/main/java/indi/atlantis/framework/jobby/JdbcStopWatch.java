@@ -12,7 +12,7 @@ import com.github.paganini2008.devtools.jdbc.ConnectionFactory;
 import com.github.paganini2008.devtools.jdbc.JdbcUtils;
 import com.github.paganini2008.devtools.net.NetUtils;
 
-import indi.atlantis.framework.seafloor.InstanceId;
+import indi.atlantis.framework.tridenter.InstanceId;
 
 /**
  * 

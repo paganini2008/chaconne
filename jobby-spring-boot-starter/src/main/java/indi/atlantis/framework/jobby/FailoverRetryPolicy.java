@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import indi.atlantis.framework.jobby.model.JobParam;
-import indi.atlantis.framework.seafloor.Constants;
-import indi.atlantis.framework.seafloor.multicast.ApplicationMulticastGroup;
+import indi.atlantis.framework.tridenter.Constants;
+import indi.atlantis.framework.tridenter.multicast.ApplicationMulticastGroup;
 
 /**
  * 

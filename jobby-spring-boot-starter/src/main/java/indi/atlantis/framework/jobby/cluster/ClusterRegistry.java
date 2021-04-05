@@ -14,9 +14,9 @@ import com.github.paganini2008.devtools.jdbc.JdbcUtils;
 
 import indi.atlantis.framework.jobby.JobException;
 import indi.atlantis.framework.jobby.SqlScripts;
-import indi.atlantis.framework.seafloor.ApplicationInfo;
-import indi.atlantis.framework.seafloor.utils.BeanLifeCycle;
-import indi.atlantis.framework.seafloor.utils.Contact;
+import indi.atlantis.framework.tridenter.ApplicationInfo;
+import indi.atlantis.framework.tridenter.utils.BeanLifeCycle;
+import indi.atlantis.framework.tridenter.utils.Contact;
 import lombok.extern.slf4j.Slf4j;
 
 /**

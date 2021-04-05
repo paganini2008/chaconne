@@ -14,7 +14,7 @@ import com.github.paganini2008.devtools.TableView;
  */
 public abstract class Banner {
 
-	public static final String PRODUCT_NAME = "JobHub";
+	public static final String PRODUCT_NAME = "Jobby";
 
 	public static final String PRODUCT_VERSION = "1.0-RC1";
 

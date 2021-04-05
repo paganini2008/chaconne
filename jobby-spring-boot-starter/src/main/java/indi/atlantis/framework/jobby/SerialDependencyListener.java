@@ -5,8 +5,8 @@ import org.springframework.context.ApplicationListener;
 
 import indi.atlantis.framework.reditools.messager.RedisMessageHandler;
 import indi.atlantis.framework.reditools.messager.RedisMessageSender;
-import indi.atlantis.framework.seafloor.election.ApplicationClusterLeaderEvent;
-import indi.atlantis.framework.seafloor.utils.ApplicationContextUtils;
+import indi.atlantis.framework.tridenter.election.ApplicationClusterLeaderEvent;
+import indi.atlantis.framework.tridenter.utils.ApplicationContextUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**

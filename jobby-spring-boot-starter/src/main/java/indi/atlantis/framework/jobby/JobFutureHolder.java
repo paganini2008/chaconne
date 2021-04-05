@@ -3,7 +3,7 @@ package indi.atlantis.framework.jobby;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import indi.atlantis.framework.seafloor.utils.BeanLifeCycle;
+import indi.atlantis.framework.tridenter.utils.BeanLifeCycle;
 
 /**
  * 

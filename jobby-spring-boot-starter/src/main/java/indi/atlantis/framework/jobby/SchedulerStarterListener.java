@@ -1,6 +1,6 @@
 package indi.atlantis.framework.jobby;
 
-import indi.atlantis.framework.seafloor.election.ApplicationClusterLeaderEvent;
+import indi.atlantis.framework.tridenter.election.ApplicationClusterLeaderEvent;
 
 /**
  * 

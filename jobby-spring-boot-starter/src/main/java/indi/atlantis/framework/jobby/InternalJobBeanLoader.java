@@ -13,7 +13,7 @@ import com.github.paganini2008.devtools.reflection.MethodUtils;
 import indi.atlantis.framework.jobby.model.JobDetail;
 import indi.atlantis.framework.jobby.model.TriggerDescription;
 import indi.atlantis.framework.jobby.model.TriggerDescription.Dependency;
-import indi.atlantis.framework.seafloor.utils.ApplicationContextUtils;
+import indi.atlantis.framework.tridenter.utils.ApplicationContextUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**

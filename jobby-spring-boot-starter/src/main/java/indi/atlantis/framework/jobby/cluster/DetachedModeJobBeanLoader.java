@@ -7,7 +7,7 @@ import indi.atlantis.framework.jobby.JobBeanLoader;
 import indi.atlantis.framework.jobby.JobKey;
 import indi.atlantis.framework.jobby.JobManager;
 import indi.atlantis.framework.jobby.model.JobTriggerDetail;
-import indi.atlantis.framework.seafloor.utils.ApplicationContextUtils;
+import indi.atlantis.framework.tridenter.utils.ApplicationContextUtils;
 
 /**
  * 

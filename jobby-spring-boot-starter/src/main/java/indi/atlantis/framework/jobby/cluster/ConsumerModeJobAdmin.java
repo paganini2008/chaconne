@@ -15,7 +15,7 @@ import indi.atlantis.framework.jobby.JobManager;
 import indi.atlantis.framework.jobby.JobState;
 import indi.atlantis.framework.jobby.LifeCycleListenerContainer;
 import indi.atlantis.framework.jobby.model.JobLifeCycleParam;
-import indi.atlantis.framework.seafloor.multicast.ApplicationMulticastGroup;
+import indi.atlantis.framework.tridenter.multicast.ApplicationMulticastGroup;
 
 /**
  * 

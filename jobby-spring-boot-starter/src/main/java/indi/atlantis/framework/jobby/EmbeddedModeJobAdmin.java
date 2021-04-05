@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
 import indi.atlantis.framework.jobby.model.JobLifeCycleParam;
-import indi.atlantis.framework.seafloor.multicast.ApplicationMulticastGroup;
+import indi.atlantis.framework.tridenter.multicast.ApplicationMulticastGroup;
 
 /**
  * 

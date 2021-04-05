@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import indi.atlantis.framework.jobby.model.JobDetail;
 import indi.atlantis.framework.jobby.model.JobRuntime;
 import indi.atlantis.framework.jobby.model.JobTriggerDetail;
-import indi.atlantis.framework.seafloor.utils.ApplicationContextUtils;
+import indi.atlantis.framework.tridenter.utils.ApplicationContextUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**

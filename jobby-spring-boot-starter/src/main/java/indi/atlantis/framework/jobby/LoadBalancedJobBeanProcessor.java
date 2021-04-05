@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
 import indi.atlantis.framework.jobby.model.JobParam;
-import indi.atlantis.framework.seafloor.ApplicationInfo;
-import indi.atlantis.framework.seafloor.Constants;
-import indi.atlantis.framework.seafloor.multicast.ApplicationMessageListener;
+import indi.atlantis.framework.tridenter.ApplicationInfo;
+import indi.atlantis.framework.tridenter.Constants;
+import indi.atlantis.framework.tridenter.multicast.ApplicationMessageListener;
 
 /**
  * 

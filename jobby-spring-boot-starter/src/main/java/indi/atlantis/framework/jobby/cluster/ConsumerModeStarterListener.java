@@ -18,10 +18,10 @@ import indi.atlantis.framework.jobby.JobRuntimeListenerContainer;
 import indi.atlantis.framework.jobby.TriggerType;
 import indi.atlantis.framework.jobby.model.JobKeyQuery;
 import indi.atlantis.framework.jobby.model.JobResult;
-import indi.atlantis.framework.seafloor.ApplicationInfo;
-import indi.atlantis.framework.seafloor.InstanceId;
-import indi.atlantis.framework.seafloor.election.ApplicationClusterRefreshedEvent;
-import indi.atlantis.framework.seafloor.utils.ApplicationContextUtils;
+import indi.atlantis.framework.tridenter.ApplicationInfo;
+import indi.atlantis.framework.tridenter.InstanceId;
+import indi.atlantis.framework.tridenter.election.ApplicationClusterRefreshedEvent;
+import indi.atlantis.framework.tridenter.utils.ApplicationContextUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**

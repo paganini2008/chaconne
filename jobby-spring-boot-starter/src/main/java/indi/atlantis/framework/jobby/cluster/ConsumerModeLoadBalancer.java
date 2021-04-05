@@ -19,8 +19,8 @@ import indi.atlantis.framework.jobby.SerialDependencyScheduler;
 import indi.atlantis.framework.jobby.StopWatch;
 import indi.atlantis.framework.jobby.TraceIdGenerator;
 import indi.atlantis.framework.jobby.model.JobParam;
-import indi.atlantis.framework.seafloor.Constants;
-import indi.atlantis.framework.seafloor.multicast.ApplicationMulticastGroup;
+import indi.atlantis.framework.tridenter.Constants;
+import indi.atlantis.framework.tridenter.multicast.ApplicationMulticastGroup;
 
 /**
  * 

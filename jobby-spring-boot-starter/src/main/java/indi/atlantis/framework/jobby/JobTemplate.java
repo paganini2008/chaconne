@@ -14,7 +14,7 @@ import com.github.paganini2008.devtools.StringUtils;
 import com.github.paganini2008.devtools.multithreads.ExecutorUtils;
 
 import indi.atlantis.framework.jobby.model.JobPeerResult;
-import indi.atlantis.framework.seafloor.utils.BeanLifeCycle;
+import indi.atlantis.framework.tridenter.utils.BeanLifeCycle;
 
 /**
  * 

@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import com.github.paganini2008.devtools.jdbc.JdbcUtils;
 import com.github.paganini2008.devtools.jdbc.PooledConnectionFactory;
 
-import indi.atlantis.framework.seafloor.utils.BeanLifeCycle;
+import indi.atlantis.framework.tridenter.utils.BeanLifeCycle;
 import lombok.extern.slf4j.Slf4j;
 
 /**

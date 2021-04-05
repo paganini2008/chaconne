@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import indi.atlantis.framework.jobby.model.JobResult;
-import indi.atlantis.framework.seafloor.ApplicationInfo;
+import indi.atlantis.framework.tridenter.ApplicationInfo;
 
 /**
  * 
