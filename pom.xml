@@ -4,18 +4,18 @@
 	
 	<groupId>indi.atlantis.framework</groupId>
 	<version>1.0-RC1</version>
-    <artifactId>jobby</artifactId>
+    <artifactId>chaconne</artifactId>
 	
     <modules>
-		<module>jobby-console</module>
-		<module>jobby-scheduler</module>
-		<module>jobby-spring-boot-starter</module>
+		<module>chaconne-console</module>
+		<module>chaconne-scheduler</module>
+		<module>chaconne-spring-boot-starter</module>
     </modules>
 	
     <packaging>pom</packaging>
-    <name>jobby</name>
+    <name>chaconne</name>
     <description>Distributed Schedule System based on SpringBoot</description>
-	<url>https://github.com/paganini2008/jobby</url>
+	<url>https://github.com/paganini2008/chaconne</url>
 	
 	<licenses>
         <license>
