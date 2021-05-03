@@ -1,4 +1,4 @@
-package indi.atlantis.framework.chaconne.utils;
+package indi.atlantis.framework.chaconne.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * 
- * Run
+ * OnFailure
  * 
  * @author Jimmy Hoff
  *
@@ -17,5 +17,5 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface Run {
+public @interface OnFailure {
 }

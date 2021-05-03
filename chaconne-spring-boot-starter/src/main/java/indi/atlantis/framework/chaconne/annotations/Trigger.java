@@ -1,4 +1,4 @@
-package indi.atlantis.framework.chaconne.utils;
+package indi.atlantis.framework.chaconne.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -24,12 +24,18 @@ public @interface Trigger {
 
 	TriggerType triggerType();
 
-	String cron();
+	String cron() default "";
 
-	long period();
+	long period() default 0L;
 
-	SchedulingUnit schedulingUnit();
+	SchedulingUnit schedulingUnit() default SchedulingUnit.SECONDS;
 
 	boolean fixedRate() default false;
+
+	String startDate() default "";
+
+	String endDate() default "";
+
+	int repeatCount() default Integer.MAX_VALUE;
 
 }

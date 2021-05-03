@@ -12,6 +12,7 @@ import indi.atlantis.framework.chaconne.JobManager;
 import indi.atlantis.framework.chaconne.JobState;
 import indi.atlantis.framework.chaconne.Trigger;
 import indi.atlantis.framework.chaconne.model.JobTriggerDetail;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
@@ -21,6 +22,7 @@ import indi.atlantis.framework.chaconne.model.JobTriggerDetail;
  *
  * @since 1.0
  */
+@Slf4j
 public class DetachedModeJobBeanProxy implements Job {
 
 	private final JobKey jobKey;
@@ -33,7 +35,7 @@ public class DetachedModeJobBeanProxy implements Job {
 	private JobManager jobManager;
 
 	@Autowired
-	private JobServerRegistry clusterRegistry;
+	private JobServerRegistry jobServerRegistry;
 
 	public DetachedModeJobBeanProxy(JobKey jobKey, JobTriggerDetail triggerDetail) {
 		this.jobKey = jobKey;
@@ -73,7 +75,7 @@ public class DetachedModeJobBeanProxy implements Job {
 			return jobAdmin.triggerJob(jobKey, result);
 		} catch (RestClientException e) {
 			resetJobState();
-			clusterRegistry.unregisterCluster(jobKey.getClusterName());
+			jobServerRegistry.unregisterCluster(jobKey.getClusterName());
 			log.error(e.getMessage(), e);
 		} catch (NoJobResourceException e) {
 			resetJobState();
@@ -87,7 +89,8 @@ public class DetachedModeJobBeanProxy implements Job {
 	private void resetJobState() {
 		try {
 			jobManager.setJobState(jobKey, JobState.SCHEDULING);
-		} catch (Exception ignored) {
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 		}
 	}
 

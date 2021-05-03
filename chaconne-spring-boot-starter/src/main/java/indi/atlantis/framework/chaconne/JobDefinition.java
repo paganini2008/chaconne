@@ -51,7 +51,7 @@ public interface JobDefinition {
 		return null;
 	}
 
-	default JobKey[] getSubKeys() {
+	default JobKey[] getSubJobKeys() {
 		return null;
 	}
 

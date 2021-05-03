@@ -17,7 +17,7 @@ public class ConsumerModeRestTemplate extends ClusterRestTemplate {
 		super(httpRequestFactory);
 	}
 
-	@Value("${atlantis.framework.chaconne.server.mode.producer.location}")
+	@Value("${atlantis.framework.chaconne.producer.location}")
 	private String contextPaths;
 
 	@Override

@@ -132,11 +132,11 @@ public class EmbeddedModeConfiguration {
 			return new SpringScheduler();
 		}
 
-		@Bean(name = ChaconneBeanNames.CLUSTER_JOB_SCHEDULER, destroyMethod = "shutdown")
+		@Bean(name = ChaconneBeanNames.JOB_SCHEDULER, destroyMethod = "shutdown")
 		public TaskScheduler taskScheduler(@Qualifier("scheduler-error-handler") ErrorHandler errorHandler) {
 			ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
 			threadPoolTaskScheduler.setPoolSize(poolSize);
-			threadPoolTaskScheduler.setThreadNamePrefix("cluster-task-scheduler-");
+			threadPoolTaskScheduler.setThreadNamePrefix("chaconne-task-scheduler-");
 			threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
 			threadPoolTaskScheduler.setAwaitTerminationSeconds(60);
 			threadPoolTaskScheduler.setErrorHandler(errorHandler);
@@ -157,10 +157,10 @@ public class EmbeddedModeConfiguration {
 		}
 
 		@ConditionalOnMissingBean(TaskExecutor.class)
-		@Bean(name = ChaconneBeanNames.CLUSTER_JOB_SCHEDULER, destroyMethod = "close")
-		public TaskExecutor taskExecutor() {
+		@Bean(name = ChaconneBeanNames.JOB_SCHEDULER, destroyMethod = "close")
+		public TaskExecutor taskScheduler() {
 			ScheduledExecutorService executor = Executors.newScheduledThreadPool(poolSize,
-					new PooledThreadFactory("cluster-task-scheduler-"));
+					new PooledThreadFactory("chaconne-task-scheduler-"));
 			return new ThreadPoolTaskExecutor(executor);
 		}
 	}
@@ -173,6 +173,11 @@ public class EmbeddedModeConfiguration {
 	@Bean
 	public BeanExtensionAwareProcessor beanExtensionAwareProcessor() {
 		return new BeanExtensionAwareProcessor();
+	}
+
+	@Bean
+	public BeanAnnotationAwareProcessor beanAnnotationAwareProcessor() {
+		return new BeanAnnotationAwareProcessor();
 	}
 
 	@Bean
@@ -190,7 +195,6 @@ public class EmbeddedModeConfiguration {
 		return new EmbeddedModeStarterListener();
 	}
 
-	@ConditionalOnProperty(name = "atlantis.framework.chaconne.schema.updater", havingValue = "created", matchIfMissing = true)
 	@Bean
 	public SchemaUpdater schemaUpdater(DataSource dataSource) {
 		return new CreatedSchemaUpdater(dataSource);

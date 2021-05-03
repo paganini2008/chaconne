@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import com.github.paganini2008.springworld.reditools.BeanNames;
 import com.github.paganini2008.springworld.reditools.common.RedisCountDownLatch;
 
 import indi.atlantis.framework.chaconne.model.TaskForkResult;
@@ -23,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ForkJoinJobListener implements JobListener {
 
 	@Autowired
-	@Qualifier(com.github.paganini2008.springworld.reditools.BeanNames.REDIS_TEMPLATE)
+	@Qualifier(BeanNames.REDIS_TEMPLATE)
 	private RedisTemplate<String, Object> redisTemplate;
 
 	@Autowired

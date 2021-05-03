@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SpringScheduler implements Scheduler {
 
-	@Qualifier(ChaconneBeanNames.CLUSTER_JOB_SCHEDULER)
+	@Qualifier(ChaconneBeanNames.JOB_SCHEDULER)
 	@Autowired
 	private TaskScheduler taskScheduler;
 

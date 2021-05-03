@@ -1,4 +1,4 @@
-package indi.atlantis.framework.chaconne.utils;
+package indi.atlantis.framework.chaconne.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * 
- * OnSuccess
+ * JobKey
  * 
  * @author Jimmy Hoff
  *
@@ -16,6 +16,15 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface OnSuccess {
+@Target(ElementType.TYPE_PARAMETER)
+public @interface JobKey {
+
+	String cluster() default "";
+
+	String group() default "";
+
+	String name();
+
+	String className();
+
 }

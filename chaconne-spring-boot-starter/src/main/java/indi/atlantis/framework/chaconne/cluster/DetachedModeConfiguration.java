@@ -28,8 +28,10 @@ import com.github.paganini2008.devtools.cron4j.TaskExecutor;
 import com.github.paganini2008.devtools.cron4j.ThreadPoolTaskExecutor;
 import com.github.paganini2008.devtools.multithreads.PooledThreadFactory;
 import com.github.paganini2008.devtools.multithreads.ThreadPoolBuilder;
+import com.github.paganini2008.springworld.jdbc.annotations.DaoScan;
 
 import indi.atlantis.framework.chaconne.Banner;
+import indi.atlantis.framework.chaconne.BeanAnnotationAwareProcessor;
 import indi.atlantis.framework.chaconne.BeanExtensionAwareProcessor;
 import indi.atlantis.framework.chaconne.ChaconneBeanNames;
 import indi.atlantis.framework.chaconne.ConditionalOnDetachedMode;
@@ -94,7 +96,7 @@ public class DetachedModeConfiguration {
 		Banner.printBanner("Detached Mode", log);
 	}
 
-	@Configuration
+	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnDetachedMode(DetachedMode.PRODUCER)
 	@ConditionalOnProperty(name = "atlantis.framework.chaconne.scheduler.engine", havingValue = "spring", matchIfMissing = true)
 	public static class SpringSchedulerConfig {
@@ -107,11 +109,11 @@ public class DetachedModeConfiguration {
 			return new SpringScheduler();
 		}
 
-		@Bean(name = ChaconneBeanNames.CLUSTER_JOB_SCHEDULER, destroyMethod = "shutdown")
+		@Bean(name = ChaconneBeanNames.JOB_SCHEDULER, destroyMethod = "shutdown")
 		public TaskScheduler taskScheduler(SchedulerErrorHandler errorHandler) {
 			ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
 			threadPoolTaskScheduler.setPoolSize(poolSize);
-			threadPoolTaskScheduler.setThreadNamePrefix("cluster-task-scheduler-");
+			threadPoolTaskScheduler.setThreadNamePrefix("chaconne-task-scheduler-");
 			threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
 			threadPoolTaskScheduler.setAwaitTerminationSeconds(60);
 			threadPoolTaskScheduler.setErrorHandler(errorHandler);
@@ -119,7 +121,7 @@ public class DetachedModeConfiguration {
 		}
 	}
 
-	@Configuration
+	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnDetachedMode(DetachedMode.PRODUCER)
 	@ConditionalOnProperty(name = "atlantis.framework.chaconne.scheduler.engine", havingValue = "cron4j")
 	public static class Cron4jSchedulerConfig {
@@ -133,21 +135,22 @@ public class DetachedModeConfiguration {
 		}
 
 		@ConditionalOnMissingBean(TaskExecutor.class)
-		@Bean(name = ChaconneBeanNames.CLUSTER_JOB_SCHEDULER, destroyMethod = "close")
-		public TaskExecutor taskExecutor() {
+		@Bean(name = ChaconneBeanNames.JOB_SCHEDULER, destroyMethod = "close")
+		public TaskExecutor taskScheduler() {
 			ScheduledExecutorService executor = Executors.newScheduledThreadPool(poolSize,
-					new PooledThreadFactory("cluster-task-scheduler-"));
+					new PooledThreadFactory("chaconne-task-scheduler-"));
 			return new ThreadPoolTaskExecutor(executor);
 		}
 	}
 
-	@Configuration
+	@Configuration(proxyBeanMethods = false)
 	@Import({ JobServerRegistryController.class, JobManagerController.class, JobAdminController.class })
+	@DaoScan(basePackages = "indi.atlantis.framework.chaconne")
 	@ConditionalOnDetachedMode(DetachedMode.PRODUCER)
 	public static class ProducerModeConfig {
 
 		@Bean
-		public JobServerRegistry clusterRegistry() {
+		public JobServerRegistry jobServerRegistry() {
 			return new JobServerRegistry();
 		}
 
@@ -172,7 +175,6 @@ public class DetachedModeConfiguration {
 			return new ProducerModeJobBeanInitializer();
 		}
 
-		@ConditionalOnProperty(name = "atlantis.framework.chaconne.schema.updater", havingValue = "created", matchIfMissing = true)
 		@Bean
 		public SchemaUpdater schemaUpdater(DataSource dataSource) {
 			return new CreatedSchemaUpdater(dataSource);
@@ -273,7 +275,7 @@ public class DetachedModeConfiguration {
 
 	}
 
-	@Configuration
+	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnDetachedMode(DetachedMode.CONSUMER)
 	@Import({ ConsumerModeController.class })
 	public static class ConsumerModeConfig {
@@ -281,6 +283,11 @@ public class DetachedModeConfiguration {
 		@Bean
 		public ConsumerModeStarterListener consumerModeStarterListener() {
 			return new ConsumerModeStarterListener();
+		}
+		
+		@Bean
+		public BeanAnnotationAwareProcessor beanAnnotationAwareProcessor() {
+			return new BeanAnnotationAwareProcessor();
 		}
 
 		@ConditionalOnMissingBean(ClusterRestTemplate.class)
@@ -359,7 +366,7 @@ public class DetachedModeConfiguration {
 
 	}
 
-	@Configuration
+	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnDetachedMode(DetachedMode.CONSUMER)
 	@ConditionalOnProperty(name = "atlantis.framework.chaconne.scheduler.running.mode", havingValue = "master-slave")
 	public static class MasterSlaveConfig {
@@ -382,7 +389,7 @@ public class DetachedModeConfiguration {
 		}
 	}
 
-	@Configuration
+	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnDetachedMode(DetachedMode.CONSUMER)
 	@ConditionalOnProperty(name = "atlantis.framework.chaconne.scheduler.running.mode", havingValue = "loadbalance", matchIfMissing = true)
 	public static class LoadBalanceConfig {

@@ -20,7 +20,7 @@ public abstract class Ddl {
 		static final String DEF_DDL_JOB_RUNTIME_DETAIL = "create table chac_job_runtime_detail(job_id int not null, job_state int not null, last_running_state int, last_execution_time timestamp, last_completion_time timestamp, next_execution_time timestamp)";
 		static final String DEF_DDL_JOB_TRACE = "create table chac_job_trace(trace_id bigint primary key, job_id int not null, running_state int, address varchar(45), instance_id varchar(45), completed int, failed int, skipped int, finished int, retries int, execution_time timestamp, completion_time timestamp)";
 		static final String DEF_DDL_JOB_EXCEPTION = "create table chac_job_exception(trace_id bigint not null, job_id int not null, stack_trace varchar(600))";
-		static final String DEF_DDL_JOB_LOG = "create table chac_job_log(trace_id bigint not null, job_id int not null, level varchar(45), log varchar(600), create_date timestamp)";
+		static final String DEF_DDL_JOB_LOG = "create table chac_job_log(trace_id bigint not null, job_id int not null, level varchar(45), log text, create_date timestamp)";
 		static final String DEF_DDL_JOB_DEPENDENCY = "create table chac_job_dependency(job_id int not null, dependent_job_id int not null, dependency_type int not null)";
 
 		public static Map<String, String> ddls() {

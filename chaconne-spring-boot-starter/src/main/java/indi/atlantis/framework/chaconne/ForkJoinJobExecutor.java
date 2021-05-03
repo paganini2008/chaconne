@@ -108,7 +108,7 @@ public class ForkJoinJobExecutor implements Aspect {
 		if (ArrayUtils.isNotEmpty(targetJob.getDependencyPostHandlers())) {
 			boolean result = true;
 			for (Class<?> handlerClass : targetJob.getDependencyPostHandlers()) {
-				DependencyPostHandler handler = (DependencyPostHandler) ApplicationContextUtils.getBeanIfNecessary(handlerClass);
+				DependencyPostHandler handler = (DependencyPostHandler) ApplicationContextUtils.getOrCreateBean(handlerClass);
 				result &= handler.approve(jobResult.getJobKey(), jobResult.getRunningState(), jobResult.getAttachment(),
 						jobResult.getResult());
 			}

@@ -81,7 +81,7 @@ public class JobDependencyFutureListener implements ApplicationListener<Applicat
 					}
 					break;
 				case PARALLEL:
-					dependentKeys = dependency.getSubKeys();
+					dependentKeys = dependency.getSubJobKeys();
 					comparedDependentKeys = jobManager.getDependentKeys(jobKey, DependencyType.PARALLEL);
 					requiredJobKeys = ArrayUtils.minus(dependentKeys, comparedDependentKeys);
 					if (ArrayUtils.isNotEmpty(requiredJobKeys)) {
@@ -96,7 +96,7 @@ public class JobDependencyFutureListener implements ApplicationListener<Applicat
 						serialDependencies.put(jobKey, requiredJobKeys);
 					}
 
-					dependentKeys = dependency.getSubKeys();
+					dependentKeys = dependency.getSubJobKeys();
 					comparedDependentKeys = jobManager.getDependentKeys(jobKey, DependencyType.PARALLEL);
 					requiredJobKeys = ArrayUtils.minus(dependentKeys, comparedDependentKeys);
 					if (ArrayUtils.isNotEmpty(requiredJobKeys)) {

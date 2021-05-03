@@ -4,7 +4,6 @@ import indi.atlantis.framework.chaconne.DependencyType;
 import indi.atlantis.framework.chaconne.GenericTrigger;
 import indi.atlantis.framework.chaconne.JobDefinition;
 import indi.atlantis.framework.chaconne.JobKey;
-import indi.atlantis.framework.chaconne.NotManagedJob;
 import indi.atlantis.framework.chaconne.Trigger;
 import indi.atlantis.framework.chaconne.model.JobPersistParam;
 import indi.atlantis.framework.chaconne.model.JobTriggerParam;
@@ -32,7 +31,7 @@ public class GenericJobDefinition implements JobDefinition {
 
 	// Dependency settings
 	private final JobKey[] dependentKeys;
-	private final JobKey[] subKeys;
+	private final JobKey[] subJobKeys;
 	private final float completionRate;
 
 	// Trigger settings
@@ -47,7 +46,7 @@ public class GenericJobDefinition implements JobDefinition {
 		this.timeout = builder.timeout;
 		this.trigger = builder.trigger;
 		this.dependentKeys = builder.dependentKeys;
-		this.subKeys = builder.subKeys;
+		this.subJobKeys = builder.subJobKeys;
 		this.completionRate = builder.completionRate;
 	}
 
@@ -107,8 +106,8 @@ public class GenericJobDefinition implements JobDefinition {
 	}
 
 	@Override
-	public JobKey[] getSubKeys() {
-		return subKeys;
+	public JobKey[] getSubJobKeys() {
+		return subJobKeys;
 	}
 
 	@Override
@@ -130,7 +129,7 @@ public class GenericJobDefinition implements JobDefinition {
 
 		private DependencyType dependencyType = DependencyType.SERIAL;
 		private JobKey[] dependentKeys;
-		private JobKey[] subKeys;
+		private JobKey[] subJobKeys;
 		private float completionRate = -1F;
 
 		private Trigger trigger;
@@ -139,7 +138,7 @@ public class GenericJobDefinition implements JobDefinition {
 			this.jobKey = jobKey;
 		}
 
-		Builder(String clusterName, String groupName, String jobName, Class<? extends NotManagedJob> jobClass) {
+		Builder(String clusterName, String groupName, String jobName, Class<?> jobClass) {
 			this.jobKey = JobKey.by(clusterName, groupName, jobName, jobClass.getName());
 		}
 
@@ -157,7 +156,7 @@ public class GenericJobDefinition implements JobDefinition {
 		param.setWeight(weight);
 		param.setJobKey(jobKey);
 		param.setDependentKeys(dependentKeys);
-		param.setSubKeys(subKeys);
+		param.setSubJobKeys(subJobKeys);
 		param.setCompletionRate(completionRate);
 
 		JobTriggerParam triggerParam = new JobTriggerParam();
@@ -174,7 +173,7 @@ public class GenericJobDefinition implements JobDefinition {
 	public static Builder parse(JobPersistParam param) {
 		Builder builder = newJob(param.getJobKey()).setDescription(param.getDescription()).setEmail(param.getEmail())
 				.setRetries(param.getRetries()).setTimeout(param.getTimeout()).setWeight(param.getWeight())
-				.setDependentKeys(param.getDependentKeys()).setSubKeys(param.getSubKeys());
+				.setDependentKeys(param.getDependentKeys()).setSubJobKeys(param.getSubJobKeys());
 		GenericTrigger.Builder triggerBuilder = GenericTrigger.parse(param.getTrigger());
 		builder.setTrigger(triggerBuilder.build());
 		return builder;
@@ -184,7 +183,7 @@ public class GenericJobDefinition implements JobDefinition {
 		return new Builder(jobKey);
 	}
 
-	public static Builder newJob(String clusterName, String groupName, String jobName, Class<? extends NotManagedJob> jobClass) {
+	public static Builder newJob(String clusterName, String groupName, String jobName, Class<?> jobClass) {
 		return new Builder(clusterName, groupName, jobName, jobClass);
 	}
 

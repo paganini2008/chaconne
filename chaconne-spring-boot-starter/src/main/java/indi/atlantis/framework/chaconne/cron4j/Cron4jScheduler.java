@@ -31,7 +31,7 @@ import indi.atlantis.framework.chaconne.SerialDependencyScheduler;
  */
 public class Cron4jScheduler implements Scheduler {
 
-	@Qualifier(ChaconneBeanNames.CLUSTER_JOB_SCHEDULER)
+	@Qualifier(ChaconneBeanNames.JOB_SCHEDULER)
 	@Autowired
 	private TaskExecutor taskExecutor;
 

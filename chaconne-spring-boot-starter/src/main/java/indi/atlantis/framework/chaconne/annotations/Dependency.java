@@ -1,4 +1,4 @@
-package indi.atlantis.framework.chaconne.utils;
+package indi.atlantis.framework.chaconne.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * 
- * Job
+ * Dependency
  * 
  * @author Jimmy Hoff
  *
@@ -17,18 +17,12 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Job {
+public @interface Dependency {
 
-	String name();
+	JobKey[] dependentKeys();
 
-	String description();
+	JobKey[] subJobKeys();
 
-	int retries();
-
-	int weight();
-
-	long timeout();
-
-	String email();
+	float completionRate() default -1;
 
 }

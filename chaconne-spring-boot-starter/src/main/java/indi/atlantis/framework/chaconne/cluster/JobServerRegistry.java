@@ -41,7 +41,7 @@ public class JobServerRegistry implements BeanLifeCycle {
 	public void registerCluster(ApplicationInfo applicationInfo) {
 		Map<String, Object> kwargs = new HashMap<String, Object>();
 		kwargs.put("clusterName", applicationInfo.getClusterName());
-		kwargs.put("applicationName", applicationInfo.getApplicationName());
+		kwargs.put("groupName", applicationInfo.getApplicationName());
 		kwargs.put("instanceId", applicationInfo.getId());
 		kwargs.put("contextPath", applicationInfo.getApplicationContextPath());
 		kwargs.put("startDate", new Timestamp(applicationInfo.getStartTime()));

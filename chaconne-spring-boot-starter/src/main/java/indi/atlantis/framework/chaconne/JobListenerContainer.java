@@ -68,7 +68,7 @@ public class JobListenerContainer {
 			listeners.get(jobKey).beforeRun(traceId, jobKey, attachment, startDate);
 		}
 
-		Class<?>[] listenerClasses = job.getJobRuntimeListeners();
+		Class<?>[] listenerClasses = job.getJobListeners();
 		if (ArrayUtils.isNotEmpty(listenerClasses)) {
 			for (Class<?> listenerClass : listenerClasses) {
 				JobListener listener = (JobListener) BeanUtils.instantiate(listenerClass);
@@ -82,10 +82,10 @@ public class JobListenerContainer {
 		if (log.isTraceEnabled()) {
 			log.trace("Trigger all JobRuntimeListeners on after running job '{}'", jobKey);
 		}
-		Class<?>[] listenerClasses = job.getJobRuntimeListeners();
+		Class<?>[] listenerClasses = job.getJobListeners();
 		if (ArrayUtils.isNotEmpty(listenerClasses)) {
 			for (Class<?> listenerClass : listenerClasses) {
-				JobListener listener = (JobListener) ApplicationContextUtils.instantiateClass(listenerClass);
+				JobListener listener = (JobListener) ApplicationContextUtils.getOrCreateBean(listenerClass);
 				listener.afterRun(traceId, jobKey, attachment, startDate, runningState, result, reason);
 			}
 		}
