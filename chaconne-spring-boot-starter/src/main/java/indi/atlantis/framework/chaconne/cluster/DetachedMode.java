@@ -4,7 +4,7 @@ package indi.atlantis.framework.chaconne.cluster;
  * 
  * DetachedMode
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @version 1.0
  */

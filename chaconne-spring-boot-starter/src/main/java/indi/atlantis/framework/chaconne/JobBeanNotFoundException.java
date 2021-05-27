@@ -4,7 +4,7 @@ package indi.atlantis.framework.chaconne;
  * 
  * JobBeanNotFoundException
  *
- * @author Jimmy Hoff
+ * @author Fred Feng
  * @since 1.0
  */
 public class JobBeanNotFoundException extends JobException {

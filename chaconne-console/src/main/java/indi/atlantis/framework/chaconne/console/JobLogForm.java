@@ -7,7 +7,7 @@ import lombok.Setter;
  * 
  * JobLogForm
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

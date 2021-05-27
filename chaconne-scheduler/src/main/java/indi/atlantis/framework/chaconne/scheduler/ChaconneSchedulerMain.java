@@ -15,7 +15,7 @@ import indi.atlantis.framework.chaconne.cluster.EnableChaconneDetachedMode;
  * 
  * ChaconneSchedulerMain
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @version 1.0
  */

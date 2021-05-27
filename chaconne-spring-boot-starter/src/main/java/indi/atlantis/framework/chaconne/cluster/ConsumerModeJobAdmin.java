@@ -21,7 +21,7 @@ import indi.atlantis.framework.tridenter.multicast.ApplicationMulticastGroup;
  * 
  * ConsumerModeJobAdmin
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

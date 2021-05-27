@@ -6,7 +6,7 @@ import org.slf4j.Logger;
  * 
  * RetryPolicy
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

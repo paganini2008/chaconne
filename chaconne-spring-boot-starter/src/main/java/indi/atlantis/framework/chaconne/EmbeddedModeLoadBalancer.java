@@ -16,7 +16,7 @@ import indi.atlantis.framework.tridenter.multicast.ApplicationMulticastGroup;
  * 
  * EmbeddedModeLoadBalancer
  *
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

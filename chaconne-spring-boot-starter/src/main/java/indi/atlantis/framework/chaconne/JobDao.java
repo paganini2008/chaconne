@@ -14,7 +14,7 @@ import com.github.paganini2008.springworld.jdbc.annotations.Update;
  * 
  * JobDao
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @version 1.0
  */

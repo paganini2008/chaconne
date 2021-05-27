@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 
  * JacksonUtils
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

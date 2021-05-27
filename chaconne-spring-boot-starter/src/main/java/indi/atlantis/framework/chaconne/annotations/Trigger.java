@@ -13,7 +13,7 @@ import indi.atlantis.framework.chaconne.TriggerType;
  * 
  * Trigger
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @version 1.0
  */

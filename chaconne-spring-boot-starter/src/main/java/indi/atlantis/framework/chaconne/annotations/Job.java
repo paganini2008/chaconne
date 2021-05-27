@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * 
  * Job
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @version 1.0
  */

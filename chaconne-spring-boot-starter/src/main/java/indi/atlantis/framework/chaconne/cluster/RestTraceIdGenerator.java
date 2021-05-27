@@ -13,7 +13,7 @@ import indi.atlantis.framework.chaconne.model.JobResult;
  * 
  * RestTraceIdGenerator
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

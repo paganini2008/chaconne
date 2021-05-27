@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
  * 
  * PeriodicTrigger
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

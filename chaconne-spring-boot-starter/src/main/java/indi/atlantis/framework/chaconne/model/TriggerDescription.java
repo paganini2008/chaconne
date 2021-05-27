@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
  * 
  * TriggerDetail
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

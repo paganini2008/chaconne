@@ -13,7 +13,7 @@ import indi.atlantis.framework.chaconne.utils.JavaMailService;
  * 
  * EmbeddedModeJobExecutor
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

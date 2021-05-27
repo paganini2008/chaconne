@@ -8,7 +8,7 @@ import indi.atlantis.framework.chaconne.model.TriggerDescription;
  * 
  * NoneTrigger
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

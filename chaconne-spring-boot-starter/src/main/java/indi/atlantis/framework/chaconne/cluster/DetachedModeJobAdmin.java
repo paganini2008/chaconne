@@ -17,7 +17,7 @@ import indi.atlantis.framework.chaconne.model.JobResult;
  * 
  * DetachedModeJobAdmin
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

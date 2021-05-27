@@ -7,7 +7,7 @@ import org.springframework.http.client.ClientHttpRequestFactory;
  * 
  * ConsoleModeClusterRestTemplate
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

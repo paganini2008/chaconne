@@ -32,7 +32,7 @@ import indi.atlantis.framework.chaconne.utils.GenericJobDefinition;
  * 
  * RestJobManager
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

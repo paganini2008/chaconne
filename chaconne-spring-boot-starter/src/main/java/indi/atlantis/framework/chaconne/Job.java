@@ -4,7 +4,7 @@ package indi.atlantis.framework.chaconne;
  * 
  * Job
  *
- * @author Jimmy Hoff
+ * @author Fred Feng
  * @since 1.0
  */
 public interface Job extends NotManagedJob, JobDefinition {

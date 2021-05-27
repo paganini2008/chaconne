@@ -15,7 +15,7 @@ import com.github.paganini2008.springworld.jdbc.annotations.Select;
  * 
  * JobQueryDao
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @version 1.0
  */
@@ -48,35 +48,35 @@ public interface JobQueryDao {
 	public static final String DEF_SELECT_JOB_EXCEPTION = "select * from chac_job_exception where job_id=:jobId and trace_id=:traceId";
 	public static final String DEF_SELECT_JOB_STAT = "select job_id, sum(complete) as completeCount, sum(failed) as failedCount, sum(skipped) as skippedCount {0} from chac_job_trace group by job_id {1}";
 
-	@Select(value = DEF_SELECT_CLUSTER_NAME, singleColumn = true)
+	@Query(value = DEF_SELECT_CLUSTER_NAME, singleColumn = true)
 	List<String> selectClusterNames();
 
-	@Select(DEF_SELECT_JOB_SERVER_DETAIL)
+	@Query(DEF_SELECT_JOB_SERVER_DETAIL)
 	List<Map<String, Object>> selectJobServerDetail(@Arg("clusterName") String clusterName);
 
-	@Select(value = DEF_SELECT_CONTEXT_PATH, singleColumn = true)
+	@Query(value = DEF_SELECT_CONTEXT_PATH, singleColumn = true)
 	List<String> selectContextPath(@Arg("clusterName") String clusterName);
 
-	@Query(DEF_SELECT_ALL_JOB_DETAIL)
+	@Select(DEF_SELECT_ALL_JOB_DETAIL)
 	ResultSetSlice<Map<String, Object>> selectAllJobDetails();
 
-	@Select(DEF_SELECT_AVAILABLE_JOB_DETAIL)
+	@Query(DEF_SELECT_AVAILABLE_JOB_DETAIL)
 	List<Map<String, Object>> selectAvailableJobDetails();
 
 	@Get(value = DEF_SELECT_JOB_ID, javaType = true)
 	Integer selectJobId(@Arg("clusterName") String clusterName, @Arg("groupName") String groupName, @Arg("jobName") String jobName,
 			@Arg("jobClassName") String jobClassName);
 
-	@Select(DEF_SELECT_JOB_TRIGGER_DEADLINE)
+	@Query(DEF_SELECT_JOB_TRIGGER_DEADLINE)
 	List<Map<String, Object>> selectJobTriggerDeadlines();
 
-	@Select(DEF_SELECT_JOB_KEYS_BY_TRIGGER_TYPE)
+	@Query(DEF_SELECT_JOB_KEYS_BY_TRIGGER_TYPE)
 	List<Map<String, Object>> selectJobKeysByTriggerType(@Arg("clusterName") String clusterName, @Arg("triggerType") int triggerType);
 
-	@Select(DEF_SELECT_JOB_DETAIL_BY_GROUP_NAME)
+	@Query(DEF_SELECT_JOB_DETAIL_BY_GROUP_NAME)
 	List<Map<String, Object>> selectJobDetailsByGroupName(@Arg("clusterName") String clusterName, @Arg("groupName") String groupName);
 
-	@Select(DEF_SELECT_JOB_DETAIL_BY_OTHER_GROUP_NAME)
+	@Query(DEF_SELECT_JOB_DETAIL_BY_OTHER_GROUP_NAME)
 	List<Map<String, Object>> selectJobDetailsByOtherGroupName(@Arg("clusterName") String clusterName, @Arg("groupName") String groupName);
 
 	@Get(value = DEF_SELECT_JOB_EXISTS, javaType = true)
@@ -92,33 +92,33 @@ public interface JobQueryDao {
 	@Get(DEF_SELECT_JOB_RUNTIME)
 	Map<String, Object> selectJobRuntime(@Arg("jobId") int jobId);
 
-	@Select(DEF_SELECT_JOB_RUNTIME_BY_JOB_STATE)
+	@Query(DEF_SELECT_JOB_RUNTIME_BY_JOB_STATE)
 	List<Map<String, Object>> selectJobRuntimeByJobState(@Arg("clusterName") String clusterName, @Arg("jobState") int jobState);
 
-	@Select(DEF_SELECT_DEPENDENT_JOB_DETAIL)
+	@Query(DEF_SELECT_DEPENDENT_JOB_DETAIL)
 	List<Map<String, Object>> selectDependentJobDetail(@Arg("jobId") int jobId, @Arg("dependencyType") int dependencyType);
 
 	@Get(value = DEF_SELECT_JOB_HAS_RELATIONS, javaType = true)
 	Integer selectJobHasRelations(@Arg("dependentJobId") int dependentJobId, @Arg("dependencyType") int dependencyType);
 
-	@Select(DEF_SELECT_JOB_RELATIONS)
+	@Query(DEF_SELECT_JOB_RELATIONS)
 	List<Map<String, Object>> selectJobRelations(@Arg("dependentJobId") int dependentJobId, @Arg("dependencyType") int dependencyType);
 
-	@Query(DEF_SELECT_JOB_TRACE)
+	@Select(DEF_SELECT_JOB_TRACE)
 	ResultSetSlice<Map<String, Object>> selectJobTrace(@Arg("jobId") int jobId, @Arg("startDate") Date startDate,
 			@Arg("endDate") Date endDate);
 
-	@Query(DEF_SELECT_JOB_INFO)
+	@Select(DEF_SELECT_JOB_INFO)
 	ResultSetSlice<Map<String, Object>> selectJobInfo(@Arg("clusterName") String clusterName);
 
 	@Get(DEF_SELECT_JOB_DETAIL)
 	Map<String, Object> selectJobDetail(@Arg("clusterName") String clusterName, @Arg("groupName") String groupName,
 			@Arg("jobName") String jobName, @Arg("jobClassName") String jobClassName);
 
-	@Select(DEF_SELECT_JOB_LOG)
+	@Query(DEF_SELECT_JOB_LOG)
 	List<Map<String, Object>> selectJobLog(@Arg("jobId") int jobId, @Arg("traceId") long traceId);
 
-	@Select(DEF_SELECT_JOB_EXCEPTION)
+	@Query(DEF_SELECT_JOB_EXCEPTION)
 	List<Map<String, Object>> selectJobException(@Arg("jobId") int jobId, @Arg("traceId") long traceId);
 
 }

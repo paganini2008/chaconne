@@ -11,7 +11,7 @@ import com.github.paganini2008.devtools.enums.EnumConstant;
  * 
  * LogLevel
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

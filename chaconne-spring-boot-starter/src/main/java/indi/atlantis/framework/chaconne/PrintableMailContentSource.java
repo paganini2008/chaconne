@@ -11,7 +11,7 @@ import com.github.paganini2008.devtools.date.DateUtils;
  * 
  * PrintableMailContentSource
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

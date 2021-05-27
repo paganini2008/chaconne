@@ -13,7 +13,7 @@ import lombok.Getter;
  * 
  * JobLoggerFactory
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

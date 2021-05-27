@@ -13,7 +13,7 @@ import indi.atlantis.framework.tridenter.utils.ApplicationContextUtils;
  * 
  * DetachedModeJobBeanLoader
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

@@ -19,7 +19,7 @@ import indi.atlantis.framework.chaconne.model.TriggerDescription;
  * 
  * JobBeanProxyUtils
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @version 1.0
  */

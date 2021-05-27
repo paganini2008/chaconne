@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * WebMvcConfig
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */
@@ -97,7 +97,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	 * 
 	 * BasicHandlerInterceptor
 	 * 
-	 * @author Jimmy Hoff
+	 * @author Fred Feng
 	 *
 	 * @since 1.0
 	 */
@@ -130,7 +130,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	 * 
 	 * SignHandlerInterceptor
 	 * 
-	 * @author Jimmy Hoff
+	 * @author Fred Feng
 	 *
 	 * @since 1.0
 	 */
@@ -161,7 +161,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	 * 
 	 * NormalResponsePreHandler
 	 * 
-	 * @author Jimmy Hoff
+	 * @author Fred Feng
 	 *
 	 * @since 1.0
 	 */

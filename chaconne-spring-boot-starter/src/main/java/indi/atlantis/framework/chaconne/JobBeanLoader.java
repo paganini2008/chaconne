@@ -4,7 +4,7 @@ package indi.atlantis.framework.chaconne;
  * 
  * JobBeanLoader
  *
- * @author Jimmy Hoff
+ * @author Fred Feng
  */
 public interface JobBeanLoader {
 

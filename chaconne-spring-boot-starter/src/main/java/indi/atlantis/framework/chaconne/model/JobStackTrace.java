@@ -9,7 +9,7 @@ import lombok.Setter;
  * 
  * JobStackTrace
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

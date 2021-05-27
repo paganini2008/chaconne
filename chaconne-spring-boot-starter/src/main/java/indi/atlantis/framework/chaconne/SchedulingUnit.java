@@ -10,7 +10,7 @@ import com.github.paganini2008.devtools.enums.EnumConstant;
  * 
  * SchedulingUnit
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

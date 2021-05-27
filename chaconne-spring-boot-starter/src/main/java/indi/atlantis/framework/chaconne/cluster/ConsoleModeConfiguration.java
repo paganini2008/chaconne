@@ -13,7 +13,7 @@ import indi.atlantis.framework.chaconne.JobManager;
  * 
  * ConsoleModeConfiguration
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

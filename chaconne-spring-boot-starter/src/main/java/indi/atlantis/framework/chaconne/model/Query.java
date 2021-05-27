@@ -6,7 +6,7 @@ import lombok.Setter;
 /**
  * 
  * Query
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

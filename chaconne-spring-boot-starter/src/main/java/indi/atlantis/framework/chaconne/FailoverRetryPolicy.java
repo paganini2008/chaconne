@@ -12,7 +12,7 @@ import indi.atlantis.framework.tridenter.multicast.ApplicationMulticastGroup;
  * 
  * FailoverRetryPolicy
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

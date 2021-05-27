@@ -12,7 +12,7 @@ import lombok.Setter;
  * 
  * JobServerDetail
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

@@ -7,7 +7,7 @@ import java.util.Map;
  * 
  * Ddl
  *
- * @author Jimmy Hoff
+ * @author Fred Feng
  * @since 1.0
  */
 public abstract class Ddl {

@@ -17,7 +17,7 @@ import indi.atlantis.framework.chaconne.console.service.JobManagerService;
  * 
  * IndexController
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

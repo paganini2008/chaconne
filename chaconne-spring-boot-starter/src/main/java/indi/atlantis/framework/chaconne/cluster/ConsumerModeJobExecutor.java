@@ -26,7 +26,7 @@ import indi.atlantis.framework.chaconne.utils.JavaMailService;
  * 
  * ConsumerModeJobExecutor
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

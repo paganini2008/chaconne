@@ -22,7 +22,7 @@ import indi.atlantis.framework.chaconne.model.JobKeyQuery;
  * 
  * ConsumerModeJobBeanInitializer
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * SerialDependencySchedulerImpl
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

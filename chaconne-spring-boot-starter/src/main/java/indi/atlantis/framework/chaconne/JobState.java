@@ -8,7 +8,7 @@ import com.github.paganini2008.devtools.enums.EnumConstant;
  * 
  * JobState
  *
- * @author Jimmy Hoff
+ * @author Fred Feng
  * @since 1.0
  */
 public enum JobState implements EnumConstant {

@@ -9,7 +9,7 @@ import lombok.Setter;
  * 
  * JobStateParam
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

@@ -7,7 +7,7 @@ import org.springframework.http.client.ClientHttpRequestFactory;
  * 
  * ProducerModeRestTemplate
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

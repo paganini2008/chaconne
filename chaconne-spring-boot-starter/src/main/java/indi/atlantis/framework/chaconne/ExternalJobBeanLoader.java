@@ -9,7 +9,7 @@ import indi.atlantis.framework.tridenter.utils.ApplicationContextUtils;
  * 
  * ExternalJobBeanLoader
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

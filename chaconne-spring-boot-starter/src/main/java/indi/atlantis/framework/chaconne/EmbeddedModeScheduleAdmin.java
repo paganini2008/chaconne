@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * 
  * EmbeddedModeScheduleAdmin
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

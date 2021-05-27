@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
  * 
  * GenericJobDefinition
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

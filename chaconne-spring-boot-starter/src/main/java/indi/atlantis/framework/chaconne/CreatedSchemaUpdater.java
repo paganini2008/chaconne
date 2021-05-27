@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * CreatedSchemaUpdater
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @version 1.0
  */

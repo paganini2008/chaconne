@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * SpringScheduler
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */
@@ -126,7 +126,7 @@ public class SpringScheduler implements Scheduler {
 	 * 
 	 * JobFutureImpl
 	 * 
-	 * @author Jimmy Hoff
+	 * @author Fred Feng
 	 *
 	 * @since 1.0
 	 */
@@ -177,7 +177,7 @@ public class SpringScheduler implements Scheduler {
 	 * 
 	 * DelayedJobFuture
 	 * 
-	 * @author Jimmy Hoff
+	 * @author Fred Feng
 	 *
 	 * @since 1.0
 	 */

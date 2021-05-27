@@ -7,7 +7,7 @@ import indi.atlantis.framework.chaconne.utils.GenericJobDefinition;
  * 
  * JobPersistence
  *
- * @author Jimmy Hoff
+ * @author Fred Feng
  */
 public interface JobPersistence {
 

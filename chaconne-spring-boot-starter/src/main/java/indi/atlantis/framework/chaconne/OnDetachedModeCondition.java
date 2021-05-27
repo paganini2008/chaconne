@@ -14,7 +14,7 @@ import indi.atlantis.framework.chaconne.cluster.DetachedMode;
  * 
  * OnDetachedModeCondition
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

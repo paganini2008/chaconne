@@ -15,7 +15,7 @@ import indi.atlantis.framework.chaconne.model.PageQuery;
  * 
  * JobManager
  *
- * @author Jimmy Hoff
+ * @author Fred Feng
  * @since 1.0
  */
 public interface JobManager extends JobPersistence {

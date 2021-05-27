@@ -14,7 +14,7 @@ import indi.atlantis.framework.tridenter.EnableApplicationCluster;
  * 
  * EnableChaconneEmbeddedMode
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @version 1.0
  */

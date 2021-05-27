@@ -14,7 +14,7 @@ import org.springframework.core.type.AnnotationMetadata;
  * 
  * DetachedModeConfigurationSelector
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @version 1.0
  */

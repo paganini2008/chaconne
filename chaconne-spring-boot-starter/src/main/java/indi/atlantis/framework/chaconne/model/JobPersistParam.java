@@ -10,7 +10,7 @@ import lombok.ToString;
  * 
  * JobPersistParam
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

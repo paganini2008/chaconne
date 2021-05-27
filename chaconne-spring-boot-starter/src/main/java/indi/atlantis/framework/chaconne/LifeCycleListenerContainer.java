@@ -14,7 +14,7 @@ import indi.atlantis.framework.tridenter.multicast.ApplicationMessageListener;
  * 
  * LifeCycleListenerContainer
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

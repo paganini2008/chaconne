@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationEvent;
  * 
  * JobManagerEvent
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

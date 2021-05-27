@@ -15,7 +15,7 @@ import lombok.Getter;
  * 
  * JobTriggerDetail
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

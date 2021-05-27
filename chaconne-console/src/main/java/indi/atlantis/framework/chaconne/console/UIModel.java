@@ -7,7 +7,7 @@ import lombok.Setter;
  * 
  * UIModel
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

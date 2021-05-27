@@ -16,7 +16,7 @@ import indi.atlantis.framework.tridenter.InstanceId;
  * 
  * JdbcStopWatch
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

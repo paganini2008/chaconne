@@ -3,7 +3,7 @@ package indi.atlantis.framework.chaconne;
 /**
  * 
  * ScheduleAdmin
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

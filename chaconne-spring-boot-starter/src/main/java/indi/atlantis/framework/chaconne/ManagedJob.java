@@ -10,7 +10,7 @@ import com.github.paganini2008.devtools.beans.ToStringBuilder;
  * 
  * ManagedJob
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

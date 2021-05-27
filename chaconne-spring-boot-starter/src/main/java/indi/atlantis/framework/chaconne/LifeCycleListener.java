@@ -4,7 +4,7 @@ package indi.atlantis.framework.chaconne;
  * 
  * LifeCycleListener
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

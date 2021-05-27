@@ -6,7 +6,7 @@ import indi.atlantis.framework.tridenter.election.ApplicationClusterLeaderEvent;
  * 
  * SchedulerStarterListener
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

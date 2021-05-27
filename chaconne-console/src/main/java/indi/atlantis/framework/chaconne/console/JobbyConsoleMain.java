@@ -14,7 +14,7 @@ import indi.atlantis.framework.chaconne.cluster.EnableChaconneConsoleMode;
  * 
  * JobbyConsoleMain
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

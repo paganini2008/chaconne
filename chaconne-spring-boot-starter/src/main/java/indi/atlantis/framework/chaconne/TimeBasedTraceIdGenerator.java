@@ -8,7 +8,7 @@ import com.github.paganini2008.springworld.reditools.common.TimeBasedIdGenerator
  * 
  * TimeBasedTraceIdGenerator
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

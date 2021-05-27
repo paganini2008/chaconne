@@ -4,7 +4,7 @@ package indi.atlantis.framework.chaconne;
  * 
  * JobException
  *
- * @author Jimmy Hoff
+ * @author Fred Feng
  * @since 1.0
  */
 public class JobException extends RuntimeException {

@@ -15,7 +15,7 @@ import com.github.paganini2008.devtools.proxy.Aspect;
  * 
  * JobLoggerAspect
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

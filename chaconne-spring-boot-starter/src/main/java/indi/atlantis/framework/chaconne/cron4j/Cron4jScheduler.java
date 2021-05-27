@@ -25,7 +25,7 @@ import indi.atlantis.framework.chaconne.SerialDependencyScheduler;
  * 
  * Cron4jScheduler
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */
@@ -137,7 +137,7 @@ public class Cron4jScheduler implements Scheduler {
 	 * 
 	 * JobFutureImpl
 	 * 
-	 * @author Jimmy Hoff
+	 * @author Fred Feng
 	 *
 	 * @since 1.0
 	 */
@@ -175,7 +175,7 @@ public class Cron4jScheduler implements Scheduler {
 	 * 
 	 * DelayedJobFuture
 	 * 
-	 * @author Jimmy Hoff
+	 * @author Fred Feng
 	 *
 	 * @since 1.0
 	 */

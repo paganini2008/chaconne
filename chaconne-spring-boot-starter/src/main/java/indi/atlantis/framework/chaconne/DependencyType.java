@@ -8,7 +8,7 @@ import com.github.paganini2008.devtools.enums.EnumConstant;
  * 
  * DependencyType
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

@@ -26,7 +26,7 @@ import indi.atlantis.framework.tridenter.multicast.ApplicationMulticastGroup;
  * 
  * ConsumerModeLoadBalancer
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

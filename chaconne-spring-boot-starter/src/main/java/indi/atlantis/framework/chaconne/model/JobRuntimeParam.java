@@ -14,7 +14,7 @@ import lombok.Setter;
  * 
  * JobRuntimeParam
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @since 1.0
  */

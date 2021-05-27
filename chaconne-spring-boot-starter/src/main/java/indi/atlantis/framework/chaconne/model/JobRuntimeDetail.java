@@ -16,7 +16,7 @@ import lombok.Getter;
  * 
  * JobRuntimeDetail
  *
- * @author Jimmy Hoff
+ * @author Fred Feng
  * @since 1.0
  */
 @JsonInclude(value = Include.NON_NULL)

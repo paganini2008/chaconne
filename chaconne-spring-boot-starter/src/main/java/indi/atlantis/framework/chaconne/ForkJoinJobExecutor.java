@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * ForkJoinJobExecutor
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @version 1.0
  */

@@ -8,7 +8,7 @@ import lombok.Setter;
  * 
  * TaskJoinResult
  * 
- * @author Jimmy Hoff
+ * @author Fred Feng
  *
  * @version 1.0
  */
