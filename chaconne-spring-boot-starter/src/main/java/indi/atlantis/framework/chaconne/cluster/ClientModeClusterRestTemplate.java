@@ -5,15 +5,15 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 
 /**
  * 
- * ConsoleModeClusterRestTemplate
+ * ClientModeClusterRestTemplate
  * 
  * @author Fred Feng
  *
  * @since 1.0
  */
-public class ConsoleModeClusterRestTemplate extends ClusterRestTemplate {
+public class ClientModeClusterRestTemplate extends ClusterRestTemplate {
 
-	public ConsoleModeClusterRestTemplate(ClientHttpRequestFactory httpRequestFactory) {
+	public ClientModeClusterRestTemplate(ClientHttpRequestFactory httpRequestFactory) {
 		super(httpRequestFactory);
 	}
 

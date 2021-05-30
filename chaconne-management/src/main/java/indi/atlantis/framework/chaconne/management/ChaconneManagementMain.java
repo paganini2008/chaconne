@@ -25,7 +25,7 @@ public class ChaconneManagementMain {
 
 	static {
 		System.setProperty("spring.devtools.restart.enabled", "false");
-		File logDir = FileUtils.getFile(FileUtils.getUserDirectory(), "logs", "indi", "atlantis", "framework", "chaconne", "scheduler");
+		File logDir = FileUtils.getFile(FileUtils.getUserDirectory(), "logs", "indi", "atlantis", "framework", "chaconne", "management");
 		if (!logDir.exists()) {
 			logDir.mkdirs();
 		}

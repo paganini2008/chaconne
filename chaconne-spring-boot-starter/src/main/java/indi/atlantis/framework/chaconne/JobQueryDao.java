@@ -26,6 +26,7 @@ public interface JobQueryDao {
 	public static final String DEF_SELECT_JOB_SERVER_DETAIL = "select * from chac_job_server_detail where cluster_name=:clusterName";
 	public static final String DEF_SELECT_CONTEXT_PATH = "select distinct context_path from chac_job_server_detail where cluster_name=:clusterName";
 	public static final String DEF_SELECT_ALL_JOB_DETAIL = "select * from chac_job_detail";
+	public static final String DEF_SELECT_JOB_DETAIL_BY_GROUP_NAMES = "select * from chac_job_detail where group_name in (:groupNames)";
 	public static final String DEF_SELECT_AVAILABLE_JOB_DETAIL = "select a.* from chac_job_detail a join chac_job_runtime_detail b on a.job_id=b.job_id where b.job_state<4";
 	public static final String DEF_SELECT_JOB_ID = "select job_id from chac_job_detail where cluster_name=:clusterName and group_name=:groupName and job_name=:jobName and job_class_name=:jobClassName";
 	public static final String DEF_SELECT_JOB_TRIGGER_DEADLINE = "select c.cluster_name,c.group_name,c.job_name,c.job_class_name,a.* from chac_job_trigger_detail a join chac_job_runtime_detail b on a.job_id=b.job_id join chac_job_detail c on c.job_id=b.job_id where a.end_date is not null and b.job_state<4";
@@ -59,6 +60,9 @@ public interface JobQueryDao {
 
 	@Select(DEF_SELECT_ALL_JOB_DETAIL)
 	ResultSetSlice<Map<String, Object>> selectAllJobDetails();
+
+	@Select(DEF_SELECT_JOB_DETAIL_BY_GROUP_NAMES)
+	ResultSetSlice<Map<String, Object>> selectJobDetailsByGroupNames(@Arg("groupNames") String groupNames);
 
 	@Query(DEF_SELECT_AVAILABLE_JOB_DETAIL)
 	List<Map<String, Object>> selectAvailableJobDetails();

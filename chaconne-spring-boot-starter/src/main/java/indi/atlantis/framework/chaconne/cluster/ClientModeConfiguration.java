@@ -11,7 +11,7 @@ import indi.atlantis.framework.chaconne.JobManager;
 
 /**
  * 
- * ConsoleModeConfiguration
+ * ClientModeConfiguration
  * 
  * @author Fred Feng
  *
@@ -19,11 +19,11 @@ import indi.atlantis.framework.chaconne.JobManager;
  */
 @ConditionalOnWebApplication
 @Configuration(proxyBeanMethods = false)
-public class ConsoleModeConfiguration {
+public class ClientModeConfiguration {
 
 	@Bean
 	public ClusterRestTemplate clusterRestTemplate(ClientHttpRequestFactory httpRequestFactory) {
-		return new ConsoleModeClusterRestTemplate(httpRequestFactory);
+		return new ClientModeClusterRestTemplate(httpRequestFactory);
 	}
 
 	@Bean

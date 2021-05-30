@@ -12,7 +12,7 @@ import indi.atlantis.framework.tridenter.EnableApplicationCluster;
 
 /**
  * 
- * EnableChaconneConsoleMode
+ * EnableChaconneClientMode
  * 
  * @author Fred Feng
  *
@@ -22,6 +22,6 @@ import indi.atlantis.framework.tridenter.EnableApplicationCluster;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @EnableApplicationCluster(enableLeaderElection = true, enableMonitor = true)
-@Import(ConsoleModeConfiguration.class)
-public @interface EnableChaconneConsoleMode {
+@Import(ClientModeConfiguration.class)
+public @interface EnableChaconneClientMode {
 }

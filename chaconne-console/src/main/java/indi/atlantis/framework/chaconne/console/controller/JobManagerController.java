@@ -33,7 +33,7 @@ import indi.atlantis.framework.chaconne.model.PageQuery;
 
 /**
  * 
- * JobController
+ * JobManagerController
  * 
  * @author Fred Feng
  *
@@ -41,7 +41,7 @@ import indi.atlantis.framework.chaconne.model.PageQuery;
  */
 @RequestMapping("/job")
 @Controller
-public class JobController {
+public class JobManagerController {
 
 	@Autowired
 	private JobManagerService jobManagerService;

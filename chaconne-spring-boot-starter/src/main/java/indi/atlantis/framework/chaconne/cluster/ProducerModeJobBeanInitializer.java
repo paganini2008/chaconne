@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
+import com.github.paganini2008.devtools.StringUtils;
 import com.github.paganini2008.devtools.jdbc.PageRequest;
 import com.github.paganini2008.devtools.jdbc.PageResponse;
 import com.github.paganini2008.devtools.jdbc.ResultSetSlice;
@@ -37,8 +39,13 @@ public class ProducerModeJobBeanInitializer implements JobBeanInitializer {
 	@Autowired
 	private JobBeanLoader jobBeanLoader;
 
+	@Value("${atlantis.framework.chaconne.producer.job.groupNames:}")
+	private String groupNames;
+
 	public void initializeJobBeans() throws Exception {
-		ResultSetSlice<Map<String, Object>> resultSetSlice = jobQueryDao.selectAllJobDetails();
+		ResultSetSlice<Map<String, Object>> resultSetSlice = StringUtils.isNotBlank(groupNames)
+				? jobQueryDao.selectJobDetailsByGroupNames(groupNames)
+				: jobQueryDao.selectAllJobDetails();
 		PageResponse<Map<String, Object>> pageResponse = resultSetSlice.list(PageRequest.of(1, 10));
 		List<Map<String, Object>> dataList;
 		JobKey jobKey;
