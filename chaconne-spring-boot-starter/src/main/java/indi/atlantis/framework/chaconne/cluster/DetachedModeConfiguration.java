@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -150,6 +151,12 @@ public class DetachedModeConfiguration {
 	public static class ProducerModeConfig {
 
 		@Bean
+		public SchemaUpdater schemaUpdater(DataSource dataSource) {
+			return new CreatedSchemaUpdater(dataSource);
+		}
+
+		@DependsOn("schemaUpdater")
+		@Bean
 		public JobServerRegistry jobServerRegistry() {
 			return new JobServerRegistry();
 		}
@@ -165,27 +172,26 @@ public class DetachedModeConfiguration {
 			return new DefaultSchedulerStarterListener();
 		}
 
+		@DependsOn("schemaUpdater")
 		@Bean
 		public BeanExtensionAwareProcessor beanExtensionAwareProcessor() {
 			return new BeanExtensionAwareProcessor();
 		}
 
+		@DependsOn("schemaUpdater")
 		@Bean
 		public JobBeanInitializer producerModeJobBeanInitializer() {
 			return new ProducerModeJobBeanInitializer();
 		}
 
-		@Bean
-		public SchemaUpdater schemaUpdater(DataSource dataSource) {
-			return new CreatedSchemaUpdater(dataSource);
-		}
-
+		@DependsOn("schemaUpdater")
 		@Bean
 		@ConditionalOnMissingBean(JobManager.class)
 		public JobManager jobManager() {
 			return new JdbcJobManager();
 		}
 
+		@DependsOn("schemaUpdater")
 		@Bean
 		@ConditionalOnMissingBean(StopWatch.class)
 		public StopWatch stopWatch() {
@@ -263,6 +269,7 @@ public class DetachedModeConfiguration {
 			return new TimeBasedTraceIdGenerator(redisConnectionFactory);
 		}
 
+		@DependsOn("schemaUpdater")
 		@Bean
 		public LogManager logManager() {
 			return new JdbcLogManager();
@@ -284,7 +291,7 @@ public class DetachedModeConfiguration {
 		public ConsumerModeStarterListener consumerModeStarterListener() {
 			return new ConsumerModeStarterListener();
 		}
-		
+
 		@Bean
 		public BeanAnnotationAwareProcessor beanAnnotationAwareProcessor() {
 			return new BeanAnnotationAwareProcessor();

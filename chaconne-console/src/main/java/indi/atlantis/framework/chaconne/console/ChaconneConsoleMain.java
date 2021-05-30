@@ -12,7 +12,7 @@ import indi.atlantis.framework.chaconne.cluster.EnableChaconneConsoleMode;
 
 /**
  * 
- * JobbyConsoleMain
+ * ChaconneConsoleMain
  * 
  * @author Fred Feng
  *
@@ -20,7 +20,7 @@ import indi.atlantis.framework.chaconne.cluster.EnableChaconneConsoleMode;
  */
 @EnableChaconneConsoleMode
 @SpringBootApplication
-public class JobbyConsoleMain {
+public class ChaconneConsoleMain {
 
 	static {
 		System.setProperty("spring.devtools.restart.enabled", "false");
@@ -32,7 +32,7 @@ public class JobbyConsoleMain {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(JobbyConsoleMain.class, args);
+		SpringApplication.run(ChaconneConsoleMain.class, args);
 		System.out.println(Env.getPid());
 	}
 

@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -200,12 +201,14 @@ public class EmbeddedModeConfiguration {
 		return new CreatedSchemaUpdater(dataSource);
 	}
 
+	@DependsOn("schemaUpdater")
 	@Bean
 	@ConditionalOnMissingBean(JobManager.class)
 	public JobManager jobManager() {
 		return new JdbcJobManager();
 	}
 
+	@DependsOn("schemaUpdater")
 	@Bean
 	@ConditionalOnMissingBean(StopWatch.class)
 	public StopWatch stopWatch() {
@@ -268,6 +271,7 @@ public class EmbeddedModeConfiguration {
 		return new TimeBasedTraceIdGenerator(redisConnectionFactory);
 	}
 
+	@DependsOn("schemaUpdater")
 	@Bean
 	public LogManager logManager() {
 		return new JdbcLogManager();

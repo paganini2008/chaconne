@@ -2,16 +2,11 @@ package indi.atlantis.framework.chaconne;
 
 import java.lang.reflect.Method;
 
-import org.slf4j.Logger;
-
 import com.github.paganini2008.devtools.proxy.Aspect;
 import com.github.paganini2008.devtools.proxy.JdkProxyFactory;
 import com.github.paganini2008.devtools.proxy.ProxyFactory;
 import com.github.paganini2008.devtools.reflection.MethodUtils;
 
-import indi.atlantis.framework.chaconne.annotations.OnFailure;
-import indi.atlantis.framework.chaconne.annotations.OnSuccess;
-import indi.atlantis.framework.chaconne.annotations.Run;
 import indi.atlantis.framework.chaconne.model.JobDetail;
 import indi.atlantis.framework.chaconne.model.TriggerDescription;
 
@@ -37,10 +32,6 @@ public abstract class JobBeanProxyUtils {
 
 	public static Job getBeanProxy(Object delegate, Aspect aspect) {
 		return (Job) proxyFactory.getProxy(delegate, aspect, Job.class);
-	}
-
-	public static NotManagedJob convertToJobBean(Object bean) {
-		return bean instanceof NotManagedJob ? (NotManagedJob) bean : new AnnotatedJobBeanProxy(bean);
 	}
 
 	private static class JobBeanAspect implements Aspect {
@@ -88,31 +79,6 @@ public abstract class JobBeanProxyUtils {
 			default:
 				return MethodUtils.invokeMethod(target, method, args);
 			}
-		}
-
-	}
-
-	private static class AnnotatedJobBeanProxy implements NotManagedJob {
-
-		private final Object targetBean;
-
-		private AnnotatedJobBeanProxy(Object targetBean) {
-			this.targetBean = targetBean;
-		}
-
-		@Override
-		public Object execute(JobKey jobKey, Object attachment, Logger log) throws Exception {
-			return MethodUtils.invokeMethodWithAnnotation(targetBean, Run.class, jobKey, attachment, log);
-		}
-
-		@Override
-		public void onSuccess(JobKey jobKey, Object result, Logger log) {
-			MethodUtils.invokeMethodsWithAnnotation(targetBean, OnSuccess.class, jobKey, result, log);
-		}
-
-		@Override
-		public void onFailure(JobKey jobKey, Throwable e, Logger log) {
-			MethodUtils.invokeMethodsWithAnnotation(targetBean, OnFailure.class, jobKey, e, log);
 		}
 
 	}

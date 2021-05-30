@@ -46,7 +46,7 @@ public class GenericTrigger implements Trigger {
 
 		Builder() {
 			this.triggerDescription = new TriggerDescription();
-			this.triggerType = TriggerType.NONE;
+			this.triggerType = TriggerType.SIMPLE;
 		}
 
 		Builder(String cronExpression) {

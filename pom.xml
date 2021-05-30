@@ -8,7 +8,7 @@
 	
     <modules>
 		<module>chaconne-console</module>
-		<module>chaconne-scheduler</module>
+		<module>chaconne-management</module>
 		<module>chaconne-spring-boot-starter</module>
     </modules>
 	
@@ -32,9 +32,9 @@
     </developers>
 	
 	<scm>
-        <connection>https://github.com/paganini2008/jobby.git</connection>
-        <developerConnection>https://github.com/paganini2008/jobby.git</developerConnection>
-        <url>https://github.com/paganini2008/jobby</url>
+        <connection>https://github.com/paganini2008/chaconne.git</connection>
+        <developerConnection>https://github.com/paganini2008/chaconne.git</developerConnection>
+        <url>https://github.com/paganini2008/chaconne</url>
     </scm>
 	
 	<properties>

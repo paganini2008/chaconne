@@ -22,7 +22,7 @@ import indi.atlantis.framework.chaconne.TriggerType;
 @Target(ElementType.TYPE)
 public @interface Trigger {
 
-	TriggerType triggerType();
+	TriggerType triggerType() default TriggerType.CRON;
 
 	String cron() default "";
 
@@ -36,6 +36,6 @@ public @interface Trigger {
 
 	String endDate() default "";
 
-	int repeatCount() default Integer.MAX_VALUE;
+	int repeatCount() default -1;
 
 }

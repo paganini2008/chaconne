@@ -29,7 +29,7 @@ public class JobTriggerParam {
 
 	public JobTriggerParam() {
 		this.triggerDescription = new TriggerDescription();
-		this.triggerType = TriggerType.NONE;
+		this.triggerType = TriggerType.SIMPLE;
 	}
 
 	public JobTriggerParam(String cronExpression) {

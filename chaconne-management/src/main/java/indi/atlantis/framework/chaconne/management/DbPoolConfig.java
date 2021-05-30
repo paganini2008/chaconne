@@ -1,4 +1,4 @@
-package indi.atlantis.framework.chaconne.scheduler;
+package indi.atlantis.framework.chaconne.management;
 
 import javax.sql.DataSource;
 

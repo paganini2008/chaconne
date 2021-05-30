@@ -95,7 +95,7 @@ public class DetachedModeScheduleManager implements ScheduleManager {
 		final TriggerDescription triggerDescription = triggerDetail.getTriggerDescriptionObject();
 		Date startDate = triggerDetail.getStartDate();
 		switch (triggerDetail.getTriggerType()) {
-		case NONE:
+		case SIMPLE:
 			if (startDate != null) {
 				return scheduler.schedule(job, attachment, startDate);
 			} else {
@@ -127,7 +127,7 @@ public class DetachedModeScheduleManager implements ScheduleManager {
 		final Dependency dependency = triggerDetail.getTriggerDescriptionObject().getDependency();
 		Date startDate = triggerDetail.getStartDate();
 		switch (dependency.getTriggerType()) {
-		case NONE:
+		case SIMPLE:
 			if (startDate != null) {
 				return scheduler.schedule(job, attachment, startDate);
 			} else {

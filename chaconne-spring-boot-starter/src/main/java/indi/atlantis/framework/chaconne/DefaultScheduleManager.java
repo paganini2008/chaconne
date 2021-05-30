@@ -85,7 +85,7 @@ public class DefaultScheduleManager implements ScheduleManager {
 			return scheduler.scheduleWithDependency(job, dependency.getDependentKeys());
 		} else if (dependency.getDependencyType() == DependencyType.PARALLEL) {
 			switch (dependency.getTriggerType()) {
-			case NONE:
+			case SIMPLE:
 				if (startDate != null) {
 					return scheduler.schedule(job, attachment, startDate);
 				} else {
@@ -118,7 +118,7 @@ public class DefaultScheduleManager implements ScheduleManager {
 		final TriggerDescription triggerDescription = triggerDetail.getTriggerDescriptionObject();
 		Date startDate = triggerDetail.getStartDate();
 		switch (triggerDetail.getTriggerType()) {
-		case NONE:
+		case SIMPLE:
 			if (startDate != null) {
 				return scheduler.schedule(job, attachment, startDate);
 			} else {

@@ -64,13 +64,13 @@ public class TriggerDescription implements Serializable {
 		private @Nullable Periodic periodic;
 
 		public Dependency() {
-			this.triggerType = TriggerType.NONE;
+			this.triggerType = TriggerType.SIMPLE;
 		}
 
 		public Dependency(JobKey[] dependentKeys, DependencyType dependencyType) {
 			this.dependentKeys = dependentKeys;
 			this.dependencyType = dependencyType;
-			this.triggerType = TriggerType.NONE;
+			this.triggerType = TriggerType.SIMPLE;
 		}
 
 		public Dependency(JobKey[] dependentKeys, JobKey[] subJobKeys, DependencyType dependencyType, Float completionRate,

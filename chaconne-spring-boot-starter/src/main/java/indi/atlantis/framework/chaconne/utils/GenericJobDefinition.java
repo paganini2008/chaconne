@@ -160,11 +160,13 @@ public class GenericJobDefinition implements JobDefinition {
 		param.setCompletionRate(completionRate);
 
 		JobTriggerParam triggerParam = new JobTriggerParam();
-		triggerParam.setTriggerType(trigger.getTriggerType());
-		triggerParam.setTriggerDescription(trigger.getTriggerDescription());
-		triggerParam.setStartDate(trigger.getStartDate());
-		triggerParam.setEndDate(trigger.getEndDate());
-		triggerParam.setRepeatCount(trigger.getRepeatCount());
+		if (trigger != null) {
+			triggerParam.setTriggerType(trigger.getTriggerType());
+			triggerParam.setTriggerDescription(trigger.getTriggerDescription());
+			triggerParam.setStartDate(trigger.getStartDate());
+			triggerParam.setEndDate(trigger.getEndDate());
+			triggerParam.setRepeatCount(trigger.getRepeatCount());
+		}
 		param.setTrigger(triggerParam);
 
 		return param;

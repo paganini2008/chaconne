@@ -19,7 +19,7 @@ import indi.atlantis.framework.chaconne.model.TriggerDescription.Periodic;
  */
 public enum TriggerType implements EnumConstant {
 
-	NONE(0, "None") {
+	SIMPLE(0, "Simple") {
 
 		@Override
 		public TriggerDescription getTriggerDescription() {

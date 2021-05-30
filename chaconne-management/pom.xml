@@ -10,10 +10,10 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>chaconne-scheduler</artifactId>
+	<artifactId>chaconne-management</artifactId>
 	<packaging>jar</packaging>
 
-	<name>chaconne-scheduler</name>
+	<name>chaconne-management</name>
 	<url>https://github.com/paganini2008/chaconne</url>
 
 	<properties>

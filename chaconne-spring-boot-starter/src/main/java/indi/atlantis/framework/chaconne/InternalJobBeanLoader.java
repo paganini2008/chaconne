@@ -27,10 +27,11 @@ public class InternalJobBeanLoader implements JobBeanLoader {
 	@Override
 	public Job loadJobBean(JobKey jobKey) throws Exception {
 		final String jobClassName = jobKey.getJobClassName();
-		if (ClassUtils.isPresent(jobClassName)) {
+		if (!ClassUtils.isPresent(jobClassName)) {
 			if (log.isTraceEnabled()) {
 				log.trace("Can not load JobClass '" + jobClassName + "' to create job instance.");
 			}
+			return null;
 		}
 		Class<?> jobClass = ClassUtils.forName(jobClassName);
 		JobDetail jobDetail = jobManager.getJobDetail(jobKey, true);
@@ -43,17 +44,13 @@ public class InternalJobBeanLoader implements JobBeanLoader {
 
 	private Job getOrCreateJobBean(Class<?> jobClass, JobKey jobKey, JobDetail jobDetail) {
 		if (Job.class.isAssignableFrom(jobClass)) {
-			String jobName = jobKey.getJobName();
-			Job job = (Job) ApplicationContextUtils.getBean(jobName, jobClass);
-			if (job == null) {
-				job = (Job) ApplicationContextUtils.getBean(jobClass, bean -> {
-					return ((Job) bean).getJobName().equals(jobName);
-				});
-			}
-			return job;
-		} else if (NotManagedJob.class.isAssignableFrom(jobClass)
-				|| jobClass.isAnnotationPresent(indi.atlantis.framework.chaconne.annotations.Job.class)) {
-			Object jobBean = ApplicationContextUtils.getOrCreateBean(jobClass);
+			return JobUtils.getJobBean(jobKey.getJobName(), jobClass);
+		} else if (NotManagedJob.class.isAssignableFrom(jobClass)) {
+			NotManagedJob jobBean = (NotManagedJob) ApplicationContextUtils.getOrCreateBean(jobClass);
+			return JobBeanProxyUtils.getBeanProxy(jobBean, jobDetail);
+		} else if (jobClass.isAnnotationPresent(indi.atlantis.framework.chaconne.annotations.Job.class)) {
+			Object targetBean = ApplicationContextUtils.getBean(jobClass);
+			NotManagedJob jobBean = new AnnotatedJobBeanProxy(targetBean);
 			return JobBeanProxyUtils.getBeanProxy(jobBean, jobDetail);
 		}
 		throw new IllegalJobStateException(jobKey, "Unsupported job class: " + jobClass.getName());

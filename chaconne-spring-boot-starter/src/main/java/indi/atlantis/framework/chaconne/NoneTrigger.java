@@ -37,7 +37,7 @@ public class NoneTrigger implements Trigger {
 
 	@Override
 	public TriggerType getTriggerType() {
-		return TriggerType.NONE;
+		return TriggerType.SIMPLE;
 	}
 
 	@Override

@@ -22,16 +22,16 @@ import org.springframework.stereotype.Component;
 @Component
 public @interface Job {
 
-	String name();
+	String name() default "";
 
-	String description();
+	String description() default "";
 
-	int retries();
+	int retries() default 0;
 
-	int weight();
+	int weight() default 100;
 
-	long timeout();
+	long timeout() default -1L;
 
-	String email();
+	String email() default "";
 
 }

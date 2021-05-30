@@ -30,7 +30,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import com.github.paganini2008.devtools.StringUtils;
 
-import indi.atlantis.framework.chaconne.console.UIModel;
+import indi.atlantis.framework.chaconne.console.Result;
 import indi.atlantis.framework.chaconne.console.WebUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -184,8 +184,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 				startTime = (Long) servletRequest.getAttribute("sign");
 				log.trace("Path: " + servletRequest.getServletPath() + " take(ms): " + (System.currentTimeMillis() - startTime));
 			}
-			if (body instanceof UIModel) {
-				UIModel<?> resultVO = (UIModel<?>) body;
+			if (body instanceof Result) {
+				Result<?> resultVO = (Result<?>) body;
 				resultVO.setElapsed(startTime > 0 ? System.currentTimeMillis() - startTime : 0);
 				resultVO.setRequestPath(servletRequest.getServletPath());
 			}

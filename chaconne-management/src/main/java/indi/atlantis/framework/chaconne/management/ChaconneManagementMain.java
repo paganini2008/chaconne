@@ -1,4 +1,4 @@
-package indi.atlantis.framework.chaconne.scheduler;
+package indi.atlantis.framework.chaconne.management;
 
 import java.io.File;
 
@@ -13,7 +13,7 @@ import indi.atlantis.framework.chaconne.cluster.EnableChaconneDetachedMode;
 
 /**
  * 
- * ChaconneSchedulerMain
+ * ChaconneManagementMain
  * 
  * @author Fred Feng
  *
@@ -21,7 +21,7 @@ import indi.atlantis.framework.chaconne.cluster.EnableChaconneDetachedMode;
  */
 @EnableChaconneDetachedMode(DetachedMode.PRODUCER)
 @SpringBootApplication
-public class ChaconneSchedulerMain {
+public class ChaconneManagementMain {
 
 	static {
 		System.setProperty("spring.devtools.restart.enabled", "false");
@@ -33,7 +33,7 @@ public class ChaconneSchedulerMain {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(ChaconneSchedulerMain.class, args);
+		SpringApplication.run(ChaconneManagementMain.class, args);
 		System.out.println(Env.getPid());
 	}
 }

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 /**
  * 
- * UIModel
+ * Result
  * 
  * @author Fred Feng
  *
@@ -13,7 +13,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class UIModel<T> {
+public class Result<T> {
 	
 	private boolean success;
 	private String msg;
@@ -23,23 +23,23 @@ public class UIModel<T> {
 	private long elapsed;
 	private String requestPath;
 	
-	public UIModel() {
+	public Result() {
 	}
 	
-	public static <T> UIModel<T> success(T data){
+	public static <T> Result<T> success(T data){
 		return success(data, "ok");
 	}
 
-	public static <T> UIModel<T> success(T data, String msg) {
-		UIModel<T> model = new UIModel<T>();
+	public static <T> Result<T> success(T data, String msg) {
+		Result<T> model = new Result<T>();
 		model.setSuccess(true);
 		model.setMsg(msg);
 		model.setData(data);
 		return model;
 	}
 
-	public static <T> UIModel<T> failure(String msg) {
-		UIModel<T> model = new UIModel<T>();
+	public static <T> Result<T> failure(String msg) {
+		Result<T> model = new Result<T>();
 		model.setSuccess(false);
 		model.setMsg(msg);
 		return model;

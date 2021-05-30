@@ -56,8 +56,8 @@ public class BeanAnnotationAwareProcessor implements BeanPostProcessor {
 	}
 
 	private JobDefinition parseObject(Object bean, String beanName) {
-		Class<?> jobBeanClass = bean.getClass();
-		Job job = jobBeanClass.getAnnotation(Job.class);
+		final Class<?> jobBeanClass = bean.getClass();
+		final Job job = jobBeanClass.getAnnotation(Job.class);
 		Trigger trigger = jobBeanClass.getAnnotation(Trigger.class);
 		String jobName = StringUtils.isNotBlank(job.name()) ? job.name() : beanName;
 		GenericJobDefinition.Builder builder = GenericJobDefinition.newJob(clusterName, applicationName, jobName, jobBeanClass);
