@@ -22,7 +22,7 @@ import indi.atlantis.framework.tridenter.utils.BeanLifeCycle;
  *
  * @since 1.0
  */
-public class JobDeadlineNotification implements JobListener, Executable, BeanLifeCycle {
+public class JobDeadlineNotification extends JobConditionalTermination implements Executable, BeanLifeCycle {
 
 	private final Map<JobKey, Date> deadlines = new ConcurrentHashMap<JobKey, Date>();
 	private Timer timer;
@@ -37,12 +37,13 @@ public class JobDeadlineNotification implements JobListener, Executable, BeanLif
 	}
 
 	@Override
-	public void beforeRun(long traceId, JobKey jobKey, Object attachment, Date startDate) {
+	protected boolean apply(long traceId, JobKey jobKey, Object attachment, Date startDate) {
 		Date theDeadline = deadlines.get(jobKey);
 		if (theDeadline != null && theDeadline.before(startDate)) {
 			deadlines.remove(jobKey);
-			throw new JobTerminationException(jobKey, "Job '" + jobKey + "' has terminated on deadline: " + theDeadline);
+			return true;
 		}
+		return false;
 	}
 
 	@Override

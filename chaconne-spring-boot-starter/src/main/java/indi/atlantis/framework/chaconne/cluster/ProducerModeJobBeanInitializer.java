@@ -39,13 +39,21 @@ public class ProducerModeJobBeanInitializer implements JobBeanInitializer {
 	@Autowired
 	private JobBeanLoader jobBeanLoader;
 
+	@Value("${atlantis.framework.chaconne.producer.job.clusterNames:}")
+	private String clusterNames;
+
 	@Value("${atlantis.framework.chaconne.producer.job.groupNames:}")
 	private String groupNames;
 
 	public void initializeJobBeans() throws Exception {
-		ResultSetSlice<Map<String, Object>> resultSetSlice = StringUtils.isNotBlank(groupNames)
-				? jobQueryDao.selectJobDetailsByGroupNames(groupNames)
-				: jobQueryDao.selectAllJobDetails();
+		ResultSetSlice<Map<String, Object>> resultSetSlice;
+		if (StringUtils.isNotBlank(clusterNames)) {
+			resultSetSlice = jobQueryDao.selectJobDetailsByClusterNames(clusterNames);
+		} else if (StringUtils.isNotBlank(groupNames)) {
+			resultSetSlice = jobQueryDao.selectJobDetailsByGroupNames(groupNames);
+		} else {
+			resultSetSlice = jobQueryDao.selectAllJobDetails();
+		}
 		PageResponse<Map<String, Object>> pageResponse = resultSetSlice.list(PageRequest.of(1, 10));
 		List<Map<String, Object>> dataList;
 		JobKey jobKey;

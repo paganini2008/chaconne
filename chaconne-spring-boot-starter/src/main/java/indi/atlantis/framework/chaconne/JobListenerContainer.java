@@ -30,28 +30,28 @@ public class JobListenerContainer {
 	private final Map<JobKey, JobListener> listeners = Collections.synchronizedMap(new TreeMap<JobKey, JobListener>());
 
 	public void addListener(JobKey jobKey, JobListener listener) {
-		Assert.isNull(listener, "Nullable JobRuntimeListener");
+		Assert.isNull(listener, "Nullable JobListener");
 		if (jobKey != null) {
 			if (!listeners.containsKey(jobKey)) {
 				listeners.putIfAbsent(jobKey, listener);
-				log.info("Add JobRuntimeListener '{}' to job '{}'", listener, jobKey);
+				log.info("Add JobListener '{}' to job '{}'", listener, jobKey);
 			}
 		} else {
 			if (globalListeners.add(listener)) {
-				log.info("Add JobRuntimeListener '{}'", listener);
+				log.info("Add JobListener '{}'", listener);
 			}
 		}
 	}
 
 	public void removeListener(JobKey jobKey, JobListener listener) {
-		Assert.isNull(listener, "Nullable JobRuntimeListener");
+		Assert.isNull(listener, "Nullable JobListener");
 		if (jobKey != null) {
 			if (listeners.remove(jobKey, listener)) {
-				log.info("Remove JobRuntimeListener '{}' from job '{}'", listener, jobKey);
+				log.info("Remove JobListener '{}' from job '{}'", listener, jobKey);
 			}
 		} else {
 			if (globalListeners.remove(listener)) {
-				log.info("Remove JobRuntimeListener '{}'", listener);
+				log.info("Remove JobListener '{}'", listener);
 			}
 		}
 	}

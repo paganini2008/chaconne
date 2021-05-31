@@ -26,6 +26,7 @@ public interface JobQueryDao {
 	public static final String DEF_SELECT_JOB_SERVER_DETAIL = "select * from chac_job_server_detail where cluster_name=:clusterName";
 	public static final String DEF_SELECT_CONTEXT_PATH = "select distinct context_path from chac_job_server_detail where cluster_name=:clusterName";
 	public static final String DEF_SELECT_ALL_JOB_DETAIL = "select * from chac_job_detail";
+	public static final String DEF_SELECT_JOB_DETAIL_BY_CLUSTER_NAMES = "select * from chac_job_detail where cluster_name in (:clusterNames)";
 	public static final String DEF_SELECT_JOB_DETAIL_BY_GROUP_NAMES = "select * from chac_job_detail where group_name in (:groupNames)";
 	public static final String DEF_SELECT_AVAILABLE_JOB_DETAIL = "select a.* from chac_job_detail a join chac_job_runtime_detail b on a.job_id=b.job_id where b.job_state<4";
 	public static final String DEF_SELECT_JOB_ID = "select job_id from chac_job_detail where cluster_name=:clusterName and group_name=:groupName and job_name=:jobName and job_class_name=:jobClassName";
@@ -43,6 +44,7 @@ public interface JobQueryDao {
 	public static final String DEF_SELECT_JOB_RELATIONS = "select * from chac_job_detail where job_id in (select job_id from chac_job_dependency where dependent_job_id=:dependentJobId and dependency_type=:dependencyType)";
 
 	public static final String DEF_SELECT_JOB_TRACE = "select * from chac_job_trace where job_id=:jobId and execution_time between :startDate and :endDate";
+	public static final String DEF_SELECT_JOB_RUNNING_COUNT = "select count(1) from chac_job_trace where job_id=:jobId and running_state=1";
 	public static final String DEF_SELECT_JOB_INFO = "select a.*,b.job_state,b.last_running_state,b.last_execution_time,b.last_completion_time,b.next_execution_time,c.trigger_type,c.trigger_description,c.start_date,c.end_date from chac_job_detail a join chac_job_runtime_detail b on b.job_id=a.job_id join chac_job_trigger_detail c on c.job_id=b.job_id where a.cluster_name=:clusterName order by create_date desc";
 	public static final String DEF_SELECT_JOB_DETAIL = "select * from chac_job_detail where cluster_name=:clusterName and group_name=:groupName and job_name=:jobName and job_class_name=:jobClassName limit 1";
 	public static final String DEF_SELECT_JOB_LOG = "select * from chac_job_log where job_id=:jobId and trace_id=:traceId";
@@ -60,6 +62,9 @@ public interface JobQueryDao {
 
 	@Select(DEF_SELECT_ALL_JOB_DETAIL)
 	ResultSetSlice<Map<String, Object>> selectAllJobDetails();
+
+	@Select(DEF_SELECT_JOB_DETAIL_BY_CLUSTER_NAMES)
+	ResultSetSlice<Map<String, Object>> selectJobDetailsByClusterNames(@Arg("clusterNames") String clusterNames);
 
 	@Select(DEF_SELECT_JOB_DETAIL_BY_GROUP_NAMES)
 	ResultSetSlice<Map<String, Object>> selectJobDetailsByGroupNames(@Arg("groupNames") String groupNames);
@@ -111,6 +116,9 @@ public interface JobQueryDao {
 	@Select(DEF_SELECT_JOB_TRACE)
 	ResultSetSlice<Map<String, Object>> selectJobTrace(@Arg("jobId") int jobId, @Arg("startDate") Date startDate,
 			@Arg("endDate") Date endDate);
+
+	@Get(value = DEF_SELECT_JOB_RUNNING_COUNT, javaType = true)
+	Integer selectJobRunningCount(@Arg("jobId") int jobId);
 
 	@Select(DEF_SELECT_JOB_INFO)
 	ResultSetSlice<Map<String, Object>> selectJobInfo(@Arg("clusterName") String clusterName);
