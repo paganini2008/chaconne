@@ -1,7 +1,9 @@
 package indi.atlantis.framework.chaconne;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +101,10 @@ public class BeanAnnotationAwareProcessor implements BeanPostProcessor {
 					builder.setSubJobKeys(subJobKeys.toArray(new indi.atlantis.framework.chaconne.JobKey[0]));
 				}
 			}
-
+			if (trigger.delay() > 0) {
+				long amount = trigger.schedulingUnit().getTimeUnit().convert(trigger.delay(), TimeUnit.SECONDS);
+				triggerBuilder.setStartDate(DateUtils.addSeconds(new Date(), (int) amount));
+			}
 			if (StringUtils.isNotBlank(trigger.startDate())) {
 				triggerBuilder.setStartDate(DateUtils.parse(trigger.startDate(), datePatterns));
 			}

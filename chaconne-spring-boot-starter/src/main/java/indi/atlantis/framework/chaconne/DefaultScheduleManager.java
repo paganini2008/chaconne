@@ -78,6 +78,9 @@ public class DefaultScheduleManager implements ScheduleManager {
 	private JobFuture scheduleDependency(JobKey jobKey, Job job, String attachment, JobTriggerDetail triggerDetail) {
 		final Dependency dependency = triggerDetail.getTriggerDescriptionObject().getDependency();
 		Date startDate = triggerDetail.getStartDate();
+		if (startDate != null && startDate.before(new Date())) {
+			startDate = null;
+		}
 		if (dependency.getDependencyType() == DependencyType.SERIAL || dependency.getDependencyType() == DependencyType.MIXED) {
 			if (startDate != null) {
 				return scheduler.scheduleWithDependency(job, dependency.getDependentKeys(), startDate);
@@ -117,6 +120,9 @@ public class DefaultScheduleManager implements ScheduleManager {
 	private JobFuture scheduleJob(JobKey jobKey, Job job, String attachment, JobTriggerDetail triggerDetail) {
 		final TriggerDescription triggerDescription = triggerDetail.getTriggerDescriptionObject();
 		Date startDate = triggerDetail.getStartDate();
+		if (startDate != null && startDate.before(new Date())) {
+			startDate = null;
+		}
 		switch (triggerDetail.getTriggerType()) {
 		case SIMPLE:
 			if (startDate != null) {

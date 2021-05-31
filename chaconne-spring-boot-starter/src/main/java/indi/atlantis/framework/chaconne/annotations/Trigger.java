@@ -32,6 +32,8 @@ public @interface Trigger {
 
 	boolean fixedRate() default false;
 
+	long delay() default 0L;
+
 	String startDate() default "";
 
 	String endDate() default "";

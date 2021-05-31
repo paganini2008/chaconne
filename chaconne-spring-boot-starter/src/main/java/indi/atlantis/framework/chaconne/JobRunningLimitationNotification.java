@@ -31,8 +31,11 @@ public class JobRunningLimitationNotification extends JobConditionalTermination 
 			throw ExceptionUtils.wrapExeception(e);
 		}
 		int repeatCount = jobDetail.getJobTriggerDetail().getRepeatCount();
-		int runningCount = jobQueryDao.selectJobRunningCount(jobDetail.getJobId());
-		return repeatCount > 0 && runningCount >= repeatCount;
+		if (repeatCount > 0) {
+			int runningCount = jobQueryDao.selectJobRunningCount(jobDetail.getJobId());
+			return runningCount >= repeatCount;
+		}
+		return false;
 	}
 
 }

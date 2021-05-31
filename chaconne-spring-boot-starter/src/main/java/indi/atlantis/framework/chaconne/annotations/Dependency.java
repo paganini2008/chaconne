@@ -19,9 +19,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Dependency {
 
-	JobKey[] dependentKeys();
+	JobKey[] dependentKeys() default {};
 
-	JobKey[] subJobKeys();
+	JobKey[] subJobKeys() default {};
 
 	float completionRate() default -1;
 
