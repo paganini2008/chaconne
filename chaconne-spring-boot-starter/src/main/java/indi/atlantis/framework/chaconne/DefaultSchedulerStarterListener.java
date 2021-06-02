@@ -65,6 +65,7 @@ public class DefaultSchedulerStarterListener
 	public void destroy() {
 		if (timer != null) {
 			timer.cancel();
+			timer = null;
 		}
 	}
 

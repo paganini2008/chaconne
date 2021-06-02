@@ -7,6 +7,7 @@ import java.util.Map;
 import com.github.paganini2008.devtools.jdbc.ResultSetSlice;
 import com.github.paganini2008.springworld.jdbc.annotations.Arg;
 import com.github.paganini2008.springworld.jdbc.annotations.Dao;
+import com.github.paganini2008.springworld.jdbc.annotations.Example;
 import com.github.paganini2008.springworld.jdbc.annotations.Get;
 import com.github.paganini2008.springworld.jdbc.annotations.Query;
 import com.github.paganini2008.springworld.jdbc.annotations.Select;
@@ -81,7 +82,8 @@ public interface JobQueryDao {
 	List<Map<String, Object>> selectJobTriggerDeadlines();
 
 	@Query(DEF_SELECT_JOB_KEYS_BY_TRIGGER_TYPE)
-	List<Map<String, Object>> selectJobKeysByTriggerType(@Sql String whereClause, @Arg("triggerType") int triggerType);
+	List<Map<String, Object>> selectJobKeysByTriggerType(@Sql String whereClause, @Example Map<String, Object> kwargs,
+			@Arg("triggerType") int triggerType);
 
 	@Query(DEF_SELECT_JOB_DETAIL_BY_GROUP_NAME)
 	List<Map<String, Object>> selectJobDetailsByGroupName(@Arg("clusterName") String clusterName, @Arg("groupName") String groupName);

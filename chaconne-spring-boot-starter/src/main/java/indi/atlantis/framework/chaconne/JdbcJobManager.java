@@ -436,18 +436,24 @@ public class JdbcJobManager implements JobManager {
 	@Override
 	public JobKey[] getJobKeys(JobKeyQuery jobQuery) throws SQLException {
 		Set<JobKey> jobKeys = new TreeSet<JobKey>();
+		Map<String, Object> kwargs = new HashMap<>();
 		StringBuilder sql = new StringBuilder();
 		if (StringUtils.isNotBlank(jobQuery.getClusterName())) {
 			sql.append(" and a.cluster_name=:clusterName");
+			kwargs.put("clusterName", jobQuery.getClusterName());
 		} else if (StringUtils.isNotBlank(jobQuery.getClusterNames())) {
 			sql.append(" and a.cluster_name in (:clusterNames)");
+			kwargs.put("clusterNames", jobQuery.getClusterNames());
 		}
 		if (StringUtils.isNotBlank(jobQuery.getGroupName())) {
 			sql.append(" and a.group_name=:groupName");
+			kwargs.put("groupName", jobQuery.getGroupName());
 		} else if (StringUtils.isNotBlank(jobQuery.getGroupNames())) {
 			sql.append(" and a.group_name in (:groupNames)");
+			kwargs.put("groupNames", jobQuery.getGroupNames());
 		}
-		List<Map<String, Object>> dataList = jobQueryDao.selectJobKeysByTriggerType(sql.toString(), jobQuery.getTriggerType().getValue());
+		List<Map<String, Object>> dataList = jobQueryDao.selectJobKeysByTriggerType(sql.toString(), kwargs,
+				jobQuery.getTriggerType().getValue());
 		if (CollectionUtils.isNotEmpty(dataList)) {
 			for (Map<String, Object> data : dataList) {
 				jobKeys.add(JobKey.of(data));
