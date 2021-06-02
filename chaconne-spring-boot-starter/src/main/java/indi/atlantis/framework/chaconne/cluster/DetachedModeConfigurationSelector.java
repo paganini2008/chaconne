@@ -27,7 +27,7 @@ public class DetachedModeConfigurationSelector implements ImportSelector, Enviro
 		AnnotationAttributes annotationAttributes = AnnotationAttributes
 				.fromMap(importingClassMetadata.getAnnotationAttributes(EnableChaconneDetachedMode.class.getName()));
 		DetachedMode detachedMode = annotationAttributes.getEnum("value");
-		((ConfigurableEnvironment) environment).getPropertySources().addLast(new MapPropertySource("jobhub:config:detachedMode",
+		((ConfigurableEnvironment) environment).getPropertySources().addLast(new MapPropertySource("chaconne:config:detachedMode",
 				Collections.singletonMap("atlantis.framework.chaconne.detachedMode", detachedMode.getRole())));
 		return new String[] { DetachedModeConfiguration.class.getName() };
 	}

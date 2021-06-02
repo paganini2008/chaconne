@@ -58,7 +58,7 @@ public class JobListenerContainer {
 
 	public void beforeRun(long traceId, JobKey jobKey, Job job, Object attachment, Date startDate) {
 		if (log.isTraceEnabled()) {
-			log.trace("Trigger all JobRuntimeListeners on before running job '{}'", jobKey);
+			log.trace("Trigger all JobListeners on before running job '{}'", jobKey);
 		}
 		for (JobListener listener : globalListeners) {
 			listener.beforeRun(traceId, jobKey, attachment, startDate);
@@ -80,7 +80,7 @@ public class JobListenerContainer {
 	public void afterRun(long traceId, JobKey jobKey, Job job, Object attachment, Date startDate, RunningState runningState, Object result,
 			Throwable reason, int retries) {
 		if (log.isTraceEnabled()) {
-			log.trace("Trigger all JobRuntimeListeners on after running job '{}'", jobKey);
+			log.trace("Trigger all JobListeners on after running job '{}'", jobKey);
 		}
 		Class<?>[] listenerClasses = job.getJobListeners();
 		if (ArrayUtils.isNotEmpty(listenerClasses)) {

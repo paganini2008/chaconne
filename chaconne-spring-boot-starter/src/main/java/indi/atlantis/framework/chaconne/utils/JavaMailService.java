@@ -37,7 +37,7 @@ public class JavaMailService {
 	@Value("${atlantis.framework.chaconne.mail.username}")
 	private String defaultMailSender;
 
-	@Value("${atlantis.framework.chaconne.mail.default.subject:Jobhub Email Warning}")
+	@Value("${atlantis.framework.chaconne.mail.default.subject:Job Email Warning}")
 	private String defaultMailSubject;
 
 	@Value("${atlantis.framework.chaconne.mail.default.recipients:}")

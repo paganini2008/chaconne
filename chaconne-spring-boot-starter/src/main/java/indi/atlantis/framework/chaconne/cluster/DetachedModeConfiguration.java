@@ -178,6 +178,7 @@ public class DetachedModeConfiguration {
 			return new BeanExtensionAwareProcessor();
 		}
 
+		@DependsOn("schemaUpdater")
 		@Bean
 		public BeanAnnotationAwareProcessor beanAnnotationAwareProcessor() {
 			return new BeanAnnotationAwareProcessor();
