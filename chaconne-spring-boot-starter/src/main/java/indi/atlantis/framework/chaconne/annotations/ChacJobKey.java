@@ -6,11 +6,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.stereotype.Component;
-
 /**
  * 
- * Job
+ * ChacJobKey
  * 
  * @author Fred Feng
  *
@@ -18,20 +16,15 @@ import org.springframework.stereotype.Component;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Component
-public @interface Job {
+@Target(ElementType.TYPE_PARAMETER)
+public @interface ChacJobKey {
 
-	String name() default "";
+	String cluster() default "";
 
-	String description() default "";
+	String group() default "";
 
-	int retries() default 0;
+	String name();
 
-	int weight() default 100;
-
-	long timeout() default -1L;
-
-	String email() default "";
+	String className();
 
 }

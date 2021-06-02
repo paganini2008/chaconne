@@ -11,7 +11,7 @@ import indi.atlantis.framework.chaconne.TriggerType;
 
 /**
  * 
- * Trigger
+ * ChacTrigger
  * 
  * @author Fred Feng
  *
@@ -20,7 +20,7 @@ import indi.atlantis.framework.chaconne.TriggerType;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Trigger {
+public @interface ChacTrigger {
 
 	TriggerType triggerType() default TriggerType.CRON;
 

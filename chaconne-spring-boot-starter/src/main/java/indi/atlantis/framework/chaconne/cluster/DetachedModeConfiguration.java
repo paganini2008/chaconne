@@ -50,7 +50,7 @@ import indi.atlantis.framework.chaconne.JobAdminController;
 import indi.atlantis.framework.chaconne.JobBeanInitializer;
 import indi.atlantis.framework.chaconne.JobBeanLoader;
 import indi.atlantis.framework.chaconne.JobDeadlineNotification;
-import indi.atlantis.framework.chaconne.JobDependencyFutureListener;
+import indi.atlantis.framework.chaconne.JobDependencyUpdater;
 import indi.atlantis.framework.chaconne.JobExecutor;
 import indi.atlantis.framework.chaconne.JobFutureHolder;
 import indi.atlantis.framework.chaconne.JobIdCache;
@@ -178,6 +178,11 @@ public class DetachedModeConfiguration {
 			return new BeanExtensionAwareProcessor();
 		}
 
+		@Bean
+		public BeanAnnotationAwareProcessor beanAnnotationAwareProcessor() {
+			return new BeanAnnotationAwareProcessor();
+		}
+
 		@DependsOn("schemaUpdater")
 		@Bean
 		public JobBeanInitializer producerModeJobBeanInitializer() {
@@ -214,7 +219,7 @@ public class DetachedModeConfiguration {
 		}
 
 		@Bean
-		public SerialDependencyListener jobDependencyDetector() {
+		public SerialDependencyListener serialDependencyListener() {
 			return new SerialDependencyListener();
 		}
 
@@ -255,8 +260,8 @@ public class DetachedModeConfiguration {
 		}
 
 		@Bean
-		public JobDependencyFutureListener jobDependencyFutureListener() {
-			return new JobDependencyFutureListener();
+		public JobDependencyUpdater jobDependencyUpdater() {
+			return new RemoteJobDependencyUpdater();
 		}
 
 		@Bean

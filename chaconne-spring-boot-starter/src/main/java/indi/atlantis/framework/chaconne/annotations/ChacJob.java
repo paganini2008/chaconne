@@ -6,9 +6,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.stereotype.Component;
+
 /**
  * 
- * Dependency
+ * ChacJob
  * 
  * @author Fred Feng
  *
@@ -17,12 +19,19 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Dependency {
+@Component
+public @interface ChacJob {
 
-	JobKey[] dependentKeys() default {};
+	String name() default "";
 
-	JobKey[] subJobKeys() default {};
+	String description() default "";
 
-	float completionRate() default -1;
+	int retries() default 0;
+
+	int weight() default 100;
+
+	long timeout() default -1L;
+
+	String email() default "";
 
 }

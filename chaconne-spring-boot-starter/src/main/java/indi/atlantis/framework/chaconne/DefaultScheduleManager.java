@@ -79,6 +79,7 @@ public class DefaultScheduleManager implements ScheduleManager {
 		final Dependency dependency = triggerDetail.getTriggerDescriptionObject().getDependency();
 		Date startDate = triggerDetail.getStartDate();
 		if (startDate != null && startDate.before(new Date())) {
+			log.warn("StartDate is past and reset to null. JobKey: {}", jobKey);
 			startDate = null;
 		}
 		if (dependency.getDependencyType() == DependencyType.SERIAL || dependency.getDependencyType() == DependencyType.MIXED) {
@@ -121,6 +122,7 @@ public class DefaultScheduleManager implements ScheduleManager {
 		final TriggerDescription triggerDescription = triggerDetail.getTriggerDescriptionObject();
 		Date startDate = triggerDetail.getStartDate();
 		if (startDate != null && startDate.before(new Date())) {
+			log.warn("StartDate is past and reset to null. JobKey: {}", jobKey);
 			startDate = null;
 		}
 		switch (triggerDetail.getTriggerType()) {

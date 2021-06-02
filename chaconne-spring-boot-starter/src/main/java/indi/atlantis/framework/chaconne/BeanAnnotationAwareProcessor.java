@@ -11,14 +11,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
 import com.github.paganini2008.devtools.ArrayUtils;
-import com.github.paganini2008.devtools.ObjectUtils;
 import com.github.paganini2008.devtools.StringUtils;
 import com.github.paganini2008.devtools.date.DateUtils;
 
-import indi.atlantis.framework.chaconne.annotations.Dependency;
-import indi.atlantis.framework.chaconne.annotations.Job;
-import indi.atlantis.framework.chaconne.annotations.JobKey;
-import indi.atlantis.framework.chaconne.annotations.Trigger;
+import indi.atlantis.framework.chaconne.annotations.ChacDependency;
+import indi.atlantis.framework.chaconne.annotations.ChacJob;
+import indi.atlantis.framework.chaconne.annotations.ChacJobKey;
+import indi.atlantis.framework.chaconne.annotations.ChacTrigger;
 import indi.atlantis.framework.chaconne.utils.GenericJobDefinition;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,7 +45,7 @@ public class BeanAnnotationAwareProcessor implements BeanPostProcessor {
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-		if (bean.getClass().isAnnotationPresent(Job.class)) {
+		if (bean.getClass().isAnnotationPresent(ChacJob.class)) {
 			JobDefinition jobDefinition = parseObject(bean, beanName);
 			try {
 				jobManager.persistJob(jobDefinition, null);
@@ -59,8 +58,8 @@ public class BeanAnnotationAwareProcessor implements BeanPostProcessor {
 
 	private JobDefinition parseObject(Object bean, String beanName) {
 		final Class<?> jobBeanClass = bean.getClass();
-		final Job job = jobBeanClass.getAnnotation(Job.class);
-		Trigger trigger = jobBeanClass.getAnnotation(Trigger.class);
+		final ChacJob job = jobBeanClass.getAnnotation(ChacJob.class);
+		ChacTrigger trigger = jobBeanClass.getAnnotation(ChacTrigger.class);
 		String jobName = StringUtils.isNotBlank(job.name()) ? job.name() : beanName;
 		GenericJobDefinition.Builder builder = GenericJobDefinition.newJob(clusterName, applicationName, jobName, jobBeanClass);
 		builder.setDescription(job.description()).setTimeout(job.timeout()).setEmail(job.email()).setRetries(job.retries())
@@ -80,25 +79,27 @@ public class BeanAnnotationAwareProcessor implements BeanPostProcessor {
 				break;
 			}
 			if (triggerType == TriggerType.DEPENDENT) {
-				Dependency dependency = jobBeanClass.getAnnotation(Dependency.class);
+				ChacDependency dependency = jobBeanClass.getAnnotation(ChacDependency.class);
 				builder.setCompletionRate(dependency.completionRate());
-				JobKey[] jobKeys = dependency.dependentKeys();
+				ChacJobKey[] jobKeys = dependency.dependentKeys();
 				if (ArrayUtils.isNotEmpty(jobKeys)) {
-					List<indi.atlantis.framework.chaconne.JobKey> dependentKeys = new ArrayList<>();
-					for (JobKey jobKey : jobKeys) {
-						dependentKeys.add(indi.atlantis.framework.chaconne.JobKey.by(ObjectUtils.toString(jobKey.cluster(), clusterName),
-								ObjectUtils.toString(jobKey.group(), applicationName), jobKey.name(), jobKey.className()));
+					List<JobKey> dependentKeys = new ArrayList<>();
+					for (ChacJobKey jobKey : jobKeys) {
+						dependentKeys.add(JobKey.by((StringUtils.isNotBlank(jobKey.cluster()) ? jobKey.cluster() : clusterName),
+								(StringUtils.isNotBlank(jobKey.group()) ? jobKey.group() : applicationName), jobKey.name(),
+								jobKey.className()));
 					}
-					builder.setDependentKeys(dependentKeys.toArray(new indi.atlantis.framework.chaconne.JobKey[0]));
+					builder.setDependentKeys(dependentKeys.toArray(new JobKey[0]));
 				}
 				jobKeys = dependency.subJobKeys();
 				if (ArrayUtils.isNotEmpty(jobKeys)) {
-					List<indi.atlantis.framework.chaconne.JobKey> subJobKeys = new ArrayList<>();
-					for (JobKey jobKey : jobKeys) {
-						subJobKeys.add(indi.atlantis.framework.chaconne.JobKey.by(ObjectUtils.toString(jobKey.cluster(), clusterName),
-								ObjectUtils.toString(jobKey.group(), applicationName), jobKey.name(), jobKey.className()));
+					List<JobKey> subJobKeys = new ArrayList<>();
+					for (ChacJobKey jobKey : jobKeys) {
+						subJobKeys.add(JobKey.by((StringUtils.isNotBlank(jobKey.cluster()) ? jobKey.cluster() : clusterName),
+								(StringUtils.isNotBlank(jobKey.group()) ? jobKey.group() : applicationName), jobKey.name(),
+								jobKey.className()));
 					}
-					builder.setSubJobKeys(subJobKeys.toArray(new indi.atlantis.framework.chaconne.JobKey[0]));
+					builder.setSubJobKeys(subJobKeys.toArray(new JobKey[0]));
 				}
 			}
 			if (trigger.delay() > 0) {

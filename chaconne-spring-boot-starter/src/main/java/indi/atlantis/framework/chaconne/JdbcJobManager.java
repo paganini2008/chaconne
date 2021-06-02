@@ -15,6 +15,7 @@ import java.util.TreeSet;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.github.paganini2008.devtools.ArrayUtils;
+import com.github.paganini2008.devtools.StringUtils;
 import com.github.paganini2008.devtools.collection.CollectionUtils;
 import com.github.paganini2008.devtools.date.DateUtils;
 import com.github.paganini2008.devtools.jdbc.PageRequest;
@@ -146,6 +147,7 @@ public class JdbcJobManager implements JobManager {
 				switch (dependencyType) {
 				case SERIAL:
 					dependency.setDependentKeys(jobDef.getDependentKeys());
+					dependency.setTriggerType(triggerType);
 					triggerDescription.setCron(null);
 					triggerDescription.setPeriodic(null);
 					break;
@@ -164,6 +166,7 @@ public class JdbcJobManager implements JobManager {
 				case MIXED:
 					dependency.setDependentKeys(jobDef.getDependentKeys());
 					dependency.setSubJobKeys(jobDef.getSubJobKeys());
+					dependency.setTriggerType(triggerType);
 					triggerDescription.setCron(null);
 					triggerDescription.setPeriodic(null);
 					break;
@@ -433,8 +436,18 @@ public class JdbcJobManager implements JobManager {
 	@Override
 	public JobKey[] getJobKeys(JobKeyQuery jobQuery) throws SQLException {
 		Set<JobKey> jobKeys = new TreeSet<JobKey>();
-		List<Map<String, Object>> dataList = jobQueryDao.selectJobKeysByTriggerType(jobQuery.getClusterName(),
-				jobQuery.getTriggerType().getValue());
+		StringBuilder sql = new StringBuilder();
+		if (StringUtils.isNotBlank(jobQuery.getClusterName())) {
+			sql.append(" and a.cluster_name=:clusterName");
+		} else if (StringUtils.isNotBlank(jobQuery.getClusterNames())) {
+			sql.append(" and a.cluster_name in (:clusterNames)");
+		}
+		if (StringUtils.isNotBlank(jobQuery.getGroupName())) {
+			sql.append(" and a.group_name=:groupName");
+		} else if (StringUtils.isNotBlank(jobQuery.getGroupNames())) {
+			sql.append(" and a.group_name in (:groupNames)");
+		}
+		List<Map<String, Object>> dataList = jobQueryDao.selectJobKeysByTriggerType(sql.toString(), jobQuery.getTriggerType().getValue());
 		if (CollectionUtils.isNotEmpty(dataList)) {
 			for (Map<String, Object> data : dataList) {
 				jobKeys.add(JobKey.of(data));

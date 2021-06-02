@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationListener;
 import com.github.paganini2008.springworld.reditools.messager.RedisMessageHandler;
 import com.github.paganini2008.springworld.reditools.messager.RedisMessageSender;
 
+import indi.atlantis.framework.tridenter.LeaderState;
 import indi.atlantis.framework.tridenter.election.ApplicationClusterLeaderEvent;
 import indi.atlantis.framework.tridenter.utils.ApplicationContextUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +27,11 @@ public class SerialDependencyListener implements ApplicationListener<Application
 
 	@Override
 	public void onApplicationEvent(ApplicationClusterLeaderEvent event) {
-		RedisMessageHandler redisMessageHandler = ApplicationContextUtils.instantiateClass(SerialDependencyTrigger.class);
-		redisMessageSender.subscribeChannel(SerialDependencyTrigger.BEAN_NAME, redisMessageHandler);
-		log.info("SerialDependencyTrigger initialize successfully.");
+		if (event.getLeaderState() == LeaderState.UP) {
+			RedisMessageHandler redisMessageHandler = ApplicationContextUtils.instantiateClass(SerialDependencyHandler.class);
+			redisMessageSender.subscribeChannel(SerialDependencyHandler.BEAN_NAME, redisMessageHandler);
+			log.info("SerialDependencyHandler initialize successfully.");
+		}
 	}
 
 }

@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * 
- * JobKey
+ * ChacDependency
  * 
  * @author Fred Feng
  *
@@ -16,15 +16,13 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE_PARAMETER)
-public @interface JobKey {
+@Target(ElementType.TYPE)
+public @interface ChacDependency {
 
-	String cluster() default "";
+	ChacJobKey[] dependentKeys() default {};
 
-	String group() default "";
+	ChacJobKey[] subJobKeys() default {};
 
-	String name();
-
-	String className();
+	float completionRate() default -1;
 
 }

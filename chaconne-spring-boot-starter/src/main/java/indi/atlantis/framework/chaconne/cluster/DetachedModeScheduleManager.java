@@ -94,6 +94,10 @@ public class DetachedModeScheduleManager implements ScheduleManager {
 	private JobFuture scheduleJob(JobKey jobKey, Job job, String attachment, JobTriggerDetail triggerDetail) {
 		final TriggerDescription triggerDescription = triggerDetail.getTriggerDescriptionObject();
 		Date startDate = triggerDetail.getStartDate();
+		if (startDate != null && startDate.before(new Date())) {
+			log.warn("StartDate is past and reset to null. JobKey: {}", jobKey);
+			startDate = null;
+		}
 		switch (triggerDetail.getTriggerType()) {
 		case SIMPLE:
 			if (startDate != null) {
@@ -126,6 +130,10 @@ public class DetachedModeScheduleManager implements ScheduleManager {
 	private JobFuture scheduleDependency(JobKey jobKey, Job job, String attachment, JobTriggerDetail triggerDetail) {
 		final Dependency dependency = triggerDetail.getTriggerDescriptionObject().getDependency();
 		Date startDate = triggerDetail.getStartDate();
+		if (startDate != null && startDate.before(new Date())) {
+			log.warn("StartDate is past and reset to null. JobKey: {}", jobKey);
+			startDate = null;
+		}
 		switch (dependency.getTriggerType()) {
 		case SIMPLE:
 			if (startDate != null) {

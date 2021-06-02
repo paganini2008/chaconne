@@ -16,20 +16,21 @@ import com.github.paganini2008.devtools.multithreads.ThreadUtils;
 import indi.atlantis.framework.chaconne.model.JobKeyQuery;
 import indi.atlantis.framework.chaconne.model.JobTriggerDetail;
 import indi.atlantis.framework.chaconne.model.TriggerDescription.Dependency;
+import indi.atlantis.framework.tridenter.LeaderState;
 import indi.atlantis.framework.tridenter.election.ApplicationClusterLeaderEvent;
 import indi.atlantis.framework.tridenter.utils.BeanLifeCycle;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
- * JobDependencyFutureListener
+ * JobDependencyUpdater
  * 
  * @author Fred Feng
  *
  * @since 1.0
  */
 @Slf4j
-public class JobDependencyFutureListener implements ApplicationListener<ApplicationClusterLeaderEvent>, Executable, BeanLifeCycle {
+public class JobDependencyUpdater implements ApplicationListener<ApplicationClusterLeaderEvent>, Executable, BeanLifeCycle {
 
 	private Timer timer;
 
@@ -48,15 +49,20 @@ public class JobDependencyFutureListener implements ApplicationListener<Applicat
 		return true;
 	}
 
-	private void refresh() {
+	protected JobKey[] selectDependentKeys() throws Exception {
 		JobKeyQuery jobQuery = new JobKeyQuery();
 		jobQuery.setClusterName(clusterName);
 		jobQuery.setTriggerType(TriggerType.DEPENDENT);
-		JobKey[] jobKeys = new JobKey[0];
+		return jobManager.getJobKeys(jobQuery);
+	}
+
+	private void refresh() {
+		JobKey[] jobKeys;
 		try {
-			jobKeys = jobManager.getJobKeys(jobQuery);
+			jobKeys = selectDependentKeys();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
+			return;
 		}
 
 		Map<JobKey, JobKey[]> serialDependencies = new HashMap<JobKey, JobKey[]>();
@@ -149,7 +155,7 @@ public class JobDependencyFutureListener implements ApplicationListener<Applicat
 		final int dependentId = jobManager.getJobId(dependency);
 		Map<String, Object> kwargs = new HashMap<String, Object>();
 		kwargs.put("jobId", jobId);
-		kwargs.put("dependentId", dependentId);
+		kwargs.put("dependentJobId", dependentId);
 		kwargs.put("dependencyType", dependencyType.getValue());
 		jobDao.saveJobDependency(kwargs);
 		log.info("Add job dependency '{}' to jobId {} ok.", dependency, jobId);
@@ -157,7 +163,9 @@ public class JobDependencyFutureListener implements ApplicationListener<Applicat
 
 	@Override
 	public void onApplicationEvent(ApplicationClusterLeaderEvent event) {
-		this.timer = ThreadUtils.scheduleWithFixedDelay(this, 1, TimeUnit.MINUTES);
+		if (event.getLeaderState() == LeaderState.UP) {
+			this.timer = ThreadUtils.scheduleWithFixedDelay(this, 1, TimeUnit.MINUTES);
+		}
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import com.github.paganini2008.devtools.multithreads.ThreadUtils;
 
 import indi.atlantis.framework.chaconne.model.JobDetail;
 import indi.atlantis.framework.chaconne.model.JobRuntimeDetail;
+import indi.atlantis.framework.tridenter.LeaderState;
 import indi.atlantis.framework.tridenter.election.ApplicationClusterLeaderEvent;
 import indi.atlantis.framework.tridenter.utils.BeanLifeCycle;
 import lombok.extern.slf4j.Slf4j;
@@ -131,7 +132,9 @@ public class JobTimeoutResolver implements ApplicationListener<ApplicationCluste
 
 	@Override
 	public void onApplicationEvent(ApplicationClusterLeaderEvent event) {
-		this.timer = ThreadUtils.scheduleWithFixedDelay(this, 1, TimeUnit.MINUTES);
+		if (event.getLeaderState() == LeaderState.UP) {
+			this.timer = ThreadUtils.scheduleWithFixedDelay(this, 1, TimeUnit.MINUTES);
+		}
 	}
 
 	@Override

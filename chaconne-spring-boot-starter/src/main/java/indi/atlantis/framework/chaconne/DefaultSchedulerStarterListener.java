@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationListener;
 import com.github.paganini2008.devtools.multithreads.Executable;
 import com.github.paganini2008.devtools.multithreads.ThreadUtils;
 
+import indi.atlantis.framework.tridenter.LeaderState;
 import indi.atlantis.framework.tridenter.election.ApplicationClusterLeaderEvent;
 import indi.atlantis.framework.tridenter.utils.BeanLifeCycle;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,9 @@ public class DefaultSchedulerStarterListener
 
 	@Override
 	public void onApplicationEvent(ApplicationClusterLeaderEvent event) {
-		timer = ThreadUtils.scheduleWithFixedDelay(this, inititalDelay, checkInterval, TimeUnit.SECONDS);
+		if (event.getLeaderState() == LeaderState.UP) {
+			timer = ThreadUtils.scheduleWithFixedDelay(this, inititalDelay, checkInterval, TimeUnit.SECONDS);
+		}
 	}
 
 	@Override

@@ -237,8 +237,8 @@ public class EmbeddedModeConfiguration {
 	}
 
 	@Bean
-	public JobDependencyFutureListener jobDependencyFutureListener() {
-		return new JobDependencyFutureListener();
+	public JobDependencyUpdater jobDependencyUpdater() {
+		return new JobDependencyUpdater();
 	}
 
 	@Bean

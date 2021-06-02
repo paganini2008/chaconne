@@ -48,7 +48,7 @@ public class InternalJobBeanLoader implements JobBeanLoader {
 		} else if (NotManagedJob.class.isAssignableFrom(jobClass)) {
 			NotManagedJob jobBean = (NotManagedJob) ApplicationContextUtils.getOrCreateBean(jobClass);
 			return JobBeanProxyUtils.getBeanProxy(jobBean, jobDetail);
-		} else if (jobClass.isAnnotationPresent(indi.atlantis.framework.chaconne.annotations.Job.class)) {
+		} else if (jobClass.isAnnotationPresent(indi.atlantis.framework.chaconne.annotations.ChacJob.class)) {
 			Object targetBean = ApplicationContextUtils.getBean(jobClass);
 			NotManagedJob jobBean = new AnnotatedJobBeanProxy(targetBean);
 			return JobBeanProxyUtils.getBeanProxy(jobBean, jobDetail);

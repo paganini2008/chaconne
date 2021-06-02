@@ -11,16 +11,16 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
- * SerialDependencyTrigger
+ * SerialDependencyHandler
  * 
  * @author Fred Feng
  *
  * @since 1.0
  */
 @Slf4j
-public class SerialDependencyTrigger implements RedisMessageHandler {
+public class SerialDependencyHandler implements RedisMessageHandler {
 
-	static final String BEAN_NAME = "serialDependencyTrigger";
+	static final String BEAN_NAME = SerialDependencyHandler.class.getSimpleName();
 
 	@Value("${spring.application.cluster.name}")
 	private String clusterName;

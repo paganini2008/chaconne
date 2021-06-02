@@ -15,6 +15,9 @@ import lombok.Data;
 public class JobKeyQuery {
 
 	private String clusterName;
+	private String groupName;
+	private String clusterNames;
+	private String groupNames;
 	private TriggerType triggerType;
 
 }

@@ -10,6 +10,7 @@ import com.github.paganini2008.springworld.jdbc.annotations.Dao;
 import com.github.paganini2008.springworld.jdbc.annotations.Get;
 import com.github.paganini2008.springworld.jdbc.annotations.Query;
 import com.github.paganini2008.springworld.jdbc.annotations.Select;
+import com.github.paganini2008.springworld.jdbc.annotations.Sql;
 
 /**
  * 
@@ -31,7 +32,7 @@ public interface JobQueryDao {
 	public static final String DEF_SELECT_AVAILABLE_JOB_DETAIL = "select a.* from chac_job_detail a join chac_job_runtime_detail b on a.job_id=b.job_id where b.job_state<4";
 	public static final String DEF_SELECT_JOB_ID = "select job_id from chac_job_detail where cluster_name=:clusterName and group_name=:groupName and job_name=:jobName and job_class_name=:jobClassName";
 	public static final String DEF_SELECT_JOB_TRIGGER_DEADLINE = "select c.cluster_name,c.group_name,c.job_name,c.job_class_name,a.* from chac_job_trigger_detail a join chac_job_runtime_detail b on a.job_id=b.job_id join chac_job_detail c on c.job_id=b.job_id where a.end_date is not null and b.job_state<4";
-	public static final String DEF_SELECT_JOB_KEYS_BY_TRIGGER_TYPE = "select * from chac_job_detail a where a.cluster_name=:clusterName and exists (select job_id from chac_job_trigger_detail where job_id=a.job_id and trigger_type=:triggerType)";
+	public static final String DEF_SELECT_JOB_KEYS_BY_TRIGGER_TYPE = "select * from chac_job_detail a where 1=1 @sql and exists (select job_id from chac_job_trigger_detail where job_id=a.job_id and trigger_type=:triggerType)";
 	public static final String DEF_SELECT_JOB_DETAIL_BY_GROUP_NAME = "select a.* from chac_job_detail a join chac_job_runtime_detail b on a.job_id=b.job_id where a.cluster_name=:clusterName and a.group_name=:groupName and b.job_state<4";
 	public static final String DEF_SELECT_JOB_DETAIL_BY_OTHER_GROUP_NAME = "select a.* from chac_job_detail a join chac_job_runtime_detail b on a.job_id=b.job_id where a.cluster_name=:clusterName and a.group_name!=:groupName and b.job_state<4";
 	public static final String DEF_SELECT_JOB_EXISTS = "select count(*) from chac_job_detail where cluster_name=:clusterName and group_name=:groupName and job_name=:jobName and job_class_name=:jobClassName";
@@ -80,7 +81,7 @@ public interface JobQueryDao {
 	List<Map<String, Object>> selectJobTriggerDeadlines();
 
 	@Query(DEF_SELECT_JOB_KEYS_BY_TRIGGER_TYPE)
-	List<Map<String, Object>> selectJobKeysByTriggerType(@Arg("clusterName") String clusterName, @Arg("triggerType") int triggerType);
+	List<Map<String, Object>> selectJobKeysByTriggerType(@Sql String whereClause, @Arg("triggerType") int triggerType);
 
 	@Query(DEF_SELECT_JOB_DETAIL_BY_GROUP_NAME)
 	List<Map<String, Object>> selectJobDetailsByGroupName(@Arg("clusterName") String clusterName, @Arg("groupName") String groupName);

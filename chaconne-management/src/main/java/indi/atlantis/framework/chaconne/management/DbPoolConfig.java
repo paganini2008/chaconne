@@ -35,10 +35,12 @@ public class DbPoolConfig {
 	private String driverClassName;
 
 	private HikariConfig getDbConfig() {
-		log.info("DbPool JdbcUrl: " + jdbcUrl);
-		log.info("DbPool Username: " + username);
-		log.info("DbPool Password: " + password);
-		log.info("DbPool DriverClassName: " + driverClassName);
+		if (log.isTraceEnabled()) {
+			log.trace("DbPoolConfig JdbcUrl: " + jdbcUrl);
+			log.trace("DbPoolConfig Username: " + username);
+			log.trace("DbPoolConfig Password: " + password);
+			log.trace("DbPoolConfig DriverClassName: " + driverClassName);
+		}
 		final HikariConfig config = new HikariConfig();
 		config.setDriverClassName(driverClassName);
 		config.setJdbcUrl(jdbcUrl);
