@@ -232,6 +232,7 @@ public class JdbcJobManager implements JobManager {
 				switch (dependencyType) {
 				case SERIAL:
 					dependency.setDependentKeys(jobDef.getDependentKeys());
+					dependency.setTriggerType(triggerType);
 					triggerDescription.setCron(null);
 					triggerDescription.setPeriodic(null);
 					break;
@@ -250,6 +251,7 @@ public class JdbcJobManager implements JobManager {
 				case MIXED:
 					dependency.setDependentKeys(jobDef.getDependentKeys());
 					dependency.setSubJobKeys(jobDef.getSubJobKeys());
+					dependency.setTriggerType(triggerType);
 					triggerDescription.setCron(null);
 					triggerDescription.setPeriodic(null);
 					break;

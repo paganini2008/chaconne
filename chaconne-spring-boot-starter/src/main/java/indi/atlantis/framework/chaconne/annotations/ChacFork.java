@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * 
- * ChacDependency
+ * ChacFork
  * 
  * @author Fred Feng
  *
@@ -17,8 +17,10 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface ChacDependency {
+public @interface ChacFork {
 
 	ChacJobKey[] value() default {};
+
+	float completionRate() default -1;
 
 }

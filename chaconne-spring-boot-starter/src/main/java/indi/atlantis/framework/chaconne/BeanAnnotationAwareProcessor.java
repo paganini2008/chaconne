@@ -15,6 +15,7 @@ import com.github.paganini2008.devtools.StringUtils;
 import com.github.paganini2008.devtools.date.DateUtils;
 
 import indi.atlantis.framework.chaconne.annotations.ChacDependency;
+import indi.atlantis.framework.chaconne.annotations.ChacFork;
 import indi.atlantis.framework.chaconne.annotations.ChacJob;
 import indi.atlantis.framework.chaconne.annotations.ChacJobKey;
 import indi.atlantis.framework.chaconne.annotations.ChacTrigger;
@@ -78,30 +79,7 @@ public class BeanAnnotationAwareProcessor implements BeanPostProcessor {
 				triggerBuilder = GenericTrigger.Builder.newTrigger().setTriggerType(triggerType);
 				break;
 			}
-			if (triggerType == TriggerType.DEPENDENT) {
-				ChacDependency dependency = jobBeanClass.getAnnotation(ChacDependency.class);
-				builder.setCompletionRate(dependency.completionRate());
-				ChacJobKey[] jobKeys = dependency.dependentKeys();
-				if (ArrayUtils.isNotEmpty(jobKeys)) {
-					List<JobKey> dependentKeys = new ArrayList<>();
-					for (ChacJobKey jobKey : jobKeys) {
-						dependentKeys.add(JobKey.by((StringUtils.isNotBlank(jobKey.cluster()) ? jobKey.cluster() : clusterName),
-								(StringUtils.isNotBlank(jobKey.group()) ? jobKey.group() : applicationName), jobKey.name(),
-								jobKey.className()));
-					}
-					builder.setDependentKeys(dependentKeys.toArray(new JobKey[0]));
-				}
-				jobKeys = dependency.subJobKeys();
-				if (ArrayUtils.isNotEmpty(jobKeys)) {
-					List<JobKey> subJobKeys = new ArrayList<>();
-					for (ChacJobKey jobKey : jobKeys) {
-						subJobKeys.add(JobKey.by((StringUtils.isNotBlank(jobKey.cluster()) ? jobKey.cluster() : clusterName),
-								(StringUtils.isNotBlank(jobKey.group()) ? jobKey.group() : applicationName), jobKey.name(),
-								jobKey.className()));
-					}
-					builder.setSubJobKeys(subJobKeys.toArray(new JobKey[0]));
-				}
-			}
+
 			if (trigger.delay() > 0) {
 				long amount = trigger.schedulingUnit().getTimeUnit().convert(trigger.delay(), TimeUnit.SECONDS);
 				triggerBuilder.setStartDate(DateUtils.addSeconds(new Date(), (int) amount));
@@ -112,9 +90,38 @@ public class BeanAnnotationAwareProcessor implements BeanPostProcessor {
 			if (StringUtils.isNotBlank(trigger.endDate())) {
 				triggerBuilder.setEndDate(DateUtils.parse(trigger.endDate(), datePatterns));
 			}
+
 			triggerBuilder.setRepeatCount(trigger.repeatCount());
 			builder.setTrigger(triggerBuilder.build());
 		}
+		ChacDependency dependency = jobBeanClass.getAnnotation(ChacDependency.class);
+		if (dependency != null) {
+			ChacJobKey[] jobKeys = dependency.value();
+			if (ArrayUtils.isNotEmpty(jobKeys)) {
+				List<JobKey> dependentKeys = new ArrayList<>();
+				for (ChacJobKey jobKey : jobKeys) {
+					dependentKeys.add(JobKey.by((StringUtils.isNotBlank(jobKey.cluster()) ? jobKey.cluster() : clusterName),
+							(StringUtils.isNotBlank(jobKey.group()) ? jobKey.group() : applicationName), jobKey.name(),
+							jobKey.className()));
+				}
+				builder.setDependentKeys(dependentKeys.toArray(new JobKey[0]));
+			}
+		}
+		ChacFork fork = jobBeanClass.getAnnotation(ChacFork.class);
+		if (fork != null) {
+			builder.setCompletionRate(fork.completionRate());
+			ChacJobKey[] jobKeys = fork.value();
+			if (ArrayUtils.isNotEmpty(jobKeys)) {
+				List<JobKey> subJobKeys = new ArrayList<>();
+				for (ChacJobKey jobKey : jobKeys) {
+					subJobKeys.add(JobKey.by((StringUtils.isNotBlank(jobKey.cluster()) ? jobKey.cluster() : clusterName),
+							(StringUtils.isNotBlank(jobKey.group()) ? jobKey.group() : applicationName), jobKey.name(),
+							jobKey.className()));
+				}
+				builder.setSubJobKeys(subJobKeys.toArray(new JobKey[0]));
+			}
+		}
+
 		return builder.build();
 	}
 
