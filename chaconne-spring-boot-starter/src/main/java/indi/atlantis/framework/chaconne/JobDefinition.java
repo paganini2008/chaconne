@@ -48,11 +48,11 @@ public interface JobDefinition {
 	}
 
 	default JobKey[] getDependentKeys() {
-		return null;
+		return new JobKey[0];
 	}
 
-	default JobKey[] getSubJobKeys() {
-		return null;
+	default JobKey[] getForkKeys() {
+		return new JobKey[0];
 	}
 
 	default float getCompletionRate() {

@@ -63,7 +63,7 @@ public class InternalJobBeanLoader implements JobBeanLoader {
 		}
 		DependencyType dependencyType = dependency.getDependencyType();
 		if (dependencyType == DependencyType.PARALLEL || dependencyType == DependencyType.MIXED) {
-			Aspect aspect = ApplicationContextUtils.instantiateClass(ForkJoinJobExecutor.class, dependency.getSubJobKeys(),
+			Aspect aspect = ApplicationContextUtils.instantiateClass(ForkJoinJobExecutor.class, dependency.getForkKeys(),
 					dependency.getCompletionRate());
 			return JobBeanProxyUtils.getBeanProxy(job, aspect);
 		}

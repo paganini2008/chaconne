@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestClientException;
 
-import indi.atlantis.framework.chaconne.GenericTrigger;
 import indi.atlantis.framework.chaconne.Job;
 import indi.atlantis.framework.chaconne.JobAdmin;
 import indi.atlantis.framework.chaconne.JobKey;
@@ -12,6 +11,7 @@ import indi.atlantis.framework.chaconne.JobManager;
 import indi.atlantis.framework.chaconne.JobState;
 import indi.atlantis.framework.chaconne.Trigger;
 import indi.atlantis.framework.chaconne.model.JobTriggerDetail;
+import indi.atlantis.framework.chaconne.utils.GenericTrigger;
 import lombok.extern.slf4j.Slf4j;
 
 /**

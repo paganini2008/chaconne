@@ -26,7 +26,7 @@ public class JobPersistParam {
 	private long timeout = -1L;
 	private int weight = 100;
 	private JobKey[] dependentKeys;
-	private JobKey[] subJobKeys;
+	private JobKey[] forkKeys;
 	private float completionRate = -1F;
 
 	private JobTriggerParam trigger;
@@ -70,7 +70,7 @@ public class JobPersistParam {
 		if (dependency != null) {
 			param.setCompletionRate(dependency.getCompletionRate());
 			param.setDependentKeys(dependency.getDependentKeys());
-			param.setSubJobKeys(dependency.getSubJobKeys());
+			param.setForkKeys(dependency.getForkKeys());
 			triggerDescription.setCron(dependency.getCron());
 			triggerDescription.setPeriodic(dependency.getPeriodic());
 			triggerDescription.setDependency(null);

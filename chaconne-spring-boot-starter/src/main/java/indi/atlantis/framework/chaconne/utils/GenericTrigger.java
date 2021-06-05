@@ -1,7 +1,10 @@
-package indi.atlantis.framework.chaconne;
+package indi.atlantis.framework.chaconne.utils;
 
 import java.util.Date;
 
+import indi.atlantis.framework.chaconne.SchedulingUnit;
+import indi.atlantis.framework.chaconne.Trigger;
+import indi.atlantis.framework.chaconne.TriggerType;
 import indi.atlantis.framework.chaconne.model.JobTriggerParam;
 import indi.atlantis.framework.chaconne.model.TriggerDescription;
 import lombok.Getter;

@@ -112,7 +112,7 @@ public class JdbcJobManager implements JobManager {
 		TriggerType triggerType;
 		DependencyType dependencyType = null;
 		boolean hasDependentKeys = ArrayUtils.isNotEmpty(jobDef.getDependentKeys());
-		boolean hasSubKeys = ArrayUtils.isNotEmpty(jobDef.getSubJobKeys());
+		boolean hasSubKeys = ArrayUtils.isNotEmpty(jobDef.getForkKeys());
 		if (hasDependentKeys && hasSubKeys) {
 			dependencyType = DependencyType.MIXED;
 		} else if (hasDependentKeys && !hasSubKeys) {
@@ -152,7 +152,7 @@ public class JdbcJobManager implements JobManager {
 					triggerDescription.setPeriodic(null);
 					break;
 				case PARALLEL:
-					dependency.setSubJobKeys(jobDef.getSubJobKeys());
+					dependency.setForkKeys(jobDef.getForkKeys());
 					dependency.setCompletionRate(jobDef.getCompletionRate());
 					dependency.setTriggerType(triggerType);
 					if (triggerType == TriggerType.CRON) {
@@ -165,7 +165,7 @@ public class JdbcJobManager implements JobManager {
 					break;
 				case MIXED:
 					dependency.setDependentKeys(jobDef.getDependentKeys());
-					dependency.setSubJobKeys(jobDef.getSubJobKeys());
+					dependency.setForkKeys(jobDef.getForkKeys());
 					dependency.setTriggerType(triggerType);
 					triggerDescription.setCron(null);
 					triggerDescription.setPeriodic(null);
@@ -188,11 +188,11 @@ public class JdbcJobManager implements JobManager {
 					handleJobDependency(jobKey, jobId, jobDef.getDependentKeys(), DependencyType.SERIAL);
 					break;
 				case PARALLEL:
-					handleJobDependency(jobKey, jobId, jobDef.getSubJobKeys(), DependencyType.PARALLEL);
+					handleJobDependency(jobKey, jobId, jobDef.getForkKeys(), DependencyType.PARALLEL);
 					break;
 				case MIXED:
 					handleJobDependency(jobKey, jobId, jobDef.getDependentKeys(), DependencyType.SERIAL);
-					handleJobDependency(jobKey, jobId, jobDef.getSubJobKeys(), DependencyType.PARALLEL);
+					handleJobDependency(jobKey, jobId, jobDef.getForkKeys(), DependencyType.PARALLEL);
 					break;
 				}
 
@@ -237,7 +237,7 @@ public class JdbcJobManager implements JobManager {
 					triggerDescription.setPeriodic(null);
 					break;
 				case PARALLEL:
-					dependency.setSubJobKeys(jobDef.getSubJobKeys());
+					dependency.setForkKeys(jobDef.getForkKeys());
 					dependency.setCompletionRate(jobDef.getCompletionRate());
 					dependency.setTriggerType(triggerType);
 					if (triggerType == TriggerType.CRON) {
@@ -250,7 +250,7 @@ public class JdbcJobManager implements JobManager {
 					break;
 				case MIXED:
 					dependency.setDependentKeys(jobDef.getDependentKeys());
-					dependency.setSubJobKeys(jobDef.getSubJobKeys());
+					dependency.setForkKeys(jobDef.getForkKeys());
 					dependency.setTriggerType(triggerType);
 					triggerDescription.setCron(null);
 					triggerDescription.setPeriodic(null);
@@ -275,11 +275,11 @@ public class JdbcJobManager implements JobManager {
 					handleJobDependency(jobKey, jobId, jobDef.getDependentKeys(), DependencyType.SERIAL);
 					break;
 				case PARALLEL:
-					handleJobDependency(jobKey, jobId, jobDef.getSubJobKeys(), DependencyType.PARALLEL);
+					handleJobDependency(jobKey, jobId, jobDef.getForkKeys(), DependencyType.PARALLEL);
 					break;
 				case MIXED:
 					handleJobDependency(jobKey, jobId, jobDef.getDependentKeys(), DependencyType.SERIAL);
-					handleJobDependency(jobKey, jobId, jobDef.getSubJobKeys(), DependencyType.PARALLEL);
+					handleJobDependency(jobKey, jobId, jobDef.getForkKeys(), DependencyType.PARALLEL);
 					break;
 				}
 

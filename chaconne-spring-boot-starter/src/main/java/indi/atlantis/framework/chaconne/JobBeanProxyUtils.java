@@ -72,8 +72,8 @@ public abstract class JobBeanProxyUtils {
 				return triggerDescription.getDependency().getDependencyType();
 			case "getDependentKeys":
 				return triggerDescription.getDependency().getDependentKeys();
-			case "getSubJobKeys":
-				return triggerDescription.getDependency().getSubJobKeys();
+			case "getForkKeys":
+				return triggerDescription.getDependency().getForkKeys();
 			case "getCompletionRate":
 				return triggerDescription.getDependency().getCompletionRate();
 			default:

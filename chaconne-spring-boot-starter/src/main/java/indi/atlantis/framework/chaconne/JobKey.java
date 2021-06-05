@@ -77,6 +77,7 @@ public final class JobKey implements Serializable, Comparable<JobKey> {
 		return false;
 	}
 
+	@Override
 	public String toString() {
 		return String.format(IDENTIFIER_PATTERN, clusterName, groupName, jobName, jobClassName);
 	}

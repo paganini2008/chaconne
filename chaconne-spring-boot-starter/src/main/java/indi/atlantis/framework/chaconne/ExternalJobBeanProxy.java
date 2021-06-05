@@ -3,6 +3,7 @@ package indi.atlantis.framework.chaconne;
 import org.slf4j.Logger;
 
 import indi.atlantis.framework.chaconne.model.JobTriggerDetail;
+import indi.atlantis.framework.chaconne.utils.GenericTrigger;
 
 /**
  * 

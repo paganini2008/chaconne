@@ -20,6 +20,7 @@ import indi.atlantis.framework.chaconne.annotations.ChacJob;
 import indi.atlantis.framework.chaconne.annotations.ChacJobKey;
 import indi.atlantis.framework.chaconne.annotations.ChacTrigger;
 import indi.atlantis.framework.chaconne.utils.GenericJobDefinition;
+import indi.atlantis.framework.chaconne.utils.GenericTrigger;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -60,11 +61,11 @@ public class BeanAnnotationAwareProcessor implements BeanPostProcessor {
 	private JobDefinition parseObject(Object bean, String beanName) {
 		final Class<?> jobBeanClass = bean.getClass();
 		final ChacJob job = jobBeanClass.getAnnotation(ChacJob.class);
-		ChacTrigger trigger = jobBeanClass.getAnnotation(ChacTrigger.class);
 		String jobName = StringUtils.isNotBlank(job.name()) ? job.name() : beanName;
 		GenericJobDefinition.Builder builder = GenericJobDefinition.newJob(clusterName, applicationName, jobName, jobBeanClass);
 		builder.setDescription(job.description()).setTimeout(job.timeout()).setEmail(job.email()).setRetries(job.retries())
 				.setWeight(job.weight());
+		ChacTrigger trigger = jobBeanClass.getAnnotation(ChacTrigger.class);
 		if (trigger != null) {
 			GenericTrigger.Builder triggerBuilder = GenericTrigger.Builder.newTrigger();
 			TriggerType triggerType = trigger.triggerType();
@@ -112,13 +113,13 @@ public class BeanAnnotationAwareProcessor implements BeanPostProcessor {
 			builder.setCompletionRate(fork.completionRate());
 			ChacJobKey[] jobKeys = fork.value();
 			if (ArrayUtils.isNotEmpty(jobKeys)) {
-				List<JobKey> subJobKeys = new ArrayList<>();
+				List<JobKey> forkKeys = new ArrayList<>();
 				for (ChacJobKey jobKey : jobKeys) {
-					subJobKeys.add(JobKey.by((StringUtils.isNotBlank(jobKey.cluster()) ? jobKey.cluster() : clusterName),
+					forkKeys.add(JobKey.by((StringUtils.isNotBlank(jobKey.cluster()) ? jobKey.cluster() : clusterName),
 							(StringUtils.isNotBlank(jobKey.group()) ? jobKey.group() : applicationName), jobKey.name(),
 							jobKey.className()));
 				}
-				builder.setSubJobKeys(subJobKeys.toArray(new JobKey[0]));
+				builder.setForkKeys(forkKeys.toArray(new JobKey[0]));
 			}
 		}
 
