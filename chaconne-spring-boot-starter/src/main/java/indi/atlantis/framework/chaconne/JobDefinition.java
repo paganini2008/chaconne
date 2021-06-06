@@ -36,7 +36,7 @@ public interface JobDefinition {
 	}
 
 	default int getWeight() {
-		return 100;
+		return 0;
 	}
 
 	default long getTimeout() {

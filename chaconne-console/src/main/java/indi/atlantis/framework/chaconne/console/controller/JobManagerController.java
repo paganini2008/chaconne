@@ -26,7 +26,7 @@ import indi.atlantis.framework.chaconne.console.service.JobManagerService;
 import indi.atlantis.framework.chaconne.console.utils.PageBean;
 import indi.atlantis.framework.chaconne.model.JobDetail;
 import indi.atlantis.framework.chaconne.model.JobLog;
-import indi.atlantis.framework.chaconne.model.JobPersistParam;
+import indi.atlantis.framework.chaconne.model.JobPersistParameter;
 import indi.atlantis.framework.chaconne.model.JobStackTrace;
 import indi.atlantis.framework.chaconne.model.JobTrace;
 import indi.atlantis.framework.chaconne.model.PageQuery;
@@ -47,7 +47,7 @@ public class JobManagerController {
 	private JobManagerService jobManagerService;
 
 	@PostMapping("/save")
-	public @ResponseBody Map<String, Object> saveJob(@RequestBody JobPersistParam param) throws Exception {
+	public @ResponseBody Map<String, Object> saveJob(@RequestBody JobPersistParameter param) throws Exception {
 		Map<String, Object> data = new HashMap<String, Object>();
 		try {
 			jobManagerService.saveJob(param);
@@ -61,12 +61,12 @@ public class JobManagerController {
 
 	@GetMapping(value = { "/edit", "/edit/{jobKey}" })
 	public String editJob(@PathVariable(name = "jobKey", required = false) String jobKey, Model ui) throws Exception {
-		JobPersistParam param;
+		JobPersistParameter param;
 		if (StringUtils.isNotBlank(jobKey)) {
 			JobDetail jobDetail = jobManagerService.getJobDetail(jobKey);
-			param = JobPersistParam.wrap(jobDetail);
+			param = JobPersistParameter.wrap(jobDetail);
 		} else {
-			param = JobPersistParam.forExample();
+			param = JobPersistParameter.forExample();
 		}
 		ui.addAttribute("jobDefinition", JacksonUtils.toJsonString(param));
 		return "job_edit";

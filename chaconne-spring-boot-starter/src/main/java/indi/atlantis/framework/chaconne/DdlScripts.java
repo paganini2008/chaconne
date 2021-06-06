@@ -5,12 +5,12 @@ import java.util.Map;
 
 /**
  * 
- * Ddl
+ * DdlScripts
  *
  * @author Fred Feng
  * @since 1.0
  */
-public abstract class Ddl {
+public abstract class DdlScripts {
 
 	public static abstract class CreateScripts {
 

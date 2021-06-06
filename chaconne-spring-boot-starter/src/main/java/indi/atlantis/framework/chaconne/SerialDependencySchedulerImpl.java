@@ -13,7 +13,7 @@ import com.github.paganini2008.devtools.Observable;
 import com.github.paganini2008.devtools.Observer;
 import com.github.paganini2008.springworld.reditools.messager.RedisMessageSender;
 
-import indi.atlantis.framework.chaconne.model.JobParam;
+import indi.atlantis.framework.chaconne.model.JobParameter;
 import indi.atlantis.framework.chaconne.model.TaskForkResult;
 import indi.atlantis.framework.tridenter.Constants;
 import indi.atlantis.framework.tridenter.utils.ApplicationContextUtils;
@@ -108,7 +108,7 @@ public class SerialDependencySchedulerImpl extends Observable implements SerialD
 	public void notifyDependants(JobKey jobKey, Object attachment) {
 		final String channel = Constants.APPLICATION_CLUSTER_NAMESPACE + clusterName + ":scheduler:job:dependency:"
 				+ jobKey.getIdentifier();
-		JobParam jobParam = new JobParam(jobKey, attachment, 0);
+		JobParameter jobParam = new JobParameter(jobKey, attachment, 0);
 		redisMessageSender.sendMessage(channel, jobParam);
 		if (log.isTraceEnabled()) {
 			log.trace("Immediately job '{}' is done and all serial dependencies will be notfied.", jobKey);

@@ -7,7 +7,7 @@ import lombok.Setter;
 
 /**
  * 
- * JobDependencyParam
+ * JobDependencyParameter
  * 
  * @author Fred Feng
  *
@@ -15,15 +15,15 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class JobDependencyParam {
+public class JobDependencyParameter {
 
 	private JobKey jobKey;
 	private DependencyType dependencyType;
 
-	public JobDependencyParam() {
+	public JobDependencyParameter() {
 	}
 
-	public JobDependencyParam(JobKey jobKey, DependencyType dependencyType) {
+	public JobDependencyParameter(JobKey jobKey, DependencyType dependencyType) {
 		this.jobKey = jobKey;
 		this.dependencyType = dependencyType;
 	}

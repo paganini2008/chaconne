@@ -16,7 +16,7 @@ public abstract class Banner {
 
 	public static final String PRODUCT_NAME = "Chaconne";
 
-	public static final String PRODUCT_VERSION = "1.0-RC1";
+	public static final String PRODUCT_VERSION = "1.0";
 
 	public static final String PRODUCT_DESCRIPTION = "A light job schedule framework and workflow tools writen in Java";
 

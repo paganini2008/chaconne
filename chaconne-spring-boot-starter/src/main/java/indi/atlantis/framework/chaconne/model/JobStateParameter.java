@@ -7,7 +7,7 @@ import lombok.Setter;
 
 /**
  * 
- * JobStateParam
+ * JobStateParameter
  * 
  * @author Fred Feng
  *
@@ -15,15 +15,15 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class JobStateParam {
+public class JobStateParameter {
 
 	private JobKey jobKey;
 	private JobState jobState;
 
-	public JobStateParam() {
+	public JobStateParameter() {
 	}
 
-	public JobStateParam(JobKey jobKey, JobState jobState) {
+	public JobStateParameter(JobKey jobKey, JobState jobState) {
 		this.jobKey = jobKey;
 		this.jobState = jobState;
 	}

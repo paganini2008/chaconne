@@ -4,8 +4,8 @@ import indi.atlantis.framework.chaconne.DependencyType;
 import indi.atlantis.framework.chaconne.JobDefinition;
 import indi.atlantis.framework.chaconne.JobKey;
 import indi.atlantis.framework.chaconne.Trigger;
-import indi.atlantis.framework.chaconne.model.JobPersistParam;
-import indi.atlantis.framework.chaconne.model.JobTriggerParam;
+import indi.atlantis.framework.chaconne.model.JobPersistParameter;
+import indi.atlantis.framework.chaconne.model.JobTriggerParameter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -146,8 +146,8 @@ public class GenericJobDefinition implements JobDefinition {
 		}
 	}
 
-	public JobPersistParam toParameter() {
-		JobPersistParam param = new JobPersistParam();
+	public JobPersistParameter toParameter() {
+		JobPersistParameter param = new JobPersistParameter();
 		param.setDescription(description);
 		param.setEmail(email);
 		param.setRetries(retries);
@@ -158,7 +158,7 @@ public class GenericJobDefinition implements JobDefinition {
 		param.setForkKeys(forkKeys);
 		param.setCompletionRate(completionRate);
 
-		JobTriggerParam triggerParam = new JobTriggerParam();
+		JobTriggerParameter triggerParam = new JobTriggerParameter();
 		if (trigger != null) {
 			triggerParam.setTriggerType(trigger.getTriggerType());
 			triggerParam.setTriggerDescription(trigger.getTriggerDescription());
@@ -171,7 +171,7 @@ public class GenericJobDefinition implements JobDefinition {
 		return param;
 	}
 
-	public static Builder parse(JobPersistParam param) {
+	public static Builder parse(JobPersistParameter param) {
 		Builder builder = newJob(param.getJobKey()).setDescription(param.getDescription()).setEmail(param.getEmail())
 				.setRetries(param.getRetries()).setTimeout(param.getTimeout()).setWeight(param.getWeight())
 				.setDependentKeys(param.getDependentKeys()).setForkKeys(param.getForkKeys());

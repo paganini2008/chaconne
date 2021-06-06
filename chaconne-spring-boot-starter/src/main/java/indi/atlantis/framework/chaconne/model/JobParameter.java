@@ -8,7 +8,7 @@ import lombok.Setter;
 
 /**
  * 
- * JobParam
+ * JobParameter
  * 
  * @author Fred Feng
  *
@@ -16,16 +16,16 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class JobParam {
+public class JobParameter {
 
 	private JobKey jobKey;
 	private Object attachment;
 	private int retries;
 
-	public JobParam() {
+	public JobParameter() {
 	}
 
-	public JobParam(JobKey jobKey, Object attachment, int retries) {
+	public JobParameter(JobKey jobKey, Object attachment, int retries) {
 		this.jobKey = jobKey;
 		this.attachment = attachment;
 		this.retries = retries;

@@ -3,7 +3,7 @@ package indi.atlantis.framework.chaconne;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import indi.atlantis.framework.chaconne.model.JobLifeCycleParam;
+import indi.atlantis.framework.chaconne.model.JobLifeCycleParameter;
 import indi.atlantis.framework.tridenter.multicast.ApplicationMulticastGroup;
 
 /**
@@ -25,7 +25,7 @@ public class EmbeddedModeLifeCycleListenerContainer extends LifeCycleListenerCon
 	@Override
 	public void onChange(JobKey jobKey, JobLifeCycle lifeCycle) {
 		applicationMulticastGroup.multicast(applicationName, LifeCycleListenerContainer.class.getName(),
-				new JobLifeCycleParam(jobKey, lifeCycle));
+				new JobLifeCycleParameter(jobKey, lifeCycle));
 	}
 
 }

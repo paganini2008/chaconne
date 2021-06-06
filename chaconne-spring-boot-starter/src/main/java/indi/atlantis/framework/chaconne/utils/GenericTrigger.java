@@ -5,7 +5,7 @@ import java.util.Date;
 import indi.atlantis.framework.chaconne.SchedulingUnit;
 import indi.atlantis.framework.chaconne.Trigger;
 import indi.atlantis.framework.chaconne.TriggerType;
-import indi.atlantis.framework.chaconne.model.JobTriggerParam;
+import indi.atlantis.framework.chaconne.model.JobTriggerParameter;
 import indi.atlantis.framework.chaconne.model.TriggerDescription;
 import lombok.Getter;
 import lombok.Setter;
@@ -80,7 +80,7 @@ public class GenericTrigger implements Trigger {
 
 	}
 
-	public static Builder parse(JobTriggerParam triggerParam) {
+	public static Builder parse(JobTriggerParameter triggerParam) {
 		return GenericTrigger.Builder.newTrigger().setTriggerType(triggerParam.getTriggerType())
 				.setTriggerDescription(triggerParam.getTriggerDescription()).setStartDate(triggerParam.getStartDate())
 				.setEndDate(triggerParam.getEndDate()).setRepeatCount(triggerParam.getRepeatCount());

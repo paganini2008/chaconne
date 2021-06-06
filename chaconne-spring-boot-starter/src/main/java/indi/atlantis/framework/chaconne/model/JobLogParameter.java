@@ -7,7 +7,7 @@ import lombok.Setter;
 
 /**
  * 
- * JobLogParam
+ * JobLogParameter
  * 
  * @author Fred Feng
  *
@@ -15,7 +15,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class JobLogParam {
+public class JobLogParameter {
 
 	private long traceId;
 	private JobKey jobKey;
@@ -24,10 +24,10 @@ public class JobLogParam {
 	private Object[] args;
 	private String[] stackTraces;
 
-	public JobLogParam() {
+	public JobLogParameter() {
 	}
 
-	public JobLogParam(long traceId, JobKey jobKey, LogLevel logLevel, String messagePattern, Object[] args, String[] stackTraces) {
+	public JobLogParameter(long traceId, JobKey jobKey, LogLevel logLevel, String messagePattern, Object[] args, String[] stackTraces) {
 		this.traceId = traceId;
 		this.jobKey = jobKey;
 		this.logLevel = logLevel;
@@ -36,7 +36,7 @@ public class JobLogParam {
 		this.stackTraces = stackTraces;
 	}
 
-	public JobLogParam(long traceId, JobKey jobKey, String[] stackTraces) {
+	public JobLogParameter(long traceId, JobKey jobKey, String[] stackTraces) {
 		this.traceId = traceId;
 		this.jobKey = jobKey;
 		this.stackTraces = stackTraces;

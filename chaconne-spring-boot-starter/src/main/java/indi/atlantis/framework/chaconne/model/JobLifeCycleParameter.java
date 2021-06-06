@@ -9,7 +9,7 @@ import lombok.Setter;
 
 /**
  * 
- * JobLifeCycleParam
+ * JobLifeCycleParameter
  * 
  * @author Fred Feng
  *
@@ -17,15 +17,15 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class JobLifeCycleParam {
+public class JobLifeCycleParameter {
 
 	private JobKey jobKey;
 	private JobLifeCycle lifeCycle;
 
-	public JobLifeCycleParam() {
+	public JobLifeCycleParameter() {
 	}
 
-	public JobLifeCycleParam(JobKey jobKey, JobLifeCycle lifeCycle) {
+	public JobLifeCycleParameter(JobKey jobKey, JobLifeCycle lifeCycle) {
 		this.jobKey = jobKey;
 		this.lifeCycle = lifeCycle;
 	}

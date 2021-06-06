@@ -14,7 +14,7 @@ import indi.atlantis.framework.chaconne.JobLifeCycle;
 import indi.atlantis.framework.chaconne.JobManager;
 import indi.atlantis.framework.chaconne.JobState;
 import indi.atlantis.framework.chaconne.LifeCycleListenerContainer;
-import indi.atlantis.framework.chaconne.model.JobLifeCycleParam;
+import indi.atlantis.framework.chaconne.model.JobLifeCycleParameter;
 import indi.atlantis.framework.tridenter.multicast.ApplicationMulticastGroup;
 
 /**
@@ -58,7 +58,7 @@ public class ConsumerModeJobAdmin implements JobAdmin {
 	@Override
 	public void publicLifeCycleEvent(JobKey jobKey, JobLifeCycle lifeCycle) {
 		applicationMulticastGroup.multicast(applicationName, LifeCycleListenerContainer.class.getName(),
-				new JobLifeCycleParam(jobKey, lifeCycle));
+				new JobLifeCycleParameter(jobKey, lifeCycle));
 	}
 
 	private Job loadJobBean(JobKey jobKey) throws Exception {

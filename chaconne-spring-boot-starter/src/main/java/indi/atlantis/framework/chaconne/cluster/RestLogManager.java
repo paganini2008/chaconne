@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.Async;
 import indi.atlantis.framework.chaconne.JobKey;
 import indi.atlantis.framework.chaconne.LogLevel;
 import indi.atlantis.framework.chaconne.LogManager;
-import indi.atlantis.framework.chaconne.model.JobLogParam;
+import indi.atlantis.framework.chaconne.model.JobLogParameter;
 import indi.atlantis.framework.chaconne.model.JobResult;
 
 /**
@@ -29,7 +29,7 @@ public class RestLogManager implements LogManager {
 	@Override
 	public void log(long traceId, JobKey jobKey, LogLevel logLevel, String messagePattern, Object[] args, String[] stackTraces) {
 		ResponseEntity<JobResult<String>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/log",
-				HttpMethod.POST, new JobLogParam(traceId, jobKey, logLevel, messagePattern, args, stackTraces),
+				HttpMethod.POST, new JobLogParameter(traceId, jobKey, logLevel, messagePattern, args, stackTraces),
 				new ParameterizedTypeReference<JobResult<String>>() {
 				});
 		responseEntity.getBody().getData();

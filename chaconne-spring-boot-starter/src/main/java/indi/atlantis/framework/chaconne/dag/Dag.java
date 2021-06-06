@@ -6,6 +6,7 @@ import java.util.List;
 
 import indi.atlantis.framework.chaconne.JobDefinition;
 import indi.atlantis.framework.chaconne.JobKey;
+import indi.atlantis.framework.chaconne.Trigger;
 import indi.atlantis.framework.chaconne.utils.GenericJobDefinition;
 
 /**
@@ -19,10 +20,10 @@ import indi.atlantis.framework.chaconne.utils.GenericJobDefinition;
 public class Dag implements DagDefination {
 
 	public Dag(String clusterName, String groupName, String name) {
-		this.builder = GenericJobDefinition.newJob(clusterName, groupName, name, DagStarter.class);
+		this.builder = GenericJobDefinition.newJob(clusterName, groupName, name, StartDagJob.class);
 	}
 
-	private DagNode startNode;
+	private DagFlow startNode;
 	private GenericJobDefinition.Builder builder;
 
 	public Dag setDescription(String description) {
@@ -50,8 +51,13 @@ public class Dag implements DagDefination {
 		return this;
 	}
 
+	public Dag setTrigger(Trigger trigger) {
+		builder.setTrigger(trigger);
+		return this;
+	}
+
 	public DagFlow startWith(String clusterName, String groupName, String jobName, String jobClassName) {
-		return new DagJob(clusterName, groupName, jobName, jobClassName, this);
+		return (startNode = new DagJob(clusterName, groupName, jobName, jobClassName, this));
 	}
 
 	@Override

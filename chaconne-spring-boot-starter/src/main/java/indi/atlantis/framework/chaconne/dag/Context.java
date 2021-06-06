@@ -1,6 +1,7 @@
 package indi.atlantis.framework.chaconne.dag;
 
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.github.paganini2008.devtools.converter.ConvertUtils;
@@ -15,7 +16,7 @@ import com.github.paganini2008.devtools.converter.ConvertUtils;
  */
 public final class Context {
 
-	private Map<String, Object> data = new HashMap<String, Object>();
+	private Map<String, Object> data = new LinkedHashMap<String, Object>();
 
 	public Object getAttribute(String attributeName) {
 		return data.get(attributeName);
@@ -26,6 +27,16 @@ public final class Context {
 			data.remove(attributeName);
 		} else {
 			data.put(attributeName, attributeValue);
+		}
+	}
+
+	public Map<String, Object> copy() {
+		return Collections.unmodifiableMap(data);
+	}
+
+	public void merge(Context anotherContext) {
+		if (anotherContext != null) {
+			data.putAll(anotherContext.copy());
 		}
 	}
 
@@ -125,6 +136,10 @@ public final class Context {
 			}
 		}
 		return defaultValue;
+	}
+
+	public String toString() {
+		return "[Context] " + data.toString();
 	}
 
 }

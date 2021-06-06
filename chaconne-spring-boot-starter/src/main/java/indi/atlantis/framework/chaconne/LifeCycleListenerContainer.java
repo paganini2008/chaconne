@@ -6,7 +6,7 @@ import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import indi.atlantis.framework.chaconne.model.JobLifeCycleParam;
+import indi.atlantis.framework.chaconne.model.JobLifeCycleParameter;
 import indi.atlantis.framework.tridenter.ApplicationInfo;
 import indi.atlantis.framework.tridenter.multicast.ApplicationMessageListener;
 
@@ -41,7 +41,7 @@ public abstract class LifeCycleListenerContainer implements ApplicationMessageLi
 
 	@Override
 	public void onMessage(ApplicationInfo applicationInfo, String id, Object message) {
-		final JobLifeCycleParam jobParam = (JobLifeCycleParam) message;
+		final JobLifeCycleParameter jobParam = (JobLifeCycleParameter) message;
 		JobKey jobKey = jobParam.getJobKey();
 		JobLifeCycle lifeCycle = jobParam.getLifeCycle();
 		accept(jobKey, lifeCycle);

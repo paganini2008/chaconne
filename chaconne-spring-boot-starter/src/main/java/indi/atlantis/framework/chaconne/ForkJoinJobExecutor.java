@@ -66,8 +66,11 @@ public class ForkJoinJobExecutor implements Aspect {
 			final JobKey jobKey = (JobKey) args[0];
 			final Object attachment = args[1];
 			final Logger logger = (Logger) args[2];
+			if (log.isDebugEnabled()) {
+				log.debug("Parallel run job with JobKey: {}, Attachment: {}", jobKey, attachment);
+			}
 
-			log.trace("Parallel run all dependent jobs ...");
+			log.trace("First parallel run all dependent jobs ...");
 			long startTime = System.currentTimeMillis();
 			long maxTimeout = 0;
 			for (JobKey dependency : dependencies) {

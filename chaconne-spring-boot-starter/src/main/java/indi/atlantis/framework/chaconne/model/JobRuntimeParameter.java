@@ -12,7 +12,7 @@ import lombok.Setter;
 
 /**
  * 
- * JobRuntimeParam
+ * JobRuntimeParameter
  * 
  * @author Fred Feng
  *
@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonInclude(value = Include.NON_NULL)
-public class JobRuntimeParam {
+public class JobRuntimeParameter {
 
 	private long traceId;
 	private JobKey jobKey;
@@ -29,7 +29,7 @@ public class JobRuntimeParam {
 	private RunningState runningState;
 	private int retries;
 
-	public JobRuntimeParam(long traceId, JobKey jobKey, Date startTime, RunningState runningState, int retries) {
+	public JobRuntimeParameter(long traceId, JobKey jobKey, Date startTime, RunningState runningState, int retries) {
 		this.traceId = traceId;
 		this.jobKey = jobKey;
 		this.startTime = startTime;
@@ -37,13 +37,13 @@ public class JobRuntimeParam {
 		this.retries = retries;
 	}
 
-	public JobRuntimeParam(long traceId, JobKey jobKey, Date startTime) {
+	public JobRuntimeParameter(long traceId, JobKey jobKey, Date startTime) {
 		this.traceId = traceId;
 		this.jobKey = jobKey;
 		this.startTime = startTime;
 	}
 
-	public JobRuntimeParam() {
+	public JobRuntimeParameter() {
 	}
 
 }

@@ -35,7 +35,7 @@ public class CreatedSchemaUpdater implements SchemaUpdater {
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
-			for (Map.Entry<String, String> entry : new HashMap<String, String>(Ddl.CreateScripts.ddls()).entrySet()) {
+			for (Map.Entry<String, String> entry : new HashMap<String, String>(DdlScripts.CreateScripts.ddls()).entrySet()) {
 				if (!JdbcUtils.existsTable(connection, null, entry.getKey())) {
 					JdbcUtils.update(connection, entry.getValue());
 					log.info("Execute ddl: " + entry.getValue());

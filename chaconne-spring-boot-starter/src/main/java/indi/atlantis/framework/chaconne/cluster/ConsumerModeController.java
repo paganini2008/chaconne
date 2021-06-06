@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import indi.atlantis.framework.chaconne.JobAdmin;
 import indi.atlantis.framework.chaconne.JobState;
-import indi.atlantis.framework.chaconne.model.JobParam;
+import indi.atlantis.framework.chaconne.model.JobLifeCycleParameter;
+import indi.atlantis.framework.chaconne.model.JobParameter;
 import indi.atlantis.framework.chaconne.model.JobResult;
 import indi.atlantis.framework.tridenter.ApplicationInfo;
 import indi.atlantis.framework.tridenter.InstanceId;
@@ -47,9 +48,15 @@ public class ConsumerModeController {
 	}
 
 	@PostMapping("/triggerJob")
-	public ResponseEntity<JobResult<JobState>> triggerJob(@RequestBody JobParam jobParam) throws Exception {
+	public ResponseEntity<JobResult<JobState>> triggerJob(@RequestBody JobParameter jobParam) throws Exception {
 		JobState jobState = jobAdmin.triggerJob(jobParam.getJobKey(), jobParam.getAttachment());
 		return ResponseEntity.ok(JobResult.success(jobState));
+	}
+
+	@PostMapping("/publicLifeCycleEvent")
+	public ResponseEntity<JobResult<String>> publicLifeCycleEvent(@RequestBody JobLifeCycleParameter param) throws Exception {
+		jobAdmin.publicLifeCycleEvent(param.getJobKey(), param.getLifeCycle());
+		return ResponseEntity.ok(JobResult.success("ok"));
 	}
 
 }

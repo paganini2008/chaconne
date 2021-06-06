@@ -10,8 +10,8 @@ package indi.atlantis.framework.chaconne.dag;
  */
 public interface DagFlow extends DagNode {
 
-	DagFlow flow(String clusterName, String groupName, String jobClassName, String jobName);
+	DagFlow flow(String clusterName, String groupName, String jobName, String jobClassName);
 
-	DagFlow fork(String clusterName, String groupName, String jobClassName, String jobName);
+	DagFlow fork(String clusterName, String groupName, String jobName, String jobClassName);
 
 }

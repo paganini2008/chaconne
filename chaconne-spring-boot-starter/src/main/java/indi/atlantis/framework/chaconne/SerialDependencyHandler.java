@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.github.paganini2008.springworld.reditools.messager.RedisMessageHandler;
 
-import indi.atlantis.framework.chaconne.model.JobParam;
+import indi.atlantis.framework.chaconne.model.JobParameter;
 import indi.atlantis.framework.tridenter.Constants;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,7 +35,7 @@ public class SerialDependencyHandler implements RedisMessageHandler {
 
 	@Override
 	public void onMessage(String channel, Object message) throws Exception {
-		final JobParam jobParam = (JobParam) message;
+		final JobParameter jobParam = (JobParameter) message;
 		if (log.isTraceEnabled()) {
 			log.trace("Trigger all serial dependencies by Job: " + jobParam.getJobKey());
 		}

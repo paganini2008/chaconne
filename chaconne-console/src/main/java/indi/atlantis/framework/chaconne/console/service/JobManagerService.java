@@ -11,7 +11,7 @@ import indi.atlantis.framework.chaconne.console.JobLogForm;
 import indi.atlantis.framework.chaconne.console.JobTraceForm;
 import indi.atlantis.framework.chaconne.model.JobDetail;
 import indi.atlantis.framework.chaconne.model.JobLog;
-import indi.atlantis.framework.chaconne.model.JobPersistParam;
+import indi.atlantis.framework.chaconne.model.JobPersistParameter;
 import indi.atlantis.framework.chaconne.model.JobStackTrace;
 import indi.atlantis.framework.chaconne.model.JobTrace;
 import indi.atlantis.framework.chaconne.model.JobTracePageQuery;
@@ -32,7 +32,7 @@ public class JobManagerService {
 	@Autowired
 	private JobManager jobManager;
 
-	public void saveJob(JobPersistParam param) throws Exception {
+	public void saveJob(JobPersistParameter param) throws Exception {
 		jobManager.persistJob(param);
 	}
 

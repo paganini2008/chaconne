@@ -10,7 +10,7 @@ import lombok.ToString;
 
 /**
  * 
- * JobTriggerParam
+ * JobTriggerParameter
  * 
  * @author Fred Feng
  *
@@ -19,7 +19,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class JobTriggerParam {
+public class JobTriggerParameter {
 
 	private TriggerType triggerType;
 	private TriggerDescription triggerDescription;
@@ -27,17 +27,17 @@ public class JobTriggerParam {
 	private Date endDate;
 	private int repeatCount = -1;
 
-	public JobTriggerParam() {
+	public JobTriggerParameter() {
 		this.triggerDescription = new TriggerDescription();
 		this.triggerType = TriggerType.SIMPLE;
 	}
 
-	public JobTriggerParam(String cronExpression) {
+	public JobTriggerParameter(String cronExpression) {
 		this.triggerDescription = new TriggerDescription(cronExpression);
 		this.triggerType = TriggerType.CRON;
 	}
 
-	public JobTriggerParam(long period, SchedulingUnit schedulingUnit, boolean fixedRate) {
+	public JobTriggerParameter(long period, SchedulingUnit schedulingUnit, boolean fixedRate) {
 		this.triggerDescription = new TriggerDescription(period, schedulingUnit, fixedRate);
 		this.triggerType = TriggerType.PERIODIC;
 	}

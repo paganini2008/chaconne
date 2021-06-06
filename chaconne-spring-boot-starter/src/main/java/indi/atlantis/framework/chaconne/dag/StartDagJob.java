@@ -7,13 +7,13 @@ import indi.atlantis.framework.chaconne.NotManagedJob;
 
 /**
  * 
- * DagStarter
+ * StartDagJob
  * 
  * @author Fred Feng
  *
  * @version 1.0
  */
-public class DagStarter implements NotManagedJob {
+public class StartDagJob implements NotManagedJob {
 
 	@Override
 	public Object execute(JobKey jobKey, Object attachment, Logger log) throws Exception {

@@ -18,7 +18,7 @@ import indi.atlantis.framework.chaconne.RunningState;
 import indi.atlantis.framework.chaconne.SerialDependencyScheduler;
 import indi.atlantis.framework.chaconne.StopWatch;
 import indi.atlantis.framework.chaconne.TraceIdGenerator;
-import indi.atlantis.framework.chaconne.model.JobParam;
+import indi.atlantis.framework.chaconne.model.JobParameter;
 import indi.atlantis.framework.tridenter.Constants;
 import indi.atlantis.framework.tridenter.multicast.ApplicationMulticastGroup;
 
@@ -77,7 +77,7 @@ public class ConsumerModeLoadBalancer extends JobTemplate implements JobExecutor
 	protected final Object[] doRun(long traceId, JobKey jobKey, Job job, Object attachment, int retries, Logger log) {
 		if (applicationMulticastGroup.countOfCandidate(jobKey.getGroupName()) > 0) {
 			final String topic = Constants.APPLICATION_CLUSTER_NAMESPACE + clusterName + ":scheduler:loadbalance";
-			applicationMulticastGroup.unicast(jobKey.getGroupName(), topic, new JobParam(jobKey, attachment, retries));
+			applicationMulticastGroup.unicast(jobKey.getGroupName(), topic, new JobParameter(jobKey, attachment, retries));
 		} else {
 			try {
 				jobManager.setJobState(jobKey, JobState.SCHEDULING);

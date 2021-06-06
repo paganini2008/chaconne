@@ -20,6 +20,6 @@ public interface DagNode extends DagDefination {
 
 	DagDefination getPrevious();
 
-	DagDefination getNext();
+	DagDefination[] getNext();
 
 }

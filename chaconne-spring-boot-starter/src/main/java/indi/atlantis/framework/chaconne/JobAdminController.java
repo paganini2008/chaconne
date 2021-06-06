@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import indi.atlantis.framework.chaconne.model.JobLifeCycleParam;
-import indi.atlantis.framework.chaconne.model.JobParam;
+import indi.atlantis.framework.chaconne.model.JobLifeCycleParameter;
+import indi.atlantis.framework.chaconne.model.JobParameter;
 import indi.atlantis.framework.chaconne.model.JobResult;
 
 /**
@@ -30,13 +30,13 @@ public class JobAdminController {
 	private ScheduleAdmin scheduleAdmin;
 
 	@PostMapping("/triggerJob")
-	public ResponseEntity<JobResult<JobState>> triggerJob(@RequestBody JobParam jobParam) throws Exception {
+	public ResponseEntity<JobResult<JobState>> triggerJob(@RequestBody JobParameter jobParam) throws Exception {
 		JobState jobState = jobAdmin.triggerJob(jobParam.getJobKey(), jobParam.getAttachment());
 		return ResponseEntity.ok(JobResult.success(jobState));
 	}
 
 	@PostMapping("/publicLifeCycleEvent")
-	public ResponseEntity<String> publicLifeCycleEvent(@RequestBody JobLifeCycleParam jobParam) throws Exception {
+	public ResponseEntity<String> publicLifeCycleEvent(@RequestBody JobLifeCycleParameter jobParam) throws Exception {
 		jobAdmin.publicLifeCycleEvent(jobParam.getJobKey(), jobParam.getLifeCycle());
 		return ResponseEntity.ok("ok");
 	}

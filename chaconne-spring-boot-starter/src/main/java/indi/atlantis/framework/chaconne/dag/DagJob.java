@@ -25,8 +25,8 @@ public class DagJob implements DagFlow {
 
 	private final GenericJobDefinition.Builder builder;
 	private final DagDefination previous;
-	private final List<DagJob> forks = new ArrayList<DagJob>();
-	private DagDefination next;
+	private final List<DagJob> forkDags = new ArrayList<DagJob>();
+	private final List<DagDefination> nextDags = new ArrayList<DagDefination>();
 
 	public DagNode setDescription(String description) {
 		builder.setDescription(description);
@@ -52,8 +52,8 @@ public class DagJob implements DagFlow {
 		return previous;
 	}
 
-	public DagDefination getNext() {
-		return next;
+	public DagDefination[] getNext() {
+		return nextDags.toArray(new DagDefination[0]);
 	}
 
 	public JobKey getJobKey() {
@@ -62,30 +62,32 @@ public class DagJob implements DagFlow {
 
 	public DagFlow flow(String clusterName, String groupName, String jobName, String jobClassName) {
 		DagJob dagNode = new DagJob(clusterName, groupName, jobName, jobClassName, this);
-		this.next = dagNode;
+		nextDags.add(dagNode);
 		return dagNode;
 	}
 
 	public DagFlow fork(String clusterName, String groupName, String jobName, String jobClassName) {
 		DagJob dagJob = new DagJob(clusterName, groupName, jobName, jobClassName, null);
-		forks.add(dagJob);
+		forkDags.add(dagJob);
 		return dagJob;
 	}
 
 	public JobDefinition[] getJobDefinitions() {
 		List<JobDefinition> jobDefinitions = new ArrayList<JobDefinition>();
 		List<JobKey> jobKeys = new ArrayList<JobKey>();
-		for (DagJob dagJob : forks) {
-			jobKeys.add(dagJob.getJobKey());
-			jobDefinitions.addAll(Arrays.asList(dagJob.getJobDefinitions()));
+		for (DagJob forkDag : forkDags) {
+			jobKeys.add(forkDag.getJobKey());
+			jobDefinitions.addAll(Arrays.asList(forkDag.getJobDefinitions()));
 		}
 		builder.setForkKeys(jobKeys.toArray(new JobKey[0]));
 		if (previous != null) {
 			builder.setDependentKeys(new JobKey[] { previous.getJobKey() });
 		}
 		jobDefinitions.add(builder.build());
-		if (next != null) {
-			jobDefinitions.addAll(Arrays.asList(next.getJobDefinitions()));
+		if (nextDags.size() > 0) {
+			for (DagDefination nextDag : nextDags) {
+				jobDefinitions.addAll(Arrays.asList(nextDag.getJobDefinitions()));
+			}
 		}
 		return jobDefinitions.toArray(new JobDefinition[0]);
 	}

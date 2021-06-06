@@ -1,7 +1,7 @@
 package indi.atlantis.framework.chaconne;
 
 import indi.atlantis.framework.chaconne.dag.DagDefination;
-import indi.atlantis.framework.chaconne.model.JobPersistParam;
+import indi.atlantis.framework.chaconne.model.JobPersistParameter;
 import indi.atlantis.framework.chaconne.utils.GenericJobDefinition;
 
 /**
@@ -14,7 +14,7 @@ import indi.atlantis.framework.chaconne.utils.GenericJobDefinition;
  */
 public interface JobPersistence {
 
-	default int persistJob(JobPersistParam param) throws Exception {
+	default int persistJob(JobPersistParameter param) throws Exception {
 		JobDefinition jobDefinition = GenericJobDefinition.parse(param).build();
 		return persistJob(jobDefinition, param.getAttachment());
 	}

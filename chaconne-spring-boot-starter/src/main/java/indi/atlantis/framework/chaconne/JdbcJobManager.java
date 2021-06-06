@@ -182,6 +182,11 @@ public class JdbcJobManager implements JobManager {
 			jobDao.updateJobTrigger(kwargs);
 			log.info("Merge job '{}' ok.", jobKey);
 
+			JobRuntimeDetail runtimeDetail = getJobRuntimeDetail(jobKey);
+			if (runtimeDetail != null && runtimeDetail.getJobState() == JobState.RUNNING) {
+				setJobState(jobKey, JobState.SCHEDULING);
+			}
+
 			if (dependencyType != null) {
 				switch (dependencyType) {
 				case SERIAL:

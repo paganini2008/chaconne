@@ -8,7 +8,7 @@ import lombok.ToString;
 
 /**
  * 
- * JobPersistParam
+ * JobPersistParameter
  * 
  * @author Fred Feng
  *
@@ -17,7 +17,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class JobPersistParam {
+public class JobPersistParameter {
 
 	private JobKey jobKey;
 	private String description;
@@ -29,34 +29,34 @@ public class JobPersistParam {
 	private JobKey[] forkKeys;
 	private float completionRate = -1F;
 
-	private JobTriggerParam trigger;
+	private JobTriggerParameter trigger;
 	private String attachment;
 
-	public JobPersistParam() {
+	public JobPersistParameter() {
 	}
 
-	public JobPersistParam(String clusterName, String groupName, String jobName, String jobClassName) {
+	public JobPersistParameter(String clusterName, String groupName, String jobName, String jobClassName) {
 		this.jobKey = JobKey.by(clusterName, groupName, jobName, jobClassName);
 	}
 
-	public JobPersistParam(JobKey jobKey) {
+	public JobPersistParameter(JobKey jobKey) {
 		this.jobKey = jobKey;
 	}
 
-	public static JobPersistParam forExample() {
-		JobPersistParam param = new JobPersistParam();
+	public static JobPersistParameter forExample() {
+		JobPersistParameter param = new JobPersistParameter();
 		param.setJobKey(JobKey.by("yourCluster", "yourGroup", "yourJob", "com.yourcompany.yourapp.YourJob"));
 		param.setDescription("Describe your job shortly");
 		param.setEmail("Set your email if job run abnormally");
 		param.setRetries(0);
 		param.setTimeout(-1L);
 		param.setAttachment("Set initial parameter of your job. Data with json format is recommended.");
-		param.setTrigger(new JobTriggerParam("*/5 * * * * ?"));
+		param.setTrigger(new JobTriggerParameter("*/5 * * * * ?"));
 		return param;
 	}
 
-	public static JobPersistParam wrap(JobDetail jobDetail) {
-		JobPersistParam param = new JobPersistParam(jobDetail.getJobKey());
+	public static JobPersistParameter wrap(JobDetail jobDetail) {
+		JobPersistParameter param = new JobPersistParameter(jobDetail.getJobKey());
 		param.setAttachment(jobDetail.getAttachment());
 		param.setDescription(jobDetail.getDescription());
 		param.setEmail(jobDetail.getEmail());
@@ -76,7 +76,7 @@ public class JobPersistParam {
 			triggerDescription.setDependency(null);
 		}
 
-		JobTriggerParam trigger = new JobTriggerParam();
+		JobTriggerParameter trigger = new JobTriggerParameter();
 		trigger.setTriggerType(triggerDetail.getTriggerType());
 		trigger.setStartDate(triggerDetail.getStartDate());
 		trigger.setEndDate(triggerDetail.getEndDate());

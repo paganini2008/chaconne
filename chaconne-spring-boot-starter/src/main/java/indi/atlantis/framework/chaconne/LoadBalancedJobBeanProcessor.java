@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
-import indi.atlantis.framework.chaconne.model.JobParam;
+import indi.atlantis.framework.chaconne.model.JobParameter;
 import indi.atlantis.framework.tridenter.ApplicationInfo;
 import indi.atlantis.framework.tridenter.Constants;
 import indi.atlantis.framework.tridenter.multicast.ApplicationMessageListener;
@@ -31,7 +31,7 @@ public class LoadBalancedJobBeanProcessor implements ApplicationMessageListener 
 
 	@Override
 	public void onMessage(ApplicationInfo applicationInfo, String id, Object message) {
-		JobParam jobParam = (JobParam) message;
+		JobParameter jobParam = (JobParameter) message;
 		Job job;
 		try {
 			job = jobBeanLoader.loadJobBean(jobParam.getJobKey());
