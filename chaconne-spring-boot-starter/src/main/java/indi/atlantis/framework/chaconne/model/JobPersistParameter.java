@@ -44,33 +44,33 @@ public class JobPersistParameter {
 	}
 
 	public static JobPersistParameter forExample() {
-		JobPersistParameter param = new JobPersistParameter();
-		param.setJobKey(JobKey.by("yourCluster", "yourGroup", "yourJob", "com.yourcompany.yourapp.YourJob"));
-		param.setDescription("Describe your job shortly");
-		param.setEmail("Set your email if job run abnormally");
-		param.setRetries(0);
-		param.setTimeout(-1L);
-		param.setAttachment("Set initial parameter of your job. Data with json format is recommended.");
-		param.setTrigger(new JobTriggerParameter("*/5 * * * * ?"));
-		return param;
+		JobPersistParameter parameter = new JobPersistParameter();
+		parameter.setJobKey(JobKey.by("yourCluster", "yourGroup", "yourJob", "com.yourcompany.yourapp.YourJob"));
+		parameter.setDescription("Describe your job shortly");
+		parameter.setEmail("Set your email if job run abnormally");
+		parameter.setRetries(0);
+		parameter.setTimeout(-1L);
+		parameter.setAttachment("Set initial parameter of your job. Data with json format is recommended.");
+		parameter.setTrigger(new JobTriggerParameter("*/5 * * * * ?"));
+		return parameter;
 	}
 
 	public static JobPersistParameter wrap(JobDetail jobDetail) {
-		JobPersistParameter param = new JobPersistParameter(jobDetail.getJobKey());
-		param.setAttachment(jobDetail.getAttachment());
-		param.setDescription(jobDetail.getDescription());
-		param.setEmail(jobDetail.getEmail());
-		param.setRetries(jobDetail.getRetries());
-		param.setTimeout(jobDetail.getTimeout());
-		param.setWeight(jobDetail.getWeight());
+		JobPersistParameter parameter = new JobPersistParameter(jobDetail.getJobKey());
+		parameter.setAttachment(jobDetail.getAttachment());
+		parameter.setDescription(jobDetail.getDescription());
+		parameter.setEmail(jobDetail.getEmail());
+		parameter.setRetries(jobDetail.getRetries());
+		parameter.setTimeout(jobDetail.getTimeout());
+		parameter.setWeight(jobDetail.getWeight());
 
 		JobTriggerDetail triggerDetail = jobDetail.getJobTriggerDetail();
 		TriggerDescription triggerDescription = triggerDetail.getTriggerDescriptionObject();
 		Dependency dependency = triggerDescription.getDependency();
 		if (dependency != null) {
-			param.setCompletionRate(dependency.getCompletionRate());
-			param.setDependentKeys(dependency.getDependentKeys());
-			param.setForkKeys(dependency.getForkKeys());
+			parameter.setCompletionRate(dependency.getCompletionRate());
+			parameter.setDependentKeys(dependency.getDependentKeys());
+			parameter.setForkKeys(dependency.getForkKeys());
 			triggerDescription.setCron(dependency.getCron());
 			triggerDescription.setPeriodic(dependency.getPeriodic());
 			triggerDescription.setDependency(null);
@@ -82,9 +82,9 @@ public class JobPersistParameter {
 		trigger.setEndDate(triggerDetail.getEndDate());
 		trigger.setRepeatCount(triggerDetail.getRepeatCount());
 		trigger.setTriggerDescription(triggerDescription);
-		param.setTrigger(trigger);
+		parameter.setTrigger(trigger);
 
-		return param;
+		return parameter;
 	}
 
 }

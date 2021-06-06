@@ -14,9 +14,9 @@ import indi.atlantis.framework.chaconne.utils.GenericJobDefinition;
  */
 public interface JobPersistence {
 
-	default int persistJob(JobPersistParameter param) throws Exception {
-		JobDefinition jobDefinition = GenericJobDefinition.parse(param).build();
-		return persistJob(jobDefinition, param.getAttachment());
+	default int persistJob(JobPersistParameter parameter) throws Exception {
+		JobDefinition jobDefinition = GenericJobDefinition.parse(parameter).build();
+		return persistJob(jobDefinition, parameter.getAttachment());
 	}
 
 	default int persistJob(DagDefination dagDefination, String attachment) throws Exception {

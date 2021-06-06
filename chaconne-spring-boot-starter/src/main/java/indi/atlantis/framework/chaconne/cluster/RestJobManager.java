@@ -50,9 +50,9 @@ public class RestJobManager implements JobManager {
 	}
 
 	@Override
-	public int persistJob(JobPersistParameter param) throws Exception {
-		ResponseEntity<JobResult<Integer>> responseEntity = restTemplate.perform(param.getJobKey().getClusterName(),
-				"/job/manager/persistJob", HttpMethod.POST, param, new ParameterizedTypeReference<JobResult<Integer>>() {
+	public int persistJob(JobPersistParameter parameter) throws Exception {
+		ResponseEntity<JobResult<Integer>> responseEntity = restTemplate.perform(parameter.getJobKey().getClusterName(),
+				"/job/manager/persistJob", HttpMethod.POST, parameter, new ParameterizedTypeReference<JobResult<Integer>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
@@ -63,9 +63,9 @@ public class RestJobManager implements JobManager {
 			throw new UnsupportedOperationException("Please use GenericJobDefinition.Builder to build a new job.");
 		}
 		GenericJobDefinition jobDef = (GenericJobDefinition) jobDefinition;
-		JobPersistParameter param = jobDef.toParameter();
-		param.setAttachment(attachment);
-		return persistJob(param);
+		JobPersistParameter parameter = jobDef.toParameter();
+		parameter.setAttachment(attachment);
+		return persistJob(parameter);
 	}
 
 	@Override

@@ -54,8 +54,8 @@ public class ConsumerModeController {
 	}
 
 	@PostMapping("/publicLifeCycleEvent")
-	public ResponseEntity<JobResult<String>> publicLifeCycleEvent(@RequestBody JobLifeCycleParameter param) throws Exception {
-		jobAdmin.publicLifeCycleEvent(param.getJobKey(), param.getLifeCycle());
+	public ResponseEntity<JobResult<String>> publicLifeCycleEvent(@RequestBody JobLifeCycleParameter parameter) throws Exception {
+		jobAdmin.publicLifeCycleEvent(parameter.getJobKey(), parameter.getLifeCycle());
 		return ResponseEntity.ok(JobResult.success("ok"));
 	}
 

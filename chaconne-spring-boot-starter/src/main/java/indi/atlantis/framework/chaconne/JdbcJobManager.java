@@ -302,7 +302,7 @@ public class JdbcJobManager implements JobManager {
 	 * @param jobId
 	 * @param dependencies
 	 * @param dependencyType
-	 * @throws SQLException
+	 * @throws Exception
 	 */
 	private void handleJobDependency(JobKey jobKey, int jobId, JobKey[] dependencies, DependencyType dependencyType) throws Exception {
 		List<Integer> dependentIds = new ArrayList<Integer>();

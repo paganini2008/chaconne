@@ -147,16 +147,16 @@ public class GenericJobDefinition implements JobDefinition {
 	}
 
 	public JobPersistParameter toParameter() {
-		JobPersistParameter param = new JobPersistParameter();
-		param.setDescription(description);
-		param.setEmail(email);
-		param.setRetries(retries);
-		param.setTimeout(timeout);
-		param.setWeight(weight);
-		param.setJobKey(jobKey);
-		param.setDependentKeys(dependentKeys);
-		param.setForkKeys(forkKeys);
-		param.setCompletionRate(completionRate);
+		JobPersistParameter parameter = new JobPersistParameter();
+		parameter.setDescription(description);
+		parameter.setEmail(email);
+		parameter.setRetries(retries);
+		parameter.setTimeout(timeout);
+		parameter.setWeight(weight);
+		parameter.setJobKey(jobKey);
+		parameter.setDependentKeys(dependentKeys);
+		parameter.setForkKeys(forkKeys);
+		parameter.setCompletionRate(completionRate);
 
 		JobTriggerParameter triggerParam = new JobTriggerParameter();
 		if (trigger != null) {
@@ -166,16 +166,15 @@ public class GenericJobDefinition implements JobDefinition {
 			triggerParam.setEndDate(trigger.getEndDate());
 			triggerParam.setRepeatCount(trigger.getRepeatCount());
 		}
-		param.setTrigger(triggerParam);
-
-		return param;
+		parameter.setTrigger(triggerParam);
+		return parameter;
 	}
 
-	public static Builder parse(JobPersistParameter param) {
-		Builder builder = newJob(param.getJobKey()).setDescription(param.getDescription()).setEmail(param.getEmail())
-				.setRetries(param.getRetries()).setTimeout(param.getTimeout()).setWeight(param.getWeight())
-				.setDependentKeys(param.getDependentKeys()).setForkKeys(param.getForkKeys());
-		GenericTrigger.Builder triggerBuilder = GenericTrigger.parse(param.getTrigger());
+	public static Builder parse(JobPersistParameter parameter) {
+		Builder builder = newJob(parameter.getJobKey()).setDescription(parameter.getDescription()).setEmail(parameter.getEmail())
+				.setRetries(parameter.getRetries()).setTimeout(parameter.getTimeout()).setWeight(parameter.getWeight())
+				.setDependentKeys(parameter.getDependentKeys()).setForkKeys(parameter.getForkKeys());
+		GenericTrigger.Builder triggerBuilder = GenericTrigger.parse(parameter.getTrigger());
 		builder.setTrigger(triggerBuilder.build());
 		return builder;
 	}
