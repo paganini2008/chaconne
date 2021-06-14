@@ -56,8 +56,8 @@ public class ResourceConfig {
 			config.setJdbcUrl(jdbcUrl);
 			config.setUsername(username);
 			config.setPassword(password);
-			config.setMinimumIdle(5);
-			config.setMaximumPoolSize(50);
+			config.setMinimumIdle(1);
+			config.setMaximumPoolSize(20);
 			config.setMaxLifetime(60 * 1000);
 			config.setIdleTimeout(60 * 1000);
 			config.setValidationTimeout(3000);

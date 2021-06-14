@@ -29,7 +29,7 @@ import com.github.paganini2008.devtools.cron4j.TaskExecutor;
 import com.github.paganini2008.devtools.cron4j.ThreadPoolTaskExecutor;
 import com.github.paganini2008.devtools.multithreads.PooledThreadFactory;
 import com.github.paganini2008.devtools.multithreads.ThreadPoolBuilder;
-import com.github.paganini2008.springworld.jdbc.annotations.DaoScan;
+import com.github.paganini2008.springdesert.jdbc.annotations.DaoScan;
 
 import indi.atlantis.framework.chaconne.cluster.ConsumerModeJobExecutor;
 import indi.atlantis.framework.chaconne.cluster.JobManagerController;

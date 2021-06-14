@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import com.github.paganini2008.devtools.ArrayUtils;
 import com.github.paganini2008.devtools.Observable;
 import com.github.paganini2008.devtools.Observer;
-import com.github.paganini2008.springworld.reditools.messager.RedisMessageSender;
+import com.github.paganini2008.springdessert.reditools.messager.RedisMessageSender;
 
 import indi.atlantis.framework.chaconne.model.JobParameter;
 import indi.atlantis.framework.chaconne.model.TaskForkResult;
