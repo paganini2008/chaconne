@@ -32,6 +32,7 @@ import com.github.paganini2008.devtools.multithreads.ThreadPoolBuilder;
 import com.github.paganini2008.springworld.jdbc.annotations.DaoScan;
 
 import indi.atlantis.framework.chaconne.cluster.ConsumerModeJobExecutor;
+import indi.atlantis.framework.chaconne.cluster.JobManagerController;
 import indi.atlantis.framework.chaconne.cron4j.Cron4jScheduler;
 import indi.atlantis.framework.chaconne.utils.JavaMailService;
 import lombok.Setter;
@@ -48,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @DaoScan(basePackages = "indi.atlantis.framework.chaconne")
 @Configuration(proxyBeanMethods = false)
-@Import({ JobAdminController.class })
+@Import({ JobAdminController.class, JobManagerController.class })
 public class EmbeddedModeConfiguration {
 
 	static {

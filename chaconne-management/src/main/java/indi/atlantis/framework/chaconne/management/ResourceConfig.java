@@ -14,9 +14,6 @@ import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericToStringSerializer;
-import org.springframework.data.redis.serializer.RedisSerializer;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -118,17 +115,6 @@ public class ResourceConfig {
 			jedisPoolConfig.setMaxWaitMillis(-1);
 			jedisPoolConfig.setTestWhileIdle(true);
 			return jedisPoolConfig;
-		}
-
-		@Bean("bigint")
-		public RedisTemplate<String, Long> bigintRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-			RedisTemplate<String, Long> redisTemplate = new RedisTemplate<String, Long>();
-			redisTemplate.setKeySerializer(RedisSerializer.string());
-			redisTemplate.setValueSerializer(new GenericToStringSerializer<Long>(Long.class));
-			redisTemplate.setExposeConnection(true);
-			redisTemplate.setConnectionFactory(redisConnectionFactory);
-			redisTemplate.afterPropertiesSet();
-			return redisTemplate;
 		}
 
 	}

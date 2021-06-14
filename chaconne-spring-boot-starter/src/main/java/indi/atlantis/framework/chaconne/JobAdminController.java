@@ -36,9 +36,9 @@ public class JobAdminController {
 	}
 
 	@PostMapping("/publicLifeCycleEvent")
-	public ResponseEntity<String> publicLifeCycleEvent(@RequestBody JobLifeCycleParameter jobParam) throws Exception {
+	public ResponseEntity<JobResult<String>> publicLifeCycleEvent(@RequestBody JobLifeCycleParameter jobParam) throws Exception {
 		jobAdmin.publicLifeCycleEvent(jobParam.getJobKey(), jobParam.getLifeCycle());
-		return ResponseEntity.ok("ok");
+		return ResponseEntity.ok(JobResult.success("ok"));
 	}
 
 	@PostMapping("/unscheduleJob")
