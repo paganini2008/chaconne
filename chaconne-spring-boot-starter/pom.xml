@@ -19,8 +19,8 @@
 		<dependency>
 			<groupId>com.github.paganini2008</groupId>
 			<artifactId>devtools-cron4j</artifactId>
-			<version>2.0-RC5</version>
-			<scope>provided</scope>
+			<version>2.0.1</version>
+			<scope>provided</scope> 
 		</dependency>
 
 		<dependency>
@@ -30,9 +30,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.github.paganini2008.springworld</groupId>
-			<artifactId>jdbc-spring-boot-starter</artifactId>
-			<version>2.0-RC5</version>
+			<groupId>com.github.paganini2008</groupId>
+			<artifactId>fastjdbc-spring-boot-starter</artifactId>
+			<version>2.0.1</version>
 		</dependency>
 
 		<dependency>

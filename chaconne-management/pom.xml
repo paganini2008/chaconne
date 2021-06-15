@@ -83,13 +83,6 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
-
-		<dependency>
-			<groupId>indi.atlantis.framework</groupId>
-			<artifactId>vortex-spring-boot-starter</artifactId>
-			<version>1.0-RC1</version>
-		</dependency>
-
 		<dependency>
 			<groupId>indi.atlantis.framework</groupId>
 			<artifactId>chaconne-spring-boot-starter</artifactId>

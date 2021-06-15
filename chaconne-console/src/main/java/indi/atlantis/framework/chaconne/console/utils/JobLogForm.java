@@ -13,17 +13,14 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package indi.atlantis.framework.chaconne.model;
-
-import java.util.ArrayList;
-import java.util.List;
+package indi.atlantis.framework.chaconne.console.utils;
 
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * 
- * PageQuery
+ * JobLogForm
  * 
  * @author Fred Feng
  *
@@ -31,20 +28,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class PageQuery<T> extends Query {
+public class JobLogForm {
 
-	private int rows;
-	private int page;
-	private int size;
-	private List<T> content = new ArrayList<T>();
-	private boolean nextPage;
-
-	public PageQuery() {
-	}
-
-	public PageQuery(int page, int size) {
-		this.page = page;
-		this.size = size;
-	}
+	private String jobKey;
+	private long traceId;
+	private String log;
+	private String level;
 
 }

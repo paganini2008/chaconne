@@ -3,12 +3,12 @@ package indi.atlantis.framework.chaconne;
 import java.util.List;
 import java.util.Map;
 
-import com.github.paganini2008.springdesert.jdbc.annotations.Args;
-import com.github.paganini2008.springdesert.jdbc.annotations.Batch;
-import com.github.paganini2008.springdesert.jdbc.annotations.Dao;
-import com.github.paganini2008.springdesert.jdbc.annotations.Example;
-import com.github.paganini2008.springdesert.jdbc.annotations.Insert;
-import com.github.paganini2008.springdesert.jdbc.annotations.Update;
+import com.github.paganini2008.springdesert.fastjdbc.annotations.Args;
+import com.github.paganini2008.springdesert.fastjdbc.annotations.Batch;
+import com.github.paganini2008.springdesert.fastjdbc.annotations.Dao;
+import com.github.paganini2008.springdesert.fastjdbc.annotations.Example;
+import com.github.paganini2008.springdesert.fastjdbc.annotations.Insert;
+import com.github.paganini2008.springdesert.fastjdbc.annotations.Update;
 
 /**
  * 
