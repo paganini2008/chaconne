@@ -1,6 +1,6 @@
 # Chaconne Project
 ### a lightweight distributed task scheduling framework
-Chaconne is a lightweight distributed task scheduling framework written in Java based on spring boot framework. Adding chaconne component to your system can help you build a distributed task cluster very quickly.
+Chaconne is a lightweight distributed task scheduling framework written in Java based on springboot framework. Reference chaconne components to your system can help you build a distributed task cluster very quickly.
 
 ### Two cluster deployment modes of chaconne
 1. Decentralized deployment mode
