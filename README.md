@@ -15,7 +15,7 @@ The core jar package contains all the core functions of chaconne
 Chaconne web management interface for task management and viewing task running status
 
 ### Implementation principle of chaconne
-Chaconne relies on trident-spring-boot-starter component to realize task cluster. It uses message unicast mechanism to realize task distribution and load balancing, slice processing and other advanced features. It retains Trident's definition of cluster and supports cross cluster calls
+Chaconne relies on [tridenter](https://github.com/paganini2008/tridenter-spring-boot-starter.git) framework to realize task cluster. It uses message unicast mechanism to realize task distribution and load balancing, slice processing and other advanced features. It retains tridenter's definition of cluster and supports task calling between clusters
 
 ### Chaconne feature list
 1. Perfect support for spring boot framework (2.2.0 +)
