@@ -33,11 +33,11 @@ Chaconne relies on [tridenter](https://github.com/paganini2008/tridenter-spring-
 
 ### Install:
 ``` xml
-		<dependency>
-			<artifactId>chaconne-spring-boot-starter</artifactId>
-			<groupId>indi.atlantis.framework</groupId>
-			<version>1.0-RC1</version>
-		</dependency>
+<dependency>
+    <artifactId>chaconne-spring-boot-starter</artifactId>
+    <groupId>indi.atlantis.framework</groupId>
+    <version>1.0-RC1</version>
+</dependency>
 ```
 ### Compatibility
 
