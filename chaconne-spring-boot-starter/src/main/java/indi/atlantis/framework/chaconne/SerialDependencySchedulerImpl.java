@@ -29,7 +29,7 @@ import com.github.paganini2008.devtools.Observer;
 import com.github.paganini2008.springdessert.reditools.messager.RedisMessageSender;
 
 import indi.atlantis.framework.chaconne.model.JobParameter;
-import indi.atlantis.framework.chaconne.model.TaskForkResult;
+import indi.atlantis.framework.chaconne.model.JobResult;
 import indi.atlantis.framework.tridenter.Constants;
 import indi.atlantis.framework.tridenter.utils.ApplicationContextUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +67,7 @@ public class SerialDependencySchedulerImpl extends Observable implements SerialD
 		List<Observer> obs = new CopyOnWriteArrayList<Observer>();
 		for (final JobKey dependency : dependencies) {
 			Observer ob = (o, attachment) -> {
-				final TaskForkResult jobResult = (TaskForkResult) attachment;
+				final JobResult jobResult = (JobResult) attachment;
 				if (approveIfJobCompleted(job, jobResult)) {
 					jobExecutor.execute(job, jobResult.getResult(), 0);
 				}
@@ -94,7 +94,7 @@ public class SerialDependencySchedulerImpl extends Observable implements SerialD
 				continue;
 			}
 			Observer ob = (o, attachment) -> {
-				final TaskForkResult jobResult = (TaskForkResult) attachment;
+				final JobResult jobResult = (JobResult) attachment;
 				if (approveIfJobCompleted(job, jobResult)) {
 					jobExecutor.execute(job, jobResult.getResult(), 0);
 				}
@@ -130,7 +130,7 @@ public class SerialDependencySchedulerImpl extends Observable implements SerialD
 		}
 	}
 
-	private boolean approveIfJobCompleted(Job targetJob, TaskForkResult jobResult) {
+	private boolean approveIfJobCompleted(Job targetJob, JobResult jobResult) {
 		if (ArrayUtils.isNotEmpty(targetJob.getDependencyPostHandlers())) {
 			boolean result = true;
 			for (Class<?> requiredType : targetJob.getDependencyPostHandlers()) {

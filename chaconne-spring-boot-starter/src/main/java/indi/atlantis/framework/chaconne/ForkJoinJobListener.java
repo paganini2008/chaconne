@@ -24,7 +24,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import com.github.paganini2008.springdessert.reditools.RedisComponentNames;
 import com.github.paganini2008.springdessert.reditools.common.RedisCountDownLatch;
 
-import indi.atlantis.framework.chaconne.model.TaskForkResult;
+import indi.atlantis.framework.chaconne.model.JobResult;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -55,7 +55,7 @@ public class ForkJoinJobListener implements JobListener {
 			throw ExceptionUtils.wrapExeception("Job '" + jobKey + "' has no relations", e);
 		}
 		RedisCountDownLatch latch = new RedisCountDownLatch(relation.getIdentifier(), redisTemplate);
-		latch.countDown(new TaskForkResult(jobKey, attachment, runningState, result));
+		latch.countDown(new JobResult(jobKey, attachment, runningState, result));
 		if (log.isTraceEnabled()) {
 			log.trace("Release job latch: {}", latch);
 		}

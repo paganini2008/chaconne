@@ -17,7 +17,7 @@ import indi.atlantis.framework.chaconne.model.JobDetail;
 import indi.atlantis.framework.chaconne.model.JobKeyQuery;
 import indi.atlantis.framework.chaconne.model.JobLog;
 import indi.atlantis.framework.chaconne.model.JobPersistParameter;
-import indi.atlantis.framework.chaconne.model.JobResult;
+import indi.atlantis.framework.chaconne.model.Result;
 import indi.atlantis.framework.chaconne.model.JobRuntimeDetail;
 import indi.atlantis.framework.chaconne.model.JobStackTrace;
 import indi.atlantis.framework.chaconne.model.JobStateParameter;
@@ -43,16 +43,16 @@ public class RestJobManager implements JobManager {
 
 	@Override
 	public String[] selectClusterNames() throws Exception {
-		ResponseEntity<JobResult<String[]>> responseEntity = restTemplate.perform(null, "/job/manager/selectClusterNames", HttpMethod.GET,
-				null, new ParameterizedTypeReference<JobResult<String[]>>() {
+		ResponseEntity<Result<String[]>> responseEntity = restTemplate.perform(null, "/job/manager/selectClusterNames", HttpMethod.GET,
+				null, new ParameterizedTypeReference<Result<String[]>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
 
 	@Override
 	public int persistJob(JobPersistParameter parameter) throws Exception {
-		ResponseEntity<JobResult<Integer>> responseEntity = restTemplate.perform(parameter.getJobKey().getClusterName(),
-				"/job/manager/persistJob", HttpMethod.POST, parameter, new ParameterizedTypeReference<JobResult<Integer>>() {
+		ResponseEntity<Result<Integer>> responseEntity = restTemplate.perform(parameter.getJobKey().getClusterName(),
+				"/job/manager/persistJob", HttpMethod.POST, parameter, new ParameterizedTypeReference<Result<Integer>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
@@ -70,16 +70,16 @@ public class RestJobManager implements JobManager {
 
 	@Override
 	public JobState finishJob(JobKey jobKey) throws Exception {
-		ResponseEntity<JobResult<JobState>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/finishJob",
-				HttpMethod.POST, jobKey, new ParameterizedTypeReference<JobResult<JobState>>() {
+		ResponseEntity<Result<JobState>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/finishJob",
+				HttpMethod.POST, jobKey, new ParameterizedTypeReference<Result<JobState>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
 
 	@Override
 	public boolean hasJob(JobKey jobKey) throws Exception {
-		ResponseEntity<JobResult<Boolean>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/hasJob",
-				HttpMethod.POST, jobKey, new ParameterizedTypeReference<JobResult<Boolean>>() {
+		ResponseEntity<Result<Boolean>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/hasJob",
+				HttpMethod.POST, jobKey, new ParameterizedTypeReference<Result<Boolean>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
@@ -96,89 +96,89 @@ public class RestJobManager implements JobManager {
 
 	@Override
 	public boolean hasJobState(JobKey jobKey, JobState jobState) throws Exception {
-		ResponseEntity<JobResult<Boolean>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/hasJobState",
-				HttpMethod.POST, new JobStateParameter(jobKey, jobState), new ParameterizedTypeReference<JobResult<Boolean>>() {
+		ResponseEntity<Result<Boolean>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/hasJobState",
+				HttpMethod.POST, new JobStateParameter(jobKey, jobState), new ParameterizedTypeReference<Result<Boolean>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
 
 	@Override
 	public JobState setJobState(JobKey jobKey, JobState jobState) throws Exception {
-		ResponseEntity<JobResult<JobState>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/setJobState",
-				HttpMethod.POST, new JobStateParameter(jobKey, jobState), new ParameterizedTypeReference<JobResult<JobState>>() {
+		ResponseEntity<Result<JobState>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/setJobState",
+				HttpMethod.POST, new JobStateParameter(jobKey, jobState), new ParameterizedTypeReference<Result<JobState>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
 
 	@Override
 	public JobDetail getJobDetail(JobKey jobKey, boolean detailed) throws Exception {
-		ResponseEntity<JobResult<JobDetail>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/getJobDetail",
-				HttpMethod.POST, jobKey, new ParameterizedTypeReference<JobResult<JobDetail>>() {
+		ResponseEntity<Result<JobDetail>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/getJobDetail",
+				HttpMethod.POST, jobKey, new ParameterizedTypeReference<Result<JobDetail>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
 
 	@Override
 	public JobTriggerDetail getJobTriggerDetail(JobKey jobKey) throws Exception {
-		ResponseEntity<JobResult<JobTriggerDetail>> responseEntity = restTemplate.perform(jobKey.getClusterName(),
-				"/job/manager/getJobTriggerDetail", HttpMethod.POST, jobKey, new ParameterizedTypeReference<JobResult<JobTriggerDetail>>() {
+		ResponseEntity<Result<JobTriggerDetail>> responseEntity = restTemplate.perform(jobKey.getClusterName(),
+				"/job/manager/getJobTriggerDetail", HttpMethod.POST, jobKey, new ParameterizedTypeReference<Result<JobTriggerDetail>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
 
 	@Override
 	public boolean hasRelations(JobKey jobKey, DependencyType dependencyType) throws Exception {
-		ResponseEntity<JobResult<Boolean>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/hasRelations",
-				HttpMethod.POST, new JobDependencyParameter(jobKey, dependencyType), new ParameterizedTypeReference<JobResult<Boolean>>() {
+		ResponseEntity<Result<Boolean>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/hasRelations",
+				HttpMethod.POST, new JobDependencyParameter(jobKey, dependencyType), new ParameterizedTypeReference<Result<Boolean>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
 
 	@Override
 	public JobKey[] getRelations(JobKey jobKey, DependencyType dependencyType) throws Exception {
-		ResponseEntity<JobResult<JobKey[]>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/getRelations",
-				HttpMethod.POST, new JobDependencyParameter(jobKey, dependencyType), new ParameterizedTypeReference<JobResult<JobKey[]>>() {
+		ResponseEntity<Result<JobKey[]>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/getRelations",
+				HttpMethod.POST, new JobDependencyParameter(jobKey, dependencyType), new ParameterizedTypeReference<Result<JobKey[]>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
 
 	@Override
 	public JobKey[] getDependentKeys(JobKey jobKey, DependencyType dependencyType) throws Exception {
-		ResponseEntity<JobResult<JobKey[]>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/getDependentKeys",
-				HttpMethod.POST, new JobDependencyParameter(jobKey, dependencyType), new ParameterizedTypeReference<JobResult<JobKey[]>>() {
+		ResponseEntity<Result<JobKey[]>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/getDependentKeys",
+				HttpMethod.POST, new JobDependencyParameter(jobKey, dependencyType), new ParameterizedTypeReference<Result<JobKey[]>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
 
 	@Override
 	public JobKey[] getJobKeys(JobKeyQuery jobQuery) throws Exception {
-		ResponseEntity<JobResult<JobKey[]>> responseEntity = restTemplate.perform(jobQuery.getClusterName(), "/job/manager/getJobKeys",
-				HttpMethod.POST, jobQuery, new ParameterizedTypeReference<JobResult<JobKey[]>>() {
+		ResponseEntity<Result<JobKey[]>> responseEntity = restTemplate.perform(jobQuery.getClusterName(), "/job/manager/getJobKeys",
+				HttpMethod.POST, jobQuery, new ParameterizedTypeReference<Result<JobKey[]>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
 
 	@Override
 	public JobRuntimeDetail getJobRuntimeDetail(JobKey jobKey) throws Exception {
-		ResponseEntity<JobResult<JobRuntimeDetail>> responseEntity = restTemplate.perform(jobKey.getClusterName(),
-				"/job/manager/getJobRuntimeDetail", HttpMethod.POST, jobKey, new ParameterizedTypeReference<JobResult<JobRuntimeDetail>>() {
+		ResponseEntity<Result<JobRuntimeDetail>> responseEntity = restTemplate.perform(jobKey.getClusterName(),
+				"/job/manager/getJobRuntimeDetail", HttpMethod.POST, jobKey, new ParameterizedTypeReference<Result<JobRuntimeDetail>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
 
 	@Override
 	public int getJobId(JobKey jobKey) throws Exception {
-		ResponseEntity<JobResult<Integer>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/getJobId",
-				HttpMethod.POST, jobKey, new ParameterizedTypeReference<JobResult<Integer>>() {
+		ResponseEntity<Result<Integer>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/getJobId",
+				HttpMethod.POST, jobKey, new ParameterizedTypeReference<Result<Integer>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
 
 	@Override
 	public void selectJobDetail(PageQuery<JobDetail> pageQuery) throws Exception {
-		ResponseEntity<JobResult<PageQuery<JobDetail>>> responseEntity = restTemplate.perform(pageQuery.getClusterName(),
+		ResponseEntity<Result<PageQuery<JobDetail>>> responseEntity = restTemplate.perform(pageQuery.getClusterName(),
 				"/job/manager/selectJobDetail", HttpMethod.POST, pageQuery,
-				new ParameterizedTypeReference<JobResult<PageQuery<JobDetail>>>() {
+				new ParameterizedTypeReference<Result<PageQuery<JobDetail>>>() {
 				});
 		PageQuery<JobDetail> data = responseEntity.getBody().getData();
 		if (data != null) {
@@ -190,9 +190,9 @@ public class RestJobManager implements JobManager {
 
 	@Override
 	public void selectJobTrace(JobTracePageQuery<JobTrace> pageQuery) throws Exception {
-		ResponseEntity<JobResult<PageQuery<JobTrace>>> responseEntity = restTemplate.perform(pageQuery.getClusterName(),
+		ResponseEntity<Result<PageQuery<JobTrace>>> responseEntity = restTemplate.perform(pageQuery.getClusterName(),
 				"/job/manager/selectJobTrace", HttpMethod.POST, pageQuery,
-				new ParameterizedTypeReference<JobResult<PageQuery<JobTrace>>>() {
+				new ParameterizedTypeReference<Result<PageQuery<JobTrace>>>() {
 				});
 		PageQuery<JobTrace> data = responseEntity.getBody().getData();
 		if (data != null) {
@@ -204,16 +204,16 @@ public class RestJobManager implements JobManager {
 
 	@Override
 	public JobStackTrace[] selectJobStackTrace(JobTraceQuery query) throws SQLException {
-		ResponseEntity<JobResult<JobStackTrace[]>> responseEntity = restTemplate.perform(query.getClusterName(),
-				"/job/manager/selectJobStackTrace", HttpMethod.POST, query, new ParameterizedTypeReference<JobResult<JobStackTrace[]>>() {
+		ResponseEntity<Result<JobStackTrace[]>> responseEntity = restTemplate.perform(query.getClusterName(),
+				"/job/manager/selectJobStackTrace", HttpMethod.POST, query, new ParameterizedTypeReference<Result<JobStackTrace[]>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
 
 	@Override
 	public JobLog[] selectJobLog(JobTraceQuery query) throws SQLException {
-		ResponseEntity<JobResult<JobLog[]>> responseEntity = restTemplate.perform(query.getClusterName(), "/job/manager/selectJobLog",
-				HttpMethod.POST, query, new ParameterizedTypeReference<JobResult<JobLog[]>>() {
+		ResponseEntity<Result<JobLog[]>> responseEntity = restTemplate.perform(query.getClusterName(), "/job/manager/selectJobLog",
+				HttpMethod.POST, query, new ParameterizedTypeReference<Result<JobLog[]>>() {
 				});
 		return responseEntity.getBody().getData();
 	}

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import indi.atlantis.framework.chaconne.model.JobResult;
+import indi.atlantis.framework.chaconne.model.Result;
 import indi.atlantis.framework.tridenter.ApplicationInfo;
 
 /**
@@ -26,9 +26,9 @@ public class JobServerRegistryController {
 	private JobServerRegistry jobServerRegistry;
 
 	@PostMapping("/registerCluster")
-	public ResponseEntity<JobResult<Boolean>> registerCluster(@RequestBody ApplicationInfo applicationInfo) {
+	public ResponseEntity<Result<Boolean>> registerCluster(@RequestBody ApplicationInfo applicationInfo) {
 		jobServerRegistry.registerCluster(applicationInfo);
-		return ResponseEntity.ok(JobResult.success(Boolean.TRUE));
+		return ResponseEntity.ok(Result.success(Boolean.TRUE));
 	}
 
 }

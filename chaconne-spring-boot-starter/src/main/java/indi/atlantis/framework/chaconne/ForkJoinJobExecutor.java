@@ -32,8 +32,7 @@ import com.github.paganini2008.devtools.reflection.MethodUtils;
 import com.github.paganini2008.springdessert.reditools.common.RedisCountDownLatch;
 
 import indi.atlantis.framework.chaconne.model.JobDetail;
-import indi.atlantis.framework.chaconne.model.TaskForkResult;
-import indi.atlantis.framework.chaconne.model.TaskJoinResult;
+import indi.atlantis.framework.chaconne.model.JobResult;
 import indi.atlantis.framework.tridenter.utils.ApplicationContextUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -103,18 +102,19 @@ public class ForkJoinJobExecutor implements Aspect {
 				} else {
 					log.warn("Maybe some dependent job spend too much time. Please check them.");
 				}
+				JobResult[] forkJobResults = ArrayUtils.cast(answers, JobResult.class);
 				int totalWeight = 0, completionWeight = 0;
-				for (Object result : answers) {
-					TaskForkResult jobResult = (TaskForkResult) result;
+				for (JobResult jobResult : forkJobResults) {
 					JobDetail jobDetail = jobManager.getJobDetail(jobResult.getJobKey(), false);
 					totalWeight += jobDetail.getWeight();
 					completionWeight += approveIfJobCompleted(targetJob, jobResult) ? jobDetail.getWeight() : 0;
 				}
-				float rate = (float) completionWeight / totalWeight;
+				float rate = totalWeight > 0 ? (float) completionWeight / totalWeight : 0;
 				if (rate >= completionRate) {
 					log.trace("The completionRate is '{}' and now start to run target job '{}'.", NumberUtils.format(rate, 2), jobKey);
-					TaskJoinResult taskJoinResult = new TaskJoinResult(jobKey, attachment, ArrayUtils.cast(answers, TaskForkResult.class));
-					return targetJob.execute(jobKey, taskJoinResult, logger);
+					JobResult jobResult = new JobResult(jobKey, attachment, null, null);
+					jobResult.setForkJobResults(forkJobResults);
+					return targetJob.execute(jobKey, jobResult, logger);
 				}
 			}
 			return null;
@@ -122,7 +122,7 @@ public class ForkJoinJobExecutor implements Aspect {
 		return MethodUtils.invokeMethod(target, method, args);
 	}
 
-	private boolean approveIfJobCompleted(Job targetJob, TaskForkResult jobResult) {
+	private boolean approveIfJobCompleted(Job targetJob, JobResult jobResult) {
 		if (ArrayUtils.isNotEmpty(targetJob.getDependencyPostHandlers())) {
 			boolean result = true;
 			for (Class<?> handlerClass : targetJob.getDependencyPostHandlers()) {

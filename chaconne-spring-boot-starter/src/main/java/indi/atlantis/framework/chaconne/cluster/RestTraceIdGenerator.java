@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 import indi.atlantis.framework.chaconne.JobKey;
 import indi.atlantis.framework.chaconne.TraceIdGenerator;
-import indi.atlantis.framework.chaconne.model.JobResult;
+import indi.atlantis.framework.chaconne.model.Result;
 
 /**
  * 
@@ -24,8 +24,8 @@ public class RestTraceIdGenerator implements TraceIdGenerator {
 
 	@Override
 	public long generateTraceId(JobKey jobKey) {
-		ResponseEntity<JobResult<Long>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/generateTraceId",
-				HttpMethod.POST, jobKey, new ParameterizedTypeReference<JobResult<Long>>() {
+		ResponseEntity<Result<Long>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/generateTraceId",
+				HttpMethod.POST, jobKey, new ParameterizedTypeReference<Result<Long>>() {
 				});
 		return responseEntity.getBody().getData();
 	}

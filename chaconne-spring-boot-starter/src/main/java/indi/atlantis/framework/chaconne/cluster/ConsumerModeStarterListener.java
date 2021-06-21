@@ -17,7 +17,7 @@ import indi.atlantis.framework.chaconne.JobListenerContainer;
 import indi.atlantis.framework.chaconne.JobManager;
 import indi.atlantis.framework.chaconne.TriggerType;
 import indi.atlantis.framework.chaconne.model.JobKeyQuery;
-import indi.atlantis.framework.chaconne.model.JobResult;
+import indi.atlantis.framework.chaconne.model.Result;
 import indi.atlantis.framework.tridenter.ApplicationInfo;
 import indi.atlantis.framework.tridenter.InstanceId;
 import indi.atlantis.framework.tridenter.election.ApplicationClusterRefreshedEvent;
@@ -59,8 +59,8 @@ public class ConsumerModeStarterListener implements ApplicationListener<Applicat
 
 	private void registerCluster() {
 		final ApplicationInfo applicationInfo = instanceId.getApplicationInfo();
-		ResponseEntity<JobResult<Boolean>> responseEntity = restTemplate.perform(null, "/job/admin/registerCluster", HttpMethod.POST,
-				applicationInfo, new ParameterizedTypeReference<JobResult<Boolean>>() {
+		ResponseEntity<Result<Boolean>> responseEntity = restTemplate.perform(null, "/job/admin/registerCluster", HttpMethod.POST,
+				applicationInfo, new ParameterizedTypeReference<Result<Boolean>>() {
 				});
 		if (responseEntity.getStatusCode() == HttpStatus.OK && responseEntity.getBody().getData()) {
 			log.info("'{}' register to job producer ok.", applicationInfo);

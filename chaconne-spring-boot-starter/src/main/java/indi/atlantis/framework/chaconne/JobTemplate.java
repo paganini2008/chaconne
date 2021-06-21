@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import com.github.paganini2008.devtools.StringUtils;
 import com.github.paganini2008.devtools.multithreads.ExecutorUtils;
 
-import indi.atlantis.framework.chaconne.model.TaskForkResult;
+import indi.atlantis.framework.chaconne.model.JobResult;
 import indi.atlantis.framework.tridenter.utils.BeanLifeCycle;
 
 /**
@@ -165,7 +165,7 @@ public abstract class JobTemplate implements JobExecutor, BeanLifeCycle {
 				job.onFailure(jobKey, reason, log);
 			}
 
-			notifyDependants(jobKey, job, new TaskForkResult(jobKey, attachment, runningState, result));
+			notifyDependants(jobKey, job, new JobResult(jobKey, attachment, runningState, result));
 		}
 		return new Object[] { runningState, result, reason };
 	}

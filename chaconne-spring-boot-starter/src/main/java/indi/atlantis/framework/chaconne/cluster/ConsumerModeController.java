@@ -14,7 +14,7 @@ import indi.atlantis.framework.chaconne.JobAdmin;
 import indi.atlantis.framework.chaconne.JobState;
 import indi.atlantis.framework.chaconne.model.JobLifeCycleParameter;
 import indi.atlantis.framework.chaconne.model.JobParameter;
-import indi.atlantis.framework.chaconne.model.JobResult;
+import indi.atlantis.framework.chaconne.model.Result;
 import indi.atlantis.framework.tridenter.ApplicationInfo;
 import indi.atlantis.framework.tridenter.InstanceId;
 
@@ -40,23 +40,23 @@ public class ConsumerModeController {
 	private JobAdmin jobAdmin;
 
 	@GetMapping("/registerCluster")
-	public ResponseEntity<JobResult<Boolean>> registerCluster() throws Exception {
+	public ResponseEntity<Result<Boolean>> registerCluster() throws Exception {
 		ApplicationInfo applicationInfo = instanceId.getApplicationInfo();
 		return restTemplate.perform(null, "/job/admin/registerCluster", HttpMethod.POST, applicationInfo,
-				new ParameterizedTypeReference<JobResult<Boolean>>() {
+				new ParameterizedTypeReference<Result<Boolean>>() {
 				});
 	}
 
 	@PostMapping("/triggerJob")
-	public ResponseEntity<JobResult<JobState>> triggerJob(@RequestBody JobParameter jobParam) throws Exception {
+	public ResponseEntity<Result<JobState>> triggerJob(@RequestBody JobParameter jobParam) throws Exception {
 		JobState jobState = jobAdmin.triggerJob(jobParam.getJobKey(), jobParam.getAttachment());
-		return ResponseEntity.ok(JobResult.success(jobState));
+		return ResponseEntity.ok(Result.success(jobState));
 	}
 
 	@PostMapping("/publicLifeCycleEvent")
-	public ResponseEntity<JobResult<String>> publicLifeCycleEvent(@RequestBody JobLifeCycleParameter parameter) throws Exception {
+	public ResponseEntity<Result<String>> publicLifeCycleEvent(@RequestBody JobLifeCycleParameter parameter) throws Exception {
 		jobAdmin.publicLifeCycleEvent(parameter.getJobKey(), parameter.getLifeCycle());
-		return ResponseEntity.ok(JobResult.success("ok"));
+		return ResponseEntity.ok(Result.success("ok"));
 	}
 
 }

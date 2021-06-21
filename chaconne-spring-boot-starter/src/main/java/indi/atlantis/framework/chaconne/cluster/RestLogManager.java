@@ -10,7 +10,7 @@ import indi.atlantis.framework.chaconne.JobKey;
 import indi.atlantis.framework.chaconne.LogLevel;
 import indi.atlantis.framework.chaconne.LogManager;
 import indi.atlantis.framework.chaconne.model.JobLogParameter;
-import indi.atlantis.framework.chaconne.model.JobResult;
+import indi.atlantis.framework.chaconne.model.Result;
 
 /**
  * 
@@ -28,9 +28,9 @@ public class RestLogManager implements LogManager {
 	@Async
 	@Override
 	public void log(long traceId, JobKey jobKey, LogLevel logLevel, String messagePattern, Object[] args, String[] stackTraces) {
-		ResponseEntity<JobResult<String>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/log",
+		ResponseEntity<Result<String>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/log",
 				HttpMethod.POST, new JobLogParameter(traceId, jobKey, logLevel, messagePattern, args, stackTraces),
-				new ParameterizedTypeReference<JobResult<String>>() {
+				new ParameterizedTypeReference<Result<String>>() {
 				});
 		responseEntity.getBody().getData();
 	}

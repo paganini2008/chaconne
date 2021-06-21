@@ -11,7 +11,7 @@ import indi.atlantis.framework.chaconne.JobLifeCycle;
 import indi.atlantis.framework.chaconne.JobState;
 import indi.atlantis.framework.chaconne.model.JobLifeCycleParameter;
 import indi.atlantis.framework.chaconne.model.JobParameter;
-import indi.atlantis.framework.chaconne.model.JobResult;
+import indi.atlantis.framework.chaconne.model.Result;
 
 /**
  * 
@@ -28,16 +28,16 @@ public class DetachedModeJobAdmin implements JobAdmin {
 
 	@Override
 	public JobState triggerJob(JobKey jobKey, Object attachment) throws Exception {
-		ResponseEntity<JobResult<JobState>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/admin/triggerJob",
-				HttpMethod.POST, new JobParameter(jobKey, attachment, 0), new ParameterizedTypeReference<JobResult<JobState>>() {
+		ResponseEntity<Result<JobState>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/admin/triggerJob",
+				HttpMethod.POST, new JobParameter(jobKey, attachment, 0), new ParameterizedTypeReference<Result<JobState>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
 
 	@Override
 	public void publicLifeCycleEvent(JobKey jobKey, JobLifeCycle lifeCycle) {
-		ResponseEntity<JobResult<String>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/admin/publicLifeCycleEvent",
-				HttpMethod.POST, new JobLifeCycleParameter(jobKey, lifeCycle), new ParameterizedTypeReference<JobResult<String>>() {
+		ResponseEntity<Result<String>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/admin/publicLifeCycleEvent",
+				HttpMethod.POST, new JobLifeCycleParameter(jobKey, lifeCycle), new ParameterizedTypeReference<Result<String>>() {
 				});
 		responseEntity.getBody();
 	}

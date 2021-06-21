@@ -20,7 +20,7 @@ import indi.atlantis.framework.chaconne.model.JobKeyQuery;
 import indi.atlantis.framework.chaconne.model.JobLog;
 import indi.atlantis.framework.chaconne.model.JobLogParameter;
 import indi.atlantis.framework.chaconne.model.JobPersistParameter;
-import indi.atlantis.framework.chaconne.model.JobResult;
+import indi.atlantis.framework.chaconne.model.Result;
 import indi.atlantis.framework.chaconne.model.JobRuntimeDetail;
 import indi.atlantis.framework.chaconne.model.JobRuntimeParameter;
 import indi.atlantis.framework.chaconne.model.JobStackTrace;
@@ -56,138 +56,138 @@ public class JobManagerController {
 	private TraceIdGenerator traceIdGenerator;
 
 	@GetMapping("/selectClusterNames")
-	public ResponseEntity<JobResult<String[]>> selectClusterNames() throws Exception {
+	public ResponseEntity<Result<String[]>> selectClusterNames() throws Exception {
 		String[] clusterNames = jobManager.selectClusterNames();
-		return ResponseEntity.ok(JobResult.success(clusterNames));
+		return ResponseEntity.ok(Result.success(clusterNames));
 	}
 
 	@PostMapping("/persistJob")
-	public ResponseEntity<JobResult<Integer>> persistJob(@RequestBody JobPersistParameter parameter) throws Exception {
+	public ResponseEntity<Result<Integer>> persistJob(@RequestBody JobPersistParameter parameter) throws Exception {
 		int jobId = jobManager.persistJob(parameter);
-		return ResponseEntity.ok(JobResult.success(jobId));
+		return ResponseEntity.ok(Result.success(jobId));
 	}
 
 	@PostMapping("/finishJob")
-	public ResponseEntity<JobResult<JobState>> finishJob(@RequestBody JobKey jobKey) throws Exception {
+	public ResponseEntity<Result<JobState>> finishJob(@RequestBody JobKey jobKey) throws Exception {
 		JobState jobState = jobManager.finishJob(jobKey);
-		return ResponseEntity.ok(JobResult.success(jobState));
+		return ResponseEntity.ok(Result.success(jobState));
 	}
 
 	@PostMapping("/hasJob")
-	public ResponseEntity<JobResult<Boolean>> hasJob(@RequestBody JobKey jobKey) throws Exception {
+	public ResponseEntity<Result<Boolean>> hasJob(@RequestBody JobKey jobKey) throws Exception {
 		boolean has = jobManager.hasJob(jobKey);
-		return ResponseEntity.ok(JobResult.success(has));
+		return ResponseEntity.ok(Result.success(has));
 	}
 
 	@PostMapping("/hasJobState")
-	public ResponseEntity<JobResult<Boolean>> hasJobState(@RequestBody JobStateParameter parameter) throws Exception {
+	public ResponseEntity<Result<Boolean>> hasJobState(@RequestBody JobStateParameter parameter) throws Exception {
 		boolean has = jobManager.hasJobState(parameter.getJobKey(), parameter.getJobState());
-		return ResponseEntity.ok(JobResult.success(has));
+		return ResponseEntity.ok(Result.success(has));
 	}
 
 	@PostMapping("/getJobId")
-	public ResponseEntity<JobResult<Integer>> getJobId(@RequestBody JobKey jobKey) throws Exception {
+	public ResponseEntity<Result<Integer>> getJobId(@RequestBody JobKey jobKey) throws Exception {
 		int jobId = jobManager.getJobId(jobKey);
-		return ResponseEntity.ok(JobResult.success(jobId));
+		return ResponseEntity.ok(Result.success(jobId));
 	}
 
 	@PostMapping("/getJobDetail")
-	public ResponseEntity<JobResult<JobDetail>> getJobDetail(@RequestBody JobKey jobKey) throws Exception {
+	public ResponseEntity<Result<JobDetail>> getJobDetail(@RequestBody JobKey jobKey) throws Exception {
 		JobDetail jobDetail = jobManager.getJobDetail(jobKey, true);
-		return ResponseEntity.ok(JobResult.success(jobDetail));
+		return ResponseEntity.ok(Result.success(jobDetail));
 	}
 
 	@PostMapping("/getJobTriggerDetail")
-	public ResponseEntity<JobResult<JobTriggerDetail>> getJobTriggerDetail(@RequestBody JobKey jobKey) throws Exception {
+	public ResponseEntity<Result<JobTriggerDetail>> getJobTriggerDetail(@RequestBody JobKey jobKey) throws Exception {
 		JobTriggerDetail jobTriggerDetail = jobManager.getJobTriggerDetail(jobKey);
-		return ResponseEntity.ok(JobResult.success(jobTriggerDetail));
+		return ResponseEntity.ok(Result.success(jobTriggerDetail));
 	}
 
 	@PostMapping("/getJobRuntimeDetail")
-	public ResponseEntity<JobResult<JobRuntimeDetail>> getJobRuntime(@RequestBody JobKey jobKey) throws Exception {
+	public ResponseEntity<Result<JobRuntimeDetail>> getJobRuntime(@RequestBody JobKey jobKey) throws Exception {
 		JobRuntimeDetail jobRuntime = jobManager.getJobRuntimeDetail(jobKey);
-		return ResponseEntity.ok(JobResult.success(jobRuntime));
+		return ResponseEntity.ok(Result.success(jobRuntime));
 	}
 
 	@PostMapping("/hasRelations")
-	public ResponseEntity<JobResult<Boolean>> hasRelations(@RequestBody JobDependencyParameter parameter) throws Exception {
+	public ResponseEntity<Result<Boolean>> hasRelations(@RequestBody JobDependencyParameter parameter) throws Exception {
 		boolean result = jobManager.hasRelations(parameter.getJobKey(), parameter.getDependencyType());
-		return ResponseEntity.ok(JobResult.success(result));
+		return ResponseEntity.ok(Result.success(result));
 	}
 
 	@PostMapping("/getRelations")
-	public ResponseEntity<JobResult<JobKey[]>> getRelations(@RequestBody JobDependencyParameter parameter) throws Exception {
+	public ResponseEntity<Result<JobKey[]>> getRelations(@RequestBody JobDependencyParameter parameter) throws Exception {
 		JobKey[] jobKeys = jobManager.getRelations(parameter.getJobKey(), parameter.getDependencyType());
-		return ResponseEntity.ok(JobResult.success(jobKeys));
+		return ResponseEntity.ok(Result.success(jobKeys));
 	}
 
 	@PostMapping("/getDependentKeys")
-	public ResponseEntity<JobResult<JobKey[]>> getDependencies(@RequestBody JobDependencyParameter parameter) throws Exception {
+	public ResponseEntity<Result<JobKey[]>> getDependencies(@RequestBody JobDependencyParameter parameter) throws Exception {
 		JobKey[] jobKeys = jobManager.getDependentKeys(parameter.getJobKey(), parameter.getDependencyType());
-		return ResponseEntity.ok(JobResult.success(jobKeys));
+		return ResponseEntity.ok(Result.success(jobKeys));
 	}
 
 	@PostMapping("/setJobState")
-	public ResponseEntity<JobResult<JobState>> setJobState(@RequestBody JobStateParameter parameter) throws Exception {
+	public ResponseEntity<Result<JobState>> setJobState(@RequestBody JobStateParameter parameter) throws Exception {
 		JobState jobState = jobManager.setJobState(parameter.getJobKey(), parameter.getJobState());
-		return ResponseEntity.ok(JobResult.success(jobState));
+		return ResponseEntity.ok(Result.success(jobState));
 	}
 
 	@PostMapping("/getJobKeys")
-	public ResponseEntity<JobResult<JobKey[]>> getJobKeys(@RequestBody JobKeyQuery jobQuery) throws Exception {
+	public ResponseEntity<Result<JobKey[]>> getJobKeys(@RequestBody JobKeyQuery jobQuery) throws Exception {
 		JobKey[] jobKeys = jobManager.getJobKeys(jobQuery);
-		return ResponseEntity.ok(JobResult.success(jobKeys));
+		return ResponseEntity.ok(Result.success(jobKeys));
 	}
 
 	@PostMapping("/selectJobDetail")
-	public ResponseEntity<JobResult<PageQuery<JobDetail>>> selectJobDetail(@RequestBody PageQuery<JobDetail> pageQuery) throws Exception {
+	public ResponseEntity<Result<PageQuery<JobDetail>>> selectJobDetail(@RequestBody PageQuery<JobDetail> pageQuery) throws Exception {
 		jobManager.selectJobDetail(pageQuery);
-		return ResponseEntity.ok(JobResult.success(pageQuery));
+		return ResponseEntity.ok(Result.success(pageQuery));
 	}
 
 	@PostMapping("/selectJobTrace")
-	public ResponseEntity<JobResult<PageQuery<JobTrace>>> selectJobTrace(@RequestBody JobTracePageQuery<JobTrace> pageQuery)
+	public ResponseEntity<Result<PageQuery<JobTrace>>> selectJobTrace(@RequestBody JobTracePageQuery<JobTrace> pageQuery)
 			throws Exception {
 		jobManager.selectJobTrace(pageQuery);
-		return ResponseEntity.ok(JobResult.success(pageQuery));
+		return ResponseEntity.ok(Result.success(pageQuery));
 	}
 
 	@PostMapping("/selectJobLog")
-	public ResponseEntity<JobResult<JobLog[]>> selectJobLog(@RequestBody JobTraceQuery query) throws Exception {
+	public ResponseEntity<Result<JobLog[]>> selectJobLog(@RequestBody JobTraceQuery query) throws Exception {
 		JobLog[] logs = jobManager.selectJobLog(query);
-		return ResponseEntity.ok(JobResult.success(logs));
+		return ResponseEntity.ok(Result.success(logs));
 	}
 
 	@PostMapping("/selectJobStackTrace")
-	public ResponseEntity<JobResult<JobStackTrace[]>> selectJobStackTrace(@RequestBody JobTraceQuery query) throws Exception {
+	public ResponseEntity<Result<JobStackTrace[]>> selectJobStackTrace(@RequestBody JobTraceQuery query) throws Exception {
 		JobStackTrace[] traces = jobManager.selectJobStackTrace(query);
-		return ResponseEntity.ok(JobResult.success(traces));
+		return ResponseEntity.ok(Result.success(traces));
 	}
 
 	@PostMapping("/onJobBegin")
-	public ResponseEntity<JobResult<JobState>> onJobBegin(@RequestBody JobRuntimeParameter parameter) throws Exception {
+	public ResponseEntity<Result<JobState>> onJobBegin(@RequestBody JobRuntimeParameter parameter) throws Exception {
 		JobState jobState = stopWatch.onJobBegin(parameter.getTraceId(), parameter.getJobKey(), parameter.getStartTime());
-		return ResponseEntity.ok(JobResult.success(jobState));
+		return ResponseEntity.ok(Result.success(jobState));
 	}
 
 	@PostMapping("/onJobEnd")
-	public ResponseEntity<JobResult<JobState>> onJobEnd(@RequestBody JobRuntimeParameter parameter) throws Exception {
+	public ResponseEntity<Result<JobState>> onJobEnd(@RequestBody JobRuntimeParameter parameter) throws Exception {
 		JobState jobState = stopWatch.onJobEnd(parameter.getTraceId(), parameter.getJobKey(), parameter.getStartTime(), parameter.getRunningState(),
 				parameter.getRetries());
-		return ResponseEntity.ok(JobResult.success(jobState));
+		return ResponseEntity.ok(Result.success(jobState));
 	}
 
 	@PostMapping("/generateTraceId")
-	public ResponseEntity<JobResult<Long>> generateTraceId(@RequestBody JobKey jobKey) {
+	public ResponseEntity<Result<Long>> generateTraceId(@RequestBody JobKey jobKey) {
 		long traceId = traceIdGenerator.generateTraceId(jobKey);
-		return ResponseEntity.ok(JobResult.success(traceId));
+		return ResponseEntity.ok(Result.success(traceId));
 	}
 
 	@PostMapping("/log")
-	public ResponseEntity<JobResult<String>> log(@RequestBody JobLogParameter parameter) throws Exception {
+	public ResponseEntity<Result<String>> log(@RequestBody JobLogParameter parameter) throws Exception {
 		logManager.log(parameter.getTraceId(), parameter.getJobKey(), parameter.getLogLevel(), parameter.getMessagePattern(), parameter.getArgs(),
 				parameter.getStackTraces());
-		return ResponseEntity.ok(JobResult.success("ok"));
+		return ResponseEntity.ok(Result.success("ok"));
 	}
 
 }

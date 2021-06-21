@@ -12,7 +12,7 @@ import indi.atlantis.framework.chaconne.JobKey;
 import indi.atlantis.framework.chaconne.JobState;
 import indi.atlantis.framework.chaconne.RunningState;
 import indi.atlantis.framework.chaconne.StopWatch;
-import indi.atlantis.framework.chaconne.model.JobResult;
+import indi.atlantis.framework.chaconne.model.Result;
 import indi.atlantis.framework.chaconne.model.JobRuntimeParameter;
 
 /**
@@ -31,8 +31,8 @@ public class RestStopWatch implements StopWatch {
 	@Async
 	@Override
 	public JobState onJobBegin(long traceId, JobKey jobKey, Date startDate) {
-		ResponseEntity<JobResult<JobState>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/onJobBegin",
-				HttpMethod.POST, new JobRuntimeParameter(traceId, jobKey, startDate), new ParameterizedTypeReference<JobResult<JobState>>() {
+		ResponseEntity<Result<JobState>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/onJobBegin",
+				HttpMethod.POST, new JobRuntimeParameter(traceId, jobKey, startDate), new ParameterizedTypeReference<Result<JobState>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
@@ -40,9 +40,9 @@ public class RestStopWatch implements StopWatch {
 	@Async
 	@Override
 	public JobState onJobEnd(long traceId, JobKey jobKey, Date startDate, RunningState runningState, int retries) {
-		ResponseEntity<JobResult<JobState>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/onJobEnd",
+		ResponseEntity<Result<JobState>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/manager/onJobEnd",
 				HttpMethod.POST, new JobRuntimeParameter(traceId, jobKey, startDate, runningState, retries),
-				new ParameterizedTypeReference<JobResult<JobState>>() {
+				new ParameterizedTypeReference<Result<JobState>>() {
 				});
 		return responseEntity.getBody().getData();
 

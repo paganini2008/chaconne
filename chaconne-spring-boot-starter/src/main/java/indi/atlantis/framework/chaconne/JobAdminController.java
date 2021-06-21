@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import indi.atlantis.framework.chaconne.model.JobLifeCycleParameter;
 import indi.atlantis.framework.chaconne.model.JobParameter;
-import indi.atlantis.framework.chaconne.model.JobResult;
+import indi.atlantis.framework.chaconne.model.Result;
 
 /**
  * 
@@ -45,27 +45,27 @@ public class JobAdminController {
 	private ScheduleAdmin scheduleAdmin;
 
 	@PostMapping("/triggerJob")
-	public ResponseEntity<JobResult<JobState>> triggerJob(@RequestBody JobParameter jobParam) throws Exception {
+	public ResponseEntity<Result<JobState>> triggerJob(@RequestBody JobParameter jobParam) throws Exception {
 		JobState jobState = jobAdmin.triggerJob(jobParam.getJobKey(), jobParam.getAttachment());
-		return ResponseEntity.ok(JobResult.success(jobState));
+		return ResponseEntity.ok(Result.success(jobState));
 	}
 
 	@PostMapping("/publicLifeCycleEvent")
-	public ResponseEntity<JobResult<String>> publicLifeCycleEvent(@RequestBody JobLifeCycleParameter jobParam) throws Exception {
+	public ResponseEntity<Result<String>> publicLifeCycleEvent(@RequestBody JobLifeCycleParameter jobParam) throws Exception {
 		jobAdmin.publicLifeCycleEvent(jobParam.getJobKey(), jobParam.getLifeCycle());
-		return ResponseEntity.ok(JobResult.success("ok"));
+		return ResponseEntity.ok(Result.success("ok"));
 	}
 
 	@PostMapping("/unscheduleJob")
-	public ResponseEntity<JobResult<JobState>> unscheduleJob(@RequestBody JobKey jobKey) {
+	public ResponseEntity<Result<JobState>> unscheduleJob(@RequestBody JobKey jobKey) {
 		JobState jobState = scheduleAdmin.unscheduleJob(jobKey);
-		return ResponseEntity.ok(JobResult.success(jobState));
+		return ResponseEntity.ok(Result.success(jobState));
 	}
 
 	@PostMapping("/scheduleJob")
-	public ResponseEntity<JobResult<JobState>> scheduleJob(@RequestBody JobKey jobKey) {
+	public ResponseEntity<Result<JobState>> scheduleJob(@RequestBody JobKey jobKey) {
 		JobState jobState = scheduleAdmin.scheduleJob(jobKey);
-		return ResponseEntity.ok(JobResult.success(jobState));
+		return ResponseEntity.ok(Result.success(jobState));
 	}
 
 }
