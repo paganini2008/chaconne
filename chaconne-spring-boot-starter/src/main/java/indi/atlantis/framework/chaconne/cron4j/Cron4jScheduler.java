@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.util.ErrorHandler;
 
 import com.github.paganini2008.devtools.Observable;
 import com.github.paganini2008.devtools.cron4j.CRON;
@@ -18,7 +19,6 @@ import indi.atlantis.framework.chaconne.JobExecutor;
 import indi.atlantis.framework.chaconne.JobFuture;
 import indi.atlantis.framework.chaconne.JobKey;
 import indi.atlantis.framework.chaconne.Scheduler;
-import indi.atlantis.framework.chaconne.SchedulerErrorHandler;
 import indi.atlantis.framework.chaconne.SerialDependencyScheduler;
 
 /**
@@ -39,8 +39,9 @@ public class Cron4jScheduler implements Scheduler {
 	@Autowired
 	private JobExecutor jobExecutor;
 
+	@Qualifier(ChaconneBeanNames.SCHEDULER_ERROR_HANDLER)
 	@Autowired
-	private SchedulerErrorHandler errorHandler;
+	private ErrorHandler errorHandler;
 
 	@Autowired
 	private SerialDependencyScheduler serialDependencyScheduler;
@@ -107,7 +108,7 @@ public class Cron4jScheduler implements Scheduler {
 
 	@Override
 	public void runJob(Job job, Object attachment) {
-			jobExecutor.execute(job, attachment, 0);
+		jobExecutor.execute(job, attachment, 0);
 	}
 
 	private class SimpleTask implements Task {

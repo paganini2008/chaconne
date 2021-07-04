@@ -24,6 +24,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 
+import com.github.paganini2008.devtools.collection.ListUtils;
 import com.github.paganini2008.devtools.proxy.Aspect;
 
 /**
@@ -68,13 +69,13 @@ public class JobLoggerAspect implements Aspect {
 					String messagePattern = marker != null ? (String) list.remove(1) : (String) firstArg;
 					Throwable cause = null;
 					if (list.size() > 0) {
-						Object lastArg = list.get(list.size() - 1);
+						Object lastArg = ListUtils.getLast(list);
 						if (lastArg instanceof Throwable) {
 							cause = (Throwable) lastArg;
-							list.remove(list.size() - 1);
+							ListUtils.removeLast(list);
 						}
 					}
-					logManager.log(traceId, jobKey, logLevel, messagePattern, args, cause);
+					logManager.log(traceId, jobKey, logLevel, messagePattern, list.toArray(), cause);
 				} catch (Exception ignored) {
 				}
 			}

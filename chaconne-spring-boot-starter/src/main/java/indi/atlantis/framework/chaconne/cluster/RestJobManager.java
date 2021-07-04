@@ -17,15 +17,17 @@ import indi.atlantis.framework.chaconne.model.JobDetail;
 import indi.atlantis.framework.chaconne.model.JobKeyQuery;
 import indi.atlantis.framework.chaconne.model.JobLog;
 import indi.atlantis.framework.chaconne.model.JobPersistParameter;
-import indi.atlantis.framework.chaconne.model.Result;
 import indi.atlantis.framework.chaconne.model.JobRuntimeDetail;
 import indi.atlantis.framework.chaconne.model.JobStackTrace;
+import indi.atlantis.framework.chaconne.model.JobStat;
+import indi.atlantis.framework.chaconne.model.JobStatQuery;
 import indi.atlantis.framework.chaconne.model.JobStateParameter;
 import indi.atlantis.framework.chaconne.model.JobTrace;
 import indi.atlantis.framework.chaconne.model.JobTracePageQuery;
 import indi.atlantis.framework.chaconne.model.JobTraceQuery;
 import indi.atlantis.framework.chaconne.model.JobTriggerDetail;
 import indi.atlantis.framework.chaconne.model.PageQuery;
+import indi.atlantis.framework.chaconne.model.Result;
 import indi.atlantis.framework.chaconne.utils.GenericJobDefinition;
 
 /**
@@ -177,8 +179,7 @@ public class RestJobManager implements JobManager {
 	@Override
 	public void selectJobDetail(PageQuery<JobDetail> pageQuery) throws Exception {
 		ResponseEntity<Result<PageQuery<JobDetail>>> responseEntity = restTemplate.perform(pageQuery.getClusterName(),
-				"/job/manager/selectJobDetail", HttpMethod.POST, pageQuery,
-				new ParameterizedTypeReference<Result<PageQuery<JobDetail>>>() {
+				"/job/manager/selectJobDetail", HttpMethod.POST, pageQuery, new ParameterizedTypeReference<Result<PageQuery<JobDetail>>>() {
 				});
 		PageQuery<JobDetail> data = responseEntity.getBody().getData();
 		if (data != null) {
@@ -191,8 +192,7 @@ public class RestJobManager implements JobManager {
 	@Override
 	public void selectJobTrace(JobTracePageQuery<JobTrace> pageQuery) throws Exception {
 		ResponseEntity<Result<PageQuery<JobTrace>>> responseEntity = restTemplate.perform(pageQuery.getClusterName(),
-				"/job/manager/selectJobTrace", HttpMethod.POST, pageQuery,
-				new ParameterizedTypeReference<Result<PageQuery<JobTrace>>>() {
+				"/job/manager/selectJobTrace", HttpMethod.POST, pageQuery, new ParameterizedTypeReference<Result<PageQuery<JobTrace>>>() {
 				});
 		PageQuery<JobTrace> data = responseEntity.getBody().getData();
 		if (data != null) {
@@ -214,6 +214,14 @@ public class RestJobManager implements JobManager {
 	public JobLog[] selectJobLog(JobTraceQuery query) throws SQLException {
 		ResponseEntity<Result<JobLog[]>> responseEntity = restTemplate.perform(query.getClusterName(), "/job/manager/selectJobLog",
 				HttpMethod.POST, query, new ParameterizedTypeReference<Result<JobLog[]>>() {
+				});
+		return responseEntity.getBody().getData();
+	}
+
+	@Override
+	public JobStat[] selectJobStatByDay(JobStatQuery query) throws Exception {
+		ResponseEntity<Result<JobStat[]>> responseEntity = restTemplate.perform(query.getClusterName(), "/job/manager/selectJobStatByDay",
+				HttpMethod.POST, query, new ParameterizedTypeReference<Result<JobStat[]>>() {
 				});
 		return responseEntity.getBody().getData();
 	}

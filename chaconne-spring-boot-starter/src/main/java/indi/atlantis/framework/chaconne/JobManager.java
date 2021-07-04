@@ -20,6 +20,8 @@ import indi.atlantis.framework.chaconne.model.JobKeyQuery;
 import indi.atlantis.framework.chaconne.model.JobLog;
 import indi.atlantis.framework.chaconne.model.JobRuntimeDetail;
 import indi.atlantis.framework.chaconne.model.JobStackTrace;
+import indi.atlantis.framework.chaconne.model.JobStat;
+import indi.atlantis.framework.chaconne.model.JobStatQuery;
 import indi.atlantis.framework.chaconne.model.JobTrace;
 import indi.atlantis.framework.chaconne.model.JobTracePageQuery;
 import indi.atlantis.framework.chaconne.model.JobTraceQuery;
@@ -60,5 +62,7 @@ public interface JobManager extends JobPersistence {
 	JobStackTrace[] selectJobStackTrace(JobTraceQuery query) throws Exception;
 
 	JobLog[] selectJobLog(JobTraceQuery query) throws Exception;
+
+	JobStat[] selectJobStatByDay(JobStatQuery query) throws Exception;
 
 }

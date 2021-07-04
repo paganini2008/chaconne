@@ -66,7 +66,7 @@ public interface JobQueryDao {
 	public static final String DEF_SELECT_JOB_DETAIL = "select * from chac_job_detail where cluster_name=:clusterName and group_name=:groupName and job_name=:jobName and job_class_name=:jobClassName limit 1";
 	public static final String DEF_SELECT_JOB_LOG = "select * from chac_job_log where job_id=:jobId and trace_id=:traceId";
 	public static final String DEF_SELECT_JOB_EXCEPTION = "select * from chac_job_exception where job_id=:jobId and trace_id=:traceId";
-	public static final String DEF_SELECT_JOB_STAT = "select job_id, sum(complete) as completeCount, sum(failed) as failedCount, sum(skipped) as skippedCount {0} from chac_job_trace group by job_id {1}";
+	public static final String DEF_SELECT_JOB_STAT_BY_DAY = "select date_format(execution_time,'%M %d,%Y') as executionDate, sum(completed) as completedcount, sum(failed) as failedcount, sum(skipped) as skippedcount, sum(finished) as finishedcount, sum(retries) as retrycount from chac_job_trace where 1=1 @sql group by 1 limit :days";
 
 	@Query(value = DEF_SELECT_CLUSTER_NAME, singleColumn = true)
 	List<String> selectClusterNames();
@@ -150,5 +150,8 @@ public interface JobQueryDao {
 
 	@Query(DEF_SELECT_JOB_EXCEPTION)
 	List<Map<String, Object>> selectJobException(@Arg("jobId") int jobId, @Arg("traceId") long traceId);
+
+	@Query(DEF_SELECT_JOB_STAT_BY_DAY)
+	List<Map<String, Object>> selectJobStatByDay(@Sql String whereClause, @Example Map<String, Object> kwargs, @Arg("days") int days);
 
 }

@@ -20,8 +20,10 @@ import static com.github.paganini2008.devtools.beans.BeanUtils.convertAsBean;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.github.paganini2008.devtools.ArrayUtils;
 import com.github.paganini2008.devtools.StringUtils;
+import com.github.paganini2008.devtools.beans.PropertyUtils;
 import com.github.paganini2008.devtools.collection.CollectionUtils;
 import com.github.paganini2008.devtools.date.DateUtils;
 import com.github.paganini2008.devtools.jdbc.PageRequest;
@@ -42,6 +45,8 @@ import indi.atlantis.framework.chaconne.model.JobKeyQuery;
 import indi.atlantis.framework.chaconne.model.JobLog;
 import indi.atlantis.framework.chaconne.model.JobRuntimeDetail;
 import indi.atlantis.framework.chaconne.model.JobStackTrace;
+import indi.atlantis.framework.chaconne.model.JobStat;
+import indi.atlantis.framework.chaconne.model.JobStatQuery;
 import indi.atlantis.framework.chaconne.model.JobTrace;
 import indi.atlantis.framework.chaconne.model.JobTracePageQuery;
 import indi.atlantis.framework.chaconne.model.JobTraceQuery;
@@ -577,6 +582,39 @@ public class JdbcJobManager implements JobManager {
 			results.add(convertAsBean(data, JobLog.class));
 		}
 		return results.toArray(new JobLog[0]);
+	}
+
+	@Override
+	public JobStat[] selectJobStatByDay(JobStatQuery query) throws Exception {
+		Map<String, JobStat> results = new LinkedHashMap<String, JobStat>();
+		Date startDate = DateUtils.setTime(DateUtils.addDays(new Date(), -1 * query.getLastDays()), 0, 0, 0);
+		Date endDate = DateUtils.setTime(new Date(), 0, 0, 0);
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(startDate);
+		while (startCal.getTime().compareTo(endDate) <= 0) {
+			results.put(DateUtils.format(startCal.getTime(), "MMMM dd,yyyy"), new JobStat());
+			startCal.add(Calendar.DAY_OF_MONTH, 1);
+		}
+
+		StringBuilder whereClause = new StringBuilder();
+		if (query.getJobId() != null) {
+			whereClause.append(" and job_id=:jobId");
+		}
+		if (StringUtils.isNotBlank(query.getAddress())) {
+			whereClause.append(" and address=:address");
+		}
+
+		whereClause.append(" and execution_time between (:startDate,:endDate)");
+
+		Map<String, Object> kwargs = PropertyUtils.convertToMap(query);
+		kwargs.put("startDate", startDate);
+		kwargs.put("endDate", DateUtils.setTime(new Date(), 23, 59, 59));
+		List<Map<String, Object>> dataList = jobQueryDao.selectJobStatByDay(whereClause.toString(), kwargs, query.getLastDays());
+		for (Map<String, Object> data : dataList) {
+			JobStat jobStat = convertAsBean(data, JobStat.class);
+			results.put(jobStat.getExecutionDate(), jobStat);
+		}
+		return results.values().toArray(new JobStat[0]);
 	}
 
 }

@@ -48,7 +48,8 @@ public class JdbcLogManager implements LogManager {
 
 	@Override
 	public void log(long traceId, JobKey jobKey, LogLevel logLevel, String messagePattern, Object[] args, String[] stackTraces) {
-		FormattingTuple tuple = MessageFormatter.format(messagePattern, args);
+		FormattingTuple tuple = ArrayUtils.isNotEmpty(args) ? MessageFormatter.arrayFormat(messagePattern, args)
+				: MessageFormatter.format(messagePattern, null);
 		log(traceId, logLevel, jobKey, tuple.getMessage(), stackTraces);
 	}
 

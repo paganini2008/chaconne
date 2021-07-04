@@ -14,7 +14,7 @@
 	
     <packaging>pom</packaging>
     <name>chaconne</name>
-    <description>A distributed Task Schedule System based on SpringBoot</description>
+    <description>A distributed Task Scheduling System based on SpringBoot Framework</description>
 	<url>https://github.com/paganini2008/chaconne</url>
 	
 	<licenses>
@@ -115,7 +115,7 @@
 	
 	<profiles>
         <profile>
-            <id>release-3</id>
+            <id>release-4</id>
             <build>
                 <plugins>
                     <!-- Source -->

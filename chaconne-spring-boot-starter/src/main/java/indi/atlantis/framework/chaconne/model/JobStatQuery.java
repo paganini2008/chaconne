@@ -13,28 +13,23 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package indi.atlantis.framework.chaconne;
+package indi.atlantis.framework.chaconne.model;
+
+import lombok.Data;
 
 /**
  * 
- * ChaconneBeanNames
+ * JobStatQuery
  * 
  * @author Fred Feng
  *
- * @since 1.0
+ * @version 1.0
  */
-public abstract class ChaconneBeanNames {
+@Data
+public class JobStatQuery extends Query {
 
-	public static final String JOB_SCHEDULER = "chaconne:job-scheduler";
-
-	public static final String MAIN_JOB_EXECUTOR = "chaconne:main-job-executor";
-
-	public static final String TARGET_JOB_EXECUTOR = "chaconne:target-job-executor";
-
-	public static final String INTERNAL_JOB_BEAN_LOADER = "chaconne:internal-job-bean-loader";
-
-	public static final String EXTERNAL_JOB_BEAN_LOADER = "chaconne:external-job-bean-loader";
-
-	public static final String SCHEDULER_ERROR_HANDLER = "chaconne:scheduler-error-handler";
+	private Integer jobId;
+	private String address;
+	private int lastDays = 30;
 
 }

@@ -131,14 +131,15 @@ public class EmbeddedModeConfiguration {
 		}
 	}
 
-	@Bean
-	public Executor executorThreadPool(@Value("${atlantis.framework.chaconne.scheduler.executor.poolSize:16}") int maxPoolSize) {
+	@ConditionalOnMissingBean(name = "executorThreadPool")
+	@Bean("executorThreadPool")
+	public Executor schedulerExecutorThreadPool(@Value("${atlantis.framework.chaconne.scheduler.executor.poolSize:16}") int maxPoolSize) {
 		return ThreadPoolBuilder.common(maxPoolSize).setTimeout(-1L).setQueueSize(Integer.MAX_VALUE)
-				.setThreadFactory(new PooledThreadFactory("job-executor-threads")).build();
+				.setThreadFactory(new PooledThreadFactory("scheduler-executor-threads")).build();
 	}
 
 	@Configuration
-	@ConditionalOnProperty(name = "atlantis.framework.chaconne.scheduler.engine", havingValue = "spring", matchIfMissing = true)
+	@ConditionalOnProperty(name = "atlantis.framework.chaconne.scheduler.engine", havingValue = "spring")
 	public static class SpringSchedulerConfig {
 
 		@Value("${atlantis.framework.chaconne.scheduler.poolSize:16}")
@@ -149,8 +150,9 @@ public class EmbeddedModeConfiguration {
 			return new SpringScheduler();
 		}
 
+		@ConditionalOnMissingBean(name = ChaconneBeanNames.JOB_SCHEDULER)
 		@Bean(name = ChaconneBeanNames.JOB_SCHEDULER, destroyMethod = "shutdown")
-		public TaskScheduler taskScheduler(@Qualifier("scheduler-error-handler") ErrorHandler errorHandler) {
+		public TaskScheduler taskScheduler(@Qualifier(ChaconneBeanNames.SCHEDULER_ERROR_HANDLER) ErrorHandler errorHandler) {
 			ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
 			threadPoolTaskScheduler.setPoolSize(poolSize);
 			threadPoolTaskScheduler.setThreadNamePrefix("chaconne-task-scheduler-");
@@ -162,7 +164,7 @@ public class EmbeddedModeConfiguration {
 	}
 
 	@Configuration
-	@ConditionalOnProperty(name = "atlantis.framework.chaconne.scheduler.engine", havingValue = "cron4j")
+	@ConditionalOnProperty(name = "atlantis.framework.chaconne.scheduler.engine", havingValue = "cron4j", matchIfMissing = true)
 	public static class Cron4jSchedulerConfig {
 
 		@Value("${atlantis.framework.chaconne.scheduler.poolSize:16}")
@@ -173,7 +175,7 @@ public class EmbeddedModeConfiguration {
 			return new Cron4jScheduler();
 		}
 
-		@ConditionalOnMissingBean(TaskExecutor.class)
+		@ConditionalOnMissingBean(name = ChaconneBeanNames.JOB_SCHEDULER)
 		@Bean(name = ChaconneBeanNames.JOB_SCHEDULER, destroyMethod = "close")
 		public TaskExecutor taskScheduler() {
 			ScheduledExecutorService executor = Executors.newScheduledThreadPool(poolSize,
@@ -182,7 +184,7 @@ public class EmbeddedModeConfiguration {
 		}
 	}
 
-	@Bean("scheduler-error-handler")
+	@Bean(ChaconneBeanNames.SCHEDULER_ERROR_HANDLER)
 	public ErrorHandler schedulerErrorHandler() {
 		return new SchedulerErrorHandler();
 	}

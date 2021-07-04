@@ -35,9 +35,11 @@ public class JobStat implements Serializable {
 	private static final long serialVersionUID = 5741263651318840914L;
 
 	private int jobId;
-	private int completeCount;
+	private int completedCount;
 	private int skippedCount;
 	private int failedCount;
-	private String execution;
+	private int finishedCount;
+	private int retryCount;
+	private String executionDate;
 
 }
