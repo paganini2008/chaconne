@@ -20,6 +20,7 @@ import indi.atlantis.framework.chaconne.model.JobPersistParameter;
 import indi.atlantis.framework.chaconne.model.JobRuntimeDetail;
 import indi.atlantis.framework.chaconne.model.JobStackTrace;
 import indi.atlantis.framework.chaconne.model.JobStat;
+import indi.atlantis.framework.chaconne.model.JobStatPageQuery;
 import indi.atlantis.framework.chaconne.model.JobStatQuery;
 import indi.atlantis.framework.chaconne.model.JobStateParameter;
 import indi.atlantis.framework.chaconne.model.JobTrace;
@@ -224,6 +225,19 @@ public class RestJobManager implements JobManager {
 				HttpMethod.POST, query, new ParameterizedTypeReference<Result<JobStat[]>>() {
 				});
 		return responseEntity.getBody().getData();
+	}
+
+	@Override
+	public void selectJobStatById(JobStatPageQuery<JobStat> pageQuery) throws Exception {
+		ResponseEntity<Result<PageQuery<JobStat>>> responseEntity = restTemplate.perform(pageQuery.getClusterName(),
+				"/job/manager/selectJobStatById", HttpMethod.POST, pageQuery, new ParameterizedTypeReference<Result<PageQuery<JobStat>>>() {
+				});
+		PageQuery<JobStat> data = responseEntity.getBody().getData();
+		if (data != null) {
+			pageQuery.setRows(data.getRows());
+			pageQuery.setContent(data.getContent());
+			pageQuery.setNextPage(data.isNextPage());
+		}
 	}
 
 }

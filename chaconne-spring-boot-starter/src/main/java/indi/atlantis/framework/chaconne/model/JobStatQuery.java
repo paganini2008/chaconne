@@ -15,7 +15,8 @@
 */
 package indi.atlantis.framework.chaconne.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 
@@ -25,7 +26,8 @@ import lombok.Data;
  *
  * @version 1.0
  */
-@Data
+@Getter
+@Setter
 public class JobStatQuery extends Query {
 
 	private Integer jobId;

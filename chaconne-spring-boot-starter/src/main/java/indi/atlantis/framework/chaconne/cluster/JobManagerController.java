@@ -20,16 +20,19 @@ import indi.atlantis.framework.chaconne.model.JobKeyQuery;
 import indi.atlantis.framework.chaconne.model.JobLog;
 import indi.atlantis.framework.chaconne.model.JobLogParameter;
 import indi.atlantis.framework.chaconne.model.JobPersistParameter;
-import indi.atlantis.framework.chaconne.model.Result;
 import indi.atlantis.framework.chaconne.model.JobRuntimeDetail;
 import indi.atlantis.framework.chaconne.model.JobRuntimeParameter;
 import indi.atlantis.framework.chaconne.model.JobStackTrace;
+import indi.atlantis.framework.chaconne.model.JobStat;
+import indi.atlantis.framework.chaconne.model.JobStatPageQuery;
+import indi.atlantis.framework.chaconne.model.JobStatQuery;
 import indi.atlantis.framework.chaconne.model.JobStateParameter;
 import indi.atlantis.framework.chaconne.model.JobTrace;
 import indi.atlantis.framework.chaconne.model.JobTracePageQuery;
 import indi.atlantis.framework.chaconne.model.JobTraceQuery;
 import indi.atlantis.framework.chaconne.model.JobTriggerDetail;
 import indi.atlantis.framework.chaconne.model.PageQuery;
+import indi.atlantis.framework.chaconne.model.Result;
 
 /**
  * 
@@ -146,8 +149,7 @@ public class JobManagerController {
 	}
 
 	@PostMapping("/selectJobTrace")
-	public ResponseEntity<Result<PageQuery<JobTrace>>> selectJobTrace(@RequestBody JobTracePageQuery<JobTrace> pageQuery)
-			throws Exception {
+	public ResponseEntity<Result<PageQuery<JobTrace>>> selectJobTrace(@RequestBody JobTracePageQuery<JobTrace> pageQuery) throws Exception {
 		jobManager.selectJobTrace(pageQuery);
 		return ResponseEntity.ok(Result.success(pageQuery));
 	}
@@ -172,8 +174,8 @@ public class JobManagerController {
 
 	@PostMapping("/onJobEnd")
 	public ResponseEntity<Result<JobState>> onJobEnd(@RequestBody JobRuntimeParameter parameter) throws Exception {
-		JobState jobState = stopWatch.onJobEnd(parameter.getTraceId(), parameter.getJobKey(), parameter.getStartTime(), parameter.getRunningState(),
-				parameter.getRetries());
+		JobState jobState = stopWatch.onJobEnd(parameter.getTraceId(), parameter.getJobKey(), parameter.getStartTime(),
+				parameter.getRunningState(), parameter.getRetries());
 		return ResponseEntity.ok(Result.success(jobState));
 	}
 
@@ -185,9 +187,21 @@ public class JobManagerController {
 
 	@PostMapping("/log")
 	public ResponseEntity<Result<String>> log(@RequestBody JobLogParameter parameter) throws Exception {
-		logManager.log(parameter.getTraceId(), parameter.getJobKey(), parameter.getLogLevel(), parameter.getMessagePattern(), parameter.getArgs(),
-				parameter.getStackTraces());
+		logManager.log(parameter.getTraceId(), parameter.getJobKey(), parameter.getLogLevel(), parameter.getMessagePattern(),
+				parameter.getArgs(), parameter.getStackTraces());
 		return ResponseEntity.ok(Result.success("ok"));
+	}
+
+	@PostMapping("/selectJobStatByDay")
+	public ResponseEntity<Result<JobStat[]>> selectJobStatByDay(@RequestBody JobStatQuery query) throws Exception {
+		JobStat[] jobStats = jobManager.selectJobStatByDay(query);
+		return ResponseEntity.ok(Result.success(jobStats));
+	}
+
+	@PostMapping("/selectJobStatById")
+	public ResponseEntity<Result<PageQuery<JobStat>>> selectJobStatById(@RequestBody JobStatPageQuery<JobStat> query) throws Exception {
+		jobManager.selectJobStatById(query);
+		return ResponseEntity.ok(Result.success(query));
 	}
 
 }

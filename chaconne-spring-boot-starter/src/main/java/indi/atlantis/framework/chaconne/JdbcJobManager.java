@@ -46,6 +46,7 @@ import indi.atlantis.framework.chaconne.model.JobLog;
 import indi.atlantis.framework.chaconne.model.JobRuntimeDetail;
 import indi.atlantis.framework.chaconne.model.JobStackTrace;
 import indi.atlantis.framework.chaconne.model.JobStat;
+import indi.atlantis.framework.chaconne.model.JobStatPageQuery;
 import indi.atlantis.framework.chaconne.model.JobStatQuery;
 import indi.atlantis.framework.chaconne.model.JobTrace;
 import indi.atlantis.framework.chaconne.model.JobTracePageQuery;
@@ -592,19 +593,22 @@ public class JdbcJobManager implements JobManager {
 		Calendar startCal = Calendar.getInstance();
 		startCal.setTime(startDate);
 		while (startCal.getTime().compareTo(endDate) <= 0) {
-			results.put(DateUtils.format(startCal.getTime(), "MMMM dd,yyyy"), new JobStat());
+			String executionDate = DateUtils.format(startCal.getTime(), "MMMM dd,yyyy");
+			results.put(executionDate, new JobStat(query.getClusterName(), executionDate));
 			startCal.add(Calendar.DAY_OF_MONTH, 1);
 		}
 
 		StringBuilder whereClause = new StringBuilder();
+		if (StringUtils.isNotBlank(query.getClusterName())) {
+			whereClause.append(" and cluster_name=:clusterName");
+		}
 		if (query.getJobId() != null) {
 			whereClause.append(" and job_id=:jobId");
 		}
 		if (StringUtils.isNotBlank(query.getAddress())) {
 			whereClause.append(" and address=:address");
 		}
-
-		whereClause.append(" and execution_time between (:startDate,:endDate)");
+		whereClause.append(" and execution_time between :startDate and :endDate");
 
 		Map<String, Object> kwargs = PropertyUtils.convertToMap(query);
 		kwargs.put("startDate", startDate);
@@ -615,6 +619,51 @@ public class JdbcJobManager implements JobManager {
 			results.put(jobStat.getExecutionDate(), jobStat);
 		}
 		return results.values().toArray(new JobStat[0]);
+	}
+
+	@Override
+	public void selectJobStatById(JobStatPageQuery<JobStat> pageQuery) throws Exception {
+		StringBuilder whereClause = new StringBuilder();
+		if (StringUtils.isNotBlank(pageQuery.getClusterName())) {
+			whereClause.append(" and a.cluster_name=:clusterName");
+		}
+		if (StringUtils.isNotBlank(pageQuery.getAddress())) {
+			whereClause.append(" and a.address=:address");
+		}
+		if (pageQuery.getStartDate() != null && pageQuery.getEndDate() != null) {
+			whereClause.append(" and a.execution_time between :startDate and :endDate");
+		} else if (pageQuery.getStartDate() != null && pageQuery.getEndDate() == null) {
+			whereClause.append(" and a.execution_time >=:startDate");
+		} else if (pageQuery.getStartDate() == null && pageQuery.getEndDate() != null) {
+			whereClause.append(" and a.execution_time <=:endDate");
+		}
+
+		Map<String, Object> kwargs = PropertyUtils.convertToMap(pageQuery);
+		final ResultSetSlice<Map<String, Object>> delegate = jobQueryDao.selectJobStatById(whereClause.toString(), kwargs);
+
+		ResultSetSlice<JobStat> resultSetSlice = new ResultSetSlice<JobStat>() {
+
+			@Override
+			public int rowCount() {
+				return delegate.rowCount();
+			}
+
+			@Override
+			public List<JobStat> list(int maxResults, int firstResult) {
+				List<JobStat> dataList = new ArrayList<JobStat>(maxResults);
+				for (Map<String, Object> data : delegate.list(maxResults, firstResult)) {
+					JobStat jobStat = convertAsBean(data, JobStat.class);
+					dataList.add(jobStat);
+				}
+				return dataList;
+			}
+
+		};
+		PageResponse<JobStat> pageResponse = resultSetSlice.list(PageRequest.of(pageQuery.getPage(), pageQuery.getSize()));
+		int rows = pageResponse.getTotalRecords();
+		pageQuery.setRows(rows);
+		pageQuery.setContent(pageResponse.getContent());
+		pageQuery.setNextPage(pageResponse.hasNextPage());
 	}
 
 }

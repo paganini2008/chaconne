@@ -15,45 +15,25 @@
 */
 package indi.atlantis.framework.chaconne.model;
 
-import java.io.Serializable;
+import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * 
- * JobStat
+ * JobStatPageQuery
  * 
  * @author Fred Feng
  *
- * @since 1.0
+ * @version 1.0
  */
 @Getter
 @Setter
-public class JobStat implements Serializable {
+public class JobStatPageQuery<T> extends PageQuery<T> {
 
-	private static final long serialVersionUID = 5741263651318840914L;
-
-	private String clusterName;
-	private Integer jobId;
-	private String jobName;
-	private int completedCount;
-	private int skippedCount;
-	private int failedCount;
-	private int finishedCount;
-	private int retryCount;
-	private String executionDate;
-
-	public JobStat() {
-	}
-
-	public JobStat(String executionDate) {
-		this.executionDate = executionDate;
-	}
-
-	public JobStat(String clusterName, String executionDate) {
-		this.clusterName = clusterName;
-		this.executionDate = executionDate;
-	}
+	private String address;
+	private Date startDate;
+	private Date endDate;
 
 }
