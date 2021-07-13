@@ -26,12 +26,14 @@ import indi.atlantis.framework.chaconne.model.JobStackTrace;
 import indi.atlantis.framework.chaconne.model.JobStat;
 import indi.atlantis.framework.chaconne.model.JobStatPageQuery;
 import indi.atlantis.framework.chaconne.model.JobStatQuery;
+import indi.atlantis.framework.chaconne.model.JobStateCount;
 import indi.atlantis.framework.chaconne.model.JobStateParameter;
 import indi.atlantis.framework.chaconne.model.JobTrace;
 import indi.atlantis.framework.chaconne.model.JobTracePageQuery;
 import indi.atlantis.framework.chaconne.model.JobTraceQuery;
 import indi.atlantis.framework.chaconne.model.JobTriggerDetail;
 import indi.atlantis.framework.chaconne.model.PageQuery;
+import indi.atlantis.framework.chaconne.model.Query;
 import indi.atlantis.framework.chaconne.model.Result;
 
 /**
@@ -202,6 +204,12 @@ public class JobManagerController {
 	public ResponseEntity<Result<PageQuery<JobStat>>> selectJobStatById(@RequestBody JobStatPageQuery<JobStat> query) throws Exception {
 		jobManager.selectJobStatById(query);
 		return ResponseEntity.ok(Result.success(query));
+	}
+
+	@PostMapping("/selectJobStateCount")
+	public ResponseEntity<Result<JobStateCount[]>> selectJobStateCount(@RequestBody Query query) throws Exception {
+		JobStateCount[] stateCounts = jobManager.selectJobStateCount(query);
+		return ResponseEntity.ok(Result.success(stateCounts));
 	}
 
 }

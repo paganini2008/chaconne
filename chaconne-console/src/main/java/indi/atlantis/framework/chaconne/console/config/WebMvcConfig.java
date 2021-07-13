@@ -102,10 +102,41 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		return new SignHandlerInterceptor();
 	}
 
+	@Bean
+	public HandlerInterceptor contextHandlerInterceptor() {
+		return new ContextHandlerInterceptor();
+	}
+
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(basicHandlerInterceptor()).addPathPatterns("/**");
-		registry.addInterceptor(signHandlerInterceptor()).addPathPatterns("/**");
+		registry.addInterceptor(signHandlerInterceptor()).addPathPatterns("/**").order(1);
+		registry.addInterceptor(basicHandlerInterceptor()).addPathPatterns("/**").order(2);
+		registry.addInterceptor(contextHandlerInterceptor()).addPathPatterns("/**").order(3);
+	}
+
+	/**
+	 * 
+	 * ContextHandlerInterceptor
+	 * 
+	 * @author Fred Feng
+	 *
+	 * @version 1.0
+	 */
+	public static class ContextHandlerInterceptor implements HandlerInterceptor {
+
+		@Override
+		public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+			if (request.getServletPath().startsWith("/index")) {
+				return true;
+			}
+			if (request.getSession().getAttribute("currentClusterName") == null) {
+				String contextPath = request.getContextPath();
+				response.sendRedirect(contextPath + "/index");
+				return false;
+			}
+			return true;
+		}
+
 	}
 
 	/**
@@ -126,7 +157,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 			HttpSession session = request.getSession();
 			if (session.getAttribute(ATTR_WEB_CONTEXT_PATH) == null) {
-				String webContextPath = environment.getProperty("cronkeeper.ui.webContextPath");
+				String webContextPath = environment.getProperty("atlantis.framework.chaconne.console.contextPath");
 				if (StringUtils.isBlank(webContextPath)) {
 					webContextPath = WebUtils.getContextPath(request);
 				}
@@ -200,9 +231,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 				log.trace("Path: " + servletRequest.getServletPath() + " take(ms): " + (System.currentTimeMillis() - startTime));
 			}
 			if (body instanceof Result) {
-				Result<?> resultVO = (Result<?>) body;
-				resultVO.setElapsed(startTime > 0 ? System.currentTimeMillis() - startTime : 0);
-				resultVO.setRequestPath(servletRequest.getServletPath());
+				Result<?> result = (Result<?>) body;
+				result.setElapsed(startTime > 0 ? System.currentTimeMillis() - startTime : 0);
+				result.setRequestPath(servletRequest.getServletPath());
 			}
 			return body;
 		}

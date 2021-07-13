@@ -35,6 +35,7 @@ public class JobStat implements Serializable {
 	private static final long serialVersionUID = 5741263651318840914L;
 
 	private String clusterName;
+	private String groupName;
 	private Integer jobId;
 	private String jobName;
 	private int completedCount;

@@ -15,28 +15,29 @@
 */
 package indi.atlantis.framework.chaconne.model;
 
+import indi.atlantis.framework.chaconne.JobState;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * 
- * Query
+ * JobStateCount
  * 
  * @author Fred Feng
  *
- * @since 1.0
+ * @version 1.0
  */
 @Getter
-@Setter
-public class Query {
+public class JobStateCount {
 
-	private String clusterName;
+	private JobState jobState;
+	private int jobCount;
 
-	public Query() {
+	public void setJobState(int jobState) {
+		this.jobState = JobState.valueOf(jobState);
 	}
 
-	public Query(String clusterName) {
-		this.clusterName = clusterName;
+	public void setJobCount(int jobCount) {
+		this.jobCount = jobCount;
 	}
 
 }

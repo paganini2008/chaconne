@@ -13,30 +13,24 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package indi.atlantis.framework.chaconne.model;
+package indi.atlantis.framework.chaconne.console.utils;
 
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * 
- * Query
+ * JobStatForm
  * 
  * @author Fred Feng
  *
- * @since 1.0
+ * @version 1.0
  */
 @Getter
 @Setter
-public class Query {
-
-	private String clusterName;
-
-	public Query() {
-	}
-
-	public Query(String clusterName) {
-		this.clusterName = clusterName;
-	}
-
+public class JobStatForm {
+	
+	private Integer jobId;
+	private int lastDays = 30;
+	
 }

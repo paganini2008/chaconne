@@ -22,12 +22,14 @@ import indi.atlantis.framework.chaconne.model.JobStackTrace;
 import indi.atlantis.framework.chaconne.model.JobStat;
 import indi.atlantis.framework.chaconne.model.JobStatPageQuery;
 import indi.atlantis.framework.chaconne.model.JobStatQuery;
+import indi.atlantis.framework.chaconne.model.JobStateCount;
 import indi.atlantis.framework.chaconne.model.JobStateParameter;
 import indi.atlantis.framework.chaconne.model.JobTrace;
 import indi.atlantis.framework.chaconne.model.JobTracePageQuery;
 import indi.atlantis.framework.chaconne.model.JobTraceQuery;
 import indi.atlantis.framework.chaconne.model.JobTriggerDetail;
 import indi.atlantis.framework.chaconne.model.PageQuery;
+import indi.atlantis.framework.chaconne.model.Query;
 import indi.atlantis.framework.chaconne.model.Result;
 import indi.atlantis.framework.chaconne.utils.GenericJobDefinition;
 
@@ -238,6 +240,14 @@ public class RestJobManager implements JobManager {
 			pageQuery.setContent(data.getContent());
 			pageQuery.setNextPage(data.isNextPage());
 		}
+	}
+
+	@Override
+	public JobStateCount[] selectJobStateCount(Query query) throws Exception {
+		ResponseEntity<Result<JobStateCount[]>> responseEntity = restTemplate.perform(query.getClusterName(),
+				"/job/manager/selectJobStateCount", HttpMethod.POST, query, new ParameterizedTypeReference<Result<JobStateCount[]>>() {
+				});
+		return responseEntity.getBody().getData();
 	}
 
 }

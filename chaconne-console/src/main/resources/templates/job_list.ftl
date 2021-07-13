@@ -115,6 +115,6 @@
 			</tbody>
 		</table>
 </div>
-		<#if page ?? && page.results?? && page.results? size gt 0>
-			<@pageToolbar.page page = page display = 0/> 
-		</#if>
+<#if page ?? && page.results?? && page.results? size gt 0>
+	<@pageToolbar.page page = page display = 0/> 
+</#if>

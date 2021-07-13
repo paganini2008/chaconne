@@ -60,6 +60,11 @@ public class JobManagerController {
 
 	@Autowired
 	private JobManagerService jobManagerService;
+	
+	@GetMapping("")
+	public String index(Model ui) throws Exception {
+		return "job_man";
+	}
 
 	@PostMapping("/save")
 	public @ResponseBody Map<String, Object> saveJob(@RequestBody JobPersistParameter param) throws Exception {

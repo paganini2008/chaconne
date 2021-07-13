@@ -40,9 +40,6 @@ public class JdbcStopWatch implements StopWatch {
 	@Autowired
 	private InstanceId instanceId;
 
-	@Value("${spring.application.cluster.name}")
-	private String clusterName;
-
 	@Value("${server.port}")
 	private int port;
 
@@ -111,7 +108,8 @@ public class JdbcStopWatch implements StopWatch {
 
 			kwargs = new HashMap<String, Object>();
 			kwargs.put("traceId", traceId);
-			kwargs.put("clusterName", clusterName);
+			kwargs.put("clusterName", jobKey.getClusterName());
+			kwargs.put("groupName", jobKey.getGroupName());
 			kwargs.put("jobId", jobId);
 			kwargs.put("runningState", runningState.getValue());
 			kwargs.put("address", getSelfAddress());

@@ -13,8 +13,9 @@
 	}
 </style>
 <ul id="navBox">
-	<li><a href="${contextPath}/index">Job Management</a></li>
-	<li><a href="javascript:void(0);">Job Report</a></li>
-	<li><a href="javascript:void(0);">Job Tools</a></li>
-	<li><a href="javascript:void(0);">Quick Start</a></li>
+	<li><a href="${contextPath}/index/1">Overview</a></li>
+	<li><a href="${contextPath}/index/2">Job Management</a></li>
+	<li><a href="${contextPath}/index/3">Job Statistics</a></li>
+	<li><a href="${contextPath}/index/4">Cron Editor</a></li>
+	<li><a href="${contextPath}/index/5">Quick Start</a></li>
 </ul>

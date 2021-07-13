@@ -48,11 +48,13 @@ import indi.atlantis.framework.chaconne.model.JobStackTrace;
 import indi.atlantis.framework.chaconne.model.JobStat;
 import indi.atlantis.framework.chaconne.model.JobStatPageQuery;
 import indi.atlantis.framework.chaconne.model.JobStatQuery;
+import indi.atlantis.framework.chaconne.model.JobStateCount;
 import indi.atlantis.framework.chaconne.model.JobTrace;
 import indi.atlantis.framework.chaconne.model.JobTracePageQuery;
 import indi.atlantis.framework.chaconne.model.JobTraceQuery;
 import indi.atlantis.framework.chaconne.model.JobTriggerDetail;
 import indi.atlantis.framework.chaconne.model.PageQuery;
+import indi.atlantis.framework.chaconne.model.Query;
 import indi.atlantis.framework.chaconne.model.TriggerDescription;
 import indi.atlantis.framework.chaconne.model.TriggerDescription.Dependency;
 import lombok.extern.slf4j.Slf4j;
@@ -602,6 +604,9 @@ public class JdbcJobManager implements JobManager {
 		if (StringUtils.isNotBlank(query.getClusterName())) {
 			whereClause.append(" and cluster_name=:clusterName");
 		}
+		if(StringUtils.isNotBlank(query.getApplicationName())) {
+			whereClause.append(" and cluster_name=:clusterName");
+		}
 		if (query.getJobId() != null) {
 			whereClause.append(" and job_id=:jobId");
 		}
@@ -664,6 +669,17 @@ public class JdbcJobManager implements JobManager {
 		pageQuery.setRows(rows);
 		pageQuery.setContent(pageResponse.getContent());
 		pageQuery.setNextPage(pageResponse.hasNextPage());
+	}
+
+	@Override
+	public JobStateCount[] selectJobStateCount(Query query) throws Exception {
+		List<JobStateCount> results = new ArrayList<JobStateCount>();
+		List<Map<String, Object>> dataList = jobQueryDao.selectJobStateCount(query.getClusterName());
+		for (Map<String, Object> data : dataList) {
+			JobStateCount jobStateCount = convertAsBean(data, JobStateCount.class);
+			results.add(jobStateCount);
+		}
+		return results.toArray(new JobStateCount[0]);
 	}
 
 }

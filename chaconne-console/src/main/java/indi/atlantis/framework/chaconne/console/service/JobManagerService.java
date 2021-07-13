@@ -51,7 +51,7 @@ public class JobManagerService {
 		jobManager.persistJob(param);
 	}
 
-	public String[] selectClusterNames() throws Exception {
+	public String[] selectRegisteredClusterNames() throws Exception {
 		String[] clusterNames = jobManager.selectClusterNames();
 		if (ArrayUtils.isEmpty(clusterNames)) {
 			clusterNames = new String[] { "mycluster" };

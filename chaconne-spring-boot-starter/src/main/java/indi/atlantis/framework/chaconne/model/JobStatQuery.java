@@ -30,6 +30,7 @@ import lombok.Setter;
 @Setter
 public class JobStatQuery extends Query {
 
+	private String applicationName;
 	private Integer jobId;
 	private String address;
 	private int lastDays = 30;

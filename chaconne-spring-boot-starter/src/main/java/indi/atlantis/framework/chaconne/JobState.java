@@ -18,6 +18,7 @@ package indi.atlantis.framework.chaconne;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.github.paganini2008.devtools.enums.EnumConstant;
+import com.github.paganini2008.devtools.enums.EnumUtils;
 
 /**
  * 
@@ -28,13 +29,8 @@ import com.github.paganini2008.devtools.enums.EnumConstant;
  */
 public enum JobState implements EnumConstant {
 
-	NOT_SCHEDULED(0, "Not scheduled"), 
-	SCHEDULING(1, "Scheduling"), 
-	RUNNING(2, "Running"), 
-	PAUSED(3, "Paused"), 
-	FINISHED(4, "Finished"), 
-	FROZEN(10, "Frozen"),
-	NONE(99, "None");
+	NOT_SCHEDULED(0, "Not Scheduled"), SCHEDULING(1, "Scheduling"), RUNNING(2, "Running"), PAUSED(3, "Paused"), FINISHED(4,
+			"Finished"), FROZEN(10, "Frozen"), NONE(99, "None");
 
 	private JobState(int value, String repr) {
 		this.value = value;
@@ -55,13 +51,8 @@ public enum JobState implements EnumConstant {
 	}
 
 	@JsonCreator
-	public static JobState valueOf(int value) {
-		for (JobState jobState : JobState.values()) {
-			if (jobState.getValue() == value) {
-				return jobState;
-			}
-		}
-		throw new IllegalArgumentException("Unknown jobState: " + value);
+	public static JobState valueOf(Integer ordinal) {
+		return EnumUtils.valueOf(JobState.class, ordinal);
 	}
 
 }

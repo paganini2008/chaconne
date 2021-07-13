@@ -19,14 +19,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 
-import com.github.paganini2008.devtools.ArrayUtils;
 import com.github.paganini2008.devtools.StringUtils;
 
 import indi.atlantis.framework.chaconne.console.service.JobManagerService;
+import indi.atlantis.framework.chaconne.console.utils.Result;
 
 /**
  * 
@@ -43,15 +45,36 @@ public class IndexController {
 	private JobManagerService jobManagerService;
 
 	@GetMapping("/index")
-	public String index(@RequestParam(name = "clusterName", required = false) String clusterName, WebRequest webRequest, Model ui)
-			throws Exception {
-		String[] clusterNames = jobManagerService.selectClusterNames();
-		ui.addAttribute("clusterNames", clusterNames);
-		if (StringUtils.isBlank(clusterName) && ArrayUtils.isNotEmpty(clusterNames)) {
-			clusterName = clusterNames[0];
+	public String index() {
+		return "forward:/index/1";
+	}
+
+	@GetMapping("/index/{index}")
+	public String index(@PathVariable("index") int index, @RequestParam(name = "clusterName", required = false) String clusterName,
+			WebRequest webRequest, Model ui) throws Exception {
+		String currentClusterName = clusterName;
+		if (StringUtils.isBlank(currentClusterName)) {
+			String[] clusterNames = jobManagerService.selectRegisteredClusterNames();
+			currentClusterName = clusterNames[0];
 		}
-		webRequest.setAttribute("currentClusterName", clusterName, RequestAttributes.SCOPE_SESSION);
-		return "index";
+		webRequest.setAttribute("currentClusterName", currentClusterName, RequestAttributes.SCOPE_SESSION);
+		ui.addAttribute("navIndex", index);
+		switch (index) {
+		case 1:
+			return "redirect:/overview";
+		case 2:
+			return "redirect:/job";
+		case 3:
+			return "redirect:/job/stat";
+		default:
+			return "redirect:/overview";
+		}
+	}
+
+	@GetMapping("/clusters")
+	public @ResponseBody Result<String[]> selectRegisteredClusterNames() throws Exception {
+		String[] clusterNames = jobManagerService.selectRegisteredClusterNames();
+		return Result.success(clusterNames);
 	}
 
 }
