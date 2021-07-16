@@ -46,6 +46,7 @@ import indi.atlantis.framework.chaconne.model.JobLog;
 import indi.atlantis.framework.chaconne.model.JobRuntimeDetail;
 import indi.atlantis.framework.chaconne.model.JobStackTrace;
 import indi.atlantis.framework.chaconne.model.JobStat;
+import indi.atlantis.framework.chaconne.model.JobStatDetail;
 import indi.atlantis.framework.chaconne.model.JobStatPageQuery;
 import indi.atlantis.framework.chaconne.model.JobStatQuery;
 import indi.atlantis.framework.chaconne.model.JobStateCount;
@@ -588,15 +589,15 @@ public class JdbcJobManager implements JobManager {
 	}
 
 	@Override
-	public JobStat[] selectJobStatByDay(JobStatQuery query) throws Exception {
-		Map<String, JobStat> results = new LinkedHashMap<String, JobStat>();
+	public JobStatDetail[] selectJobStatByDay(JobStatQuery query) throws Exception {
+		Map<String, JobStatDetail> results = new LinkedHashMap<String, JobStatDetail>();
 		Date startDate = DateUtils.setTime(DateUtils.addDays(new Date(), -1 * query.getLastDays()), 0, 0, 0);
 		Date endDate = DateUtils.setTime(new Date(), 0, 0, 0);
 		Calendar startCal = Calendar.getInstance();
 		startCal.setTime(startDate);
 		while (startCal.getTime().compareTo(endDate) <= 0) {
 			String executionDate = DateUtils.format(startCal.getTime(), "MMMM dd,yyyy");
-			results.put(executionDate, new JobStat(query.getClusterName(), executionDate));
+			results.put(executionDate, new JobStatDetail(query.getClusterName(), executionDate));
 			startCal.add(Calendar.DAY_OF_MONTH, 1);
 		}
 
@@ -604,7 +605,7 @@ public class JdbcJobManager implements JobManager {
 		if (StringUtils.isNotBlank(query.getClusterName())) {
 			whereClause.append(" and cluster_name=:clusterName");
 		}
-		if(StringUtils.isNotBlank(query.getApplicationName())) {
+		if (StringUtils.isNotBlank(query.getApplicationName())) {
 			whereClause.append(" and cluster_name=:clusterName");
 		}
 		if (query.getJobId() != null) {
@@ -620,14 +621,14 @@ public class JdbcJobManager implements JobManager {
 		kwargs.put("endDate", DateUtils.setTime(new Date(), 23, 59, 59));
 		List<Map<String, Object>> dataList = jobQueryDao.selectJobStatByDay(whereClause.toString(), kwargs, query.getLastDays());
 		for (Map<String, Object> data : dataList) {
-			JobStat jobStat = convertAsBean(data, JobStat.class);
+			JobStatDetail jobStat = convertAsBean(data, JobStatDetail.class);
 			results.put(jobStat.getExecutionDate(), jobStat);
 		}
-		return results.values().toArray(new JobStat[0]);
+		return results.values().toArray(new JobStatDetail[0]);
 	}
 
 	@Override
-	public void selectJobStatById(JobStatPageQuery<JobStat> pageQuery) throws Exception {
+	public void selectJobStatById(JobStatPageQuery<JobStatDetail> pageQuery) throws Exception {
 		StringBuilder whereClause = new StringBuilder();
 		if (StringUtils.isNotBlank(pageQuery.getClusterName())) {
 			whereClause.append(" and a.cluster_name=:clusterName");
@@ -646,7 +647,7 @@ public class JdbcJobManager implements JobManager {
 		Map<String, Object> kwargs = PropertyUtils.convertToMap(pageQuery);
 		final ResultSetSlice<Map<String, Object>> delegate = jobQueryDao.selectJobStatById(whereClause.toString(), kwargs);
 
-		ResultSetSlice<JobStat> resultSetSlice = new ResultSetSlice<JobStat>() {
+		ResultSetSlice<JobStatDetail> resultSetSlice = new ResultSetSlice<JobStatDetail>() {
 
 			@Override
 			public int rowCount() {
@@ -654,17 +655,17 @@ public class JdbcJobManager implements JobManager {
 			}
 
 			@Override
-			public List<JobStat> list(int maxResults, int firstResult) {
-				List<JobStat> dataList = new ArrayList<JobStat>(maxResults);
+			public List<JobStatDetail> list(int maxResults, int firstResult) {
+				List<JobStatDetail> dataList = new ArrayList<JobStatDetail>(maxResults);
 				for (Map<String, Object> data : delegate.list(maxResults, firstResult)) {
-					JobStat jobStat = convertAsBean(data, JobStat.class);
+					JobStatDetail jobStat = convertAsBean(data, JobStatDetail.class);
 					dataList.add(jobStat);
 				}
 				return dataList;
 			}
 
 		};
-		PageResponse<JobStat> pageResponse = resultSetSlice.list(PageRequest.of(pageQuery.getPage(), pageQuery.getSize()));
+		PageResponse<JobStatDetail> pageResponse = resultSetSlice.list(PageRequest.of(pageQuery.getPage(), pageQuery.getSize()));
 		int rows = pageResponse.getTotalRecords();
 		pageQuery.setRows(rows);
 		pageQuery.setContent(pageResponse.getContent());
@@ -680,6 +681,12 @@ public class JdbcJobManager implements JobManager {
 			results.add(jobStateCount);
 		}
 		return results.toArray(new JobStateCount[0]);
+	}
+
+	@Override
+	public JobStat selectJobStat(Query query) throws Exception {
+		List<Map<String, Object>> dataList = jobQueryDao.selectJobStat(query.getClusterName());
+		return convertAsBean(dataList.get(0), JobStat.class);
 	}
 
 }

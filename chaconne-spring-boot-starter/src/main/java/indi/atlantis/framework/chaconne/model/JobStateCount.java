@@ -17,6 +17,7 @@ package indi.atlantis.framework.chaconne.model;
 
 import indi.atlantis.framework.chaconne.JobState;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * 
@@ -27,6 +28,7 @@ import lombok.Getter;
  * @version 1.0
  */
 @Getter
+@ToString
 public class JobStateCount {
 
 	private JobState jobState;

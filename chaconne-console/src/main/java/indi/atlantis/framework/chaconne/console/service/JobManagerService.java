@@ -47,8 +47,8 @@ public class JobManagerService {
 	@Autowired
 	private JobManager jobManager;
 
-	public void saveJob(JobPersistParameter param) throws Exception {
-		jobManager.persistJob(param);
+	public int saveJob(JobPersistParameter param) throws Exception {
+		return jobManager.persistJob(param);
 	}
 
 	public String[] selectRegisteredClusterNames() throws Exception {

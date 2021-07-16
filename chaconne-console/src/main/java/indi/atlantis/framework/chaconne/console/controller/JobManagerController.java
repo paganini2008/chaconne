@@ -39,6 +39,7 @@ import indi.atlantis.framework.chaconne.console.service.JobManagerService;
 import indi.atlantis.framework.chaconne.console.utils.JobLogForm;
 import indi.atlantis.framework.chaconne.console.utils.JobTraceForm;
 import indi.atlantis.framework.chaconne.console.utils.PageBean;
+import indi.atlantis.framework.chaconne.console.utils.Result;
 import indi.atlantis.framework.chaconne.model.JobDetail;
 import indi.atlantis.framework.chaconne.model.JobLog;
 import indi.atlantis.framework.chaconne.model.JobPersistParameter;
@@ -60,23 +61,29 @@ public class JobManagerController {
 
 	@Autowired
 	private JobManagerService jobManagerService;
-	
+
 	@GetMapping("")
-	public String index(Model ui) throws Exception {
+	public String index(Model ui) {
 		return "job_man";
 	}
 
+	@GetMapping("/clusters")
+	public @ResponseBody Result<String[]> selectRegisteredClusterNames() throws Exception {
+		String[] clusterNames = jobManagerService.selectRegisteredClusterNames();
+		return Result.success(clusterNames);
+	}
+
 	@PostMapping("/save")
-	public @ResponseBody Map<String, Object> saveJob(@RequestBody JobPersistParameter param) throws Exception {
+	public @ResponseBody Result<Map<String, Object>> saveJob(@RequestBody JobPersistParameter param) throws Exception {
 		Map<String, Object> data = new HashMap<String, Object>();
 		try {
-			jobManagerService.saveJob(param);
-			data.put("success", true);
+			int id = jobManagerService.saveJob(param);
+			data.put("success", id > 0);
 		} catch (Exception e) {
 			data.put("success", false);
-			data.put("msg", "Server Internal Error: " + e.getMessage());
+			data.put("errorMsg", e.getMessage());
 		}
-		return data;
+		return Result.success(data);
 	}
 
 	@GetMapping(value = { "/edit", "/edit/{jobKey}" })

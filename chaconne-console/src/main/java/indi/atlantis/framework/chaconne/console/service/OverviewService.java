@@ -15,16 +15,12 @@
 */
 package indi.atlantis.framework.chaconne.console.service;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import indi.atlantis.framework.chaconne.JobManager;
 import indi.atlantis.framework.chaconne.model.JobStat;
+import indi.atlantis.framework.chaconne.model.JobStatDetail;
 import indi.atlantis.framework.chaconne.model.JobStatQuery;
 import indi.atlantis.framework.chaconne.model.JobStateCount;
 import indi.atlantis.framework.chaconne.model.Query;
@@ -43,12 +39,15 @@ public class OverviewService {
 	@Autowired
 	private JobManager jobManager;
 
-	public Map<String, JobStateCount> selectJobStateCount(String clusterName) throws Exception {
-		JobStateCount[] stateCounts = jobManager.selectJobStateCount(new Query(clusterName));
-		return Arrays.stream(stateCounts).collect(Collectors.toMap(t -> t.getJobState().getRepr(), Function.identity()));
+	public JobStat selectJobStat(String clusterName) throws Exception {
+		return jobManager.selectJobStat(new Query(clusterName));
 	}
 
-	public JobStat[] selectJobStatByDay(String clusterName) throws Exception {
+	public JobStateCount[] selectJobStateCount(String clusterName) throws Exception {
+		return jobManager.selectJobStateCount(new Query(clusterName));
+	}
+
+	public JobStatDetail[] selectJobStatByDay(String clusterName) throws Exception {
 		JobStatQuery query = new JobStatQuery();
 		query.setClusterName(clusterName);
 		return jobManager.selectJobStatByDay(query);

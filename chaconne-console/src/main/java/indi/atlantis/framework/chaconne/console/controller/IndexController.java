@@ -21,14 +21,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 
 import com.github.paganini2008.devtools.StringUtils;
 
 import indi.atlantis.framework.chaconne.console.service.JobManagerService;
-import indi.atlantis.framework.chaconne.console.utils.Result;
 
 /**
  * 
@@ -69,12 +67,6 @@ public class IndexController {
 		default:
 			return "redirect:/overview";
 		}
-	}
-
-	@GetMapping("/clusters")
-	public @ResponseBody Result<String[]> selectRegisteredClusterNames() throws Exception {
-		String[] clusterNames = jobManagerService.selectRegisteredClusterNames();
-		return Result.success(clusterNames);
 	}
 
 }

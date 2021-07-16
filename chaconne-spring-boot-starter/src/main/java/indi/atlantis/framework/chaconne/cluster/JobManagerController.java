@@ -24,6 +24,7 @@ import indi.atlantis.framework.chaconne.model.JobRuntimeDetail;
 import indi.atlantis.framework.chaconne.model.JobRuntimeParameter;
 import indi.atlantis.framework.chaconne.model.JobStackTrace;
 import indi.atlantis.framework.chaconne.model.JobStat;
+import indi.atlantis.framework.chaconne.model.JobStatDetail;
 import indi.atlantis.framework.chaconne.model.JobStatPageQuery;
 import indi.atlantis.framework.chaconne.model.JobStatQuery;
 import indi.atlantis.framework.chaconne.model.JobStateCount;
@@ -195,13 +196,14 @@ public class JobManagerController {
 	}
 
 	@PostMapping("/selectJobStatByDay")
-	public ResponseEntity<Result<JobStat[]>> selectJobStatByDay(@RequestBody JobStatQuery query) throws Exception {
-		JobStat[] jobStats = jobManager.selectJobStatByDay(query);
+	public ResponseEntity<Result<JobStatDetail[]>> selectJobStatByDay(@RequestBody JobStatQuery query) throws Exception {
+		JobStatDetail[] jobStats = jobManager.selectJobStatByDay(query);
 		return ResponseEntity.ok(Result.success(jobStats));
 	}
 
 	@PostMapping("/selectJobStatById")
-	public ResponseEntity<Result<PageQuery<JobStat>>> selectJobStatById(@RequestBody JobStatPageQuery<JobStat> query) throws Exception {
+	public ResponseEntity<Result<PageQuery<JobStatDetail>>> selectJobStatById(@RequestBody JobStatPageQuery<JobStatDetail> query)
+			throws Exception {
 		jobManager.selectJobStatById(query);
 		return ResponseEntity.ok(Result.success(query));
 	}
@@ -210,6 +212,12 @@ public class JobManagerController {
 	public ResponseEntity<Result<JobStateCount[]>> selectJobStateCount(@RequestBody Query query) throws Exception {
 		JobStateCount[] stateCounts = jobManager.selectJobStateCount(query);
 		return ResponseEntity.ok(Result.success(stateCounts));
+	}
+
+	@PostMapping("/selectJobStat")
+	public ResponseEntity<Result<JobStat>> selectJobStat(@RequestBody Query query) throws Exception {
+		JobStat jobStat = jobManager.selectJobStat(query);
+		return ResponseEntity.ok(Result.success(jobStat));
 	}
 
 }

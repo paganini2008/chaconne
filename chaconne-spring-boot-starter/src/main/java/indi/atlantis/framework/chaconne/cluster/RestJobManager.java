@@ -20,6 +20,7 @@ import indi.atlantis.framework.chaconne.model.JobPersistParameter;
 import indi.atlantis.framework.chaconne.model.JobRuntimeDetail;
 import indi.atlantis.framework.chaconne.model.JobStackTrace;
 import indi.atlantis.framework.chaconne.model.JobStat;
+import indi.atlantis.framework.chaconne.model.JobStatDetail;
 import indi.atlantis.framework.chaconne.model.JobStatPageQuery;
 import indi.atlantis.framework.chaconne.model.JobStatQuery;
 import indi.atlantis.framework.chaconne.model.JobStateCount;
@@ -222,19 +223,20 @@ public class RestJobManager implements JobManager {
 	}
 
 	@Override
-	public JobStat[] selectJobStatByDay(JobStatQuery query) throws Exception {
-		ResponseEntity<Result<JobStat[]>> responseEntity = restTemplate.perform(query.getClusterName(), "/job/manager/selectJobStatByDay",
-				HttpMethod.POST, query, new ParameterizedTypeReference<Result<JobStat[]>>() {
+	public JobStatDetail[] selectJobStatByDay(JobStatQuery query) throws Exception {
+		ResponseEntity<Result<JobStatDetail[]>> responseEntity = restTemplate.perform(query.getClusterName(),
+				"/job/manager/selectJobStatByDay", HttpMethod.POST, query, new ParameterizedTypeReference<Result<JobStatDetail[]>>() {
 				});
 		return responseEntity.getBody().getData();
 	}
 
 	@Override
-	public void selectJobStatById(JobStatPageQuery<JobStat> pageQuery) throws Exception {
-		ResponseEntity<Result<PageQuery<JobStat>>> responseEntity = restTemplate.perform(pageQuery.getClusterName(),
-				"/job/manager/selectJobStatById", HttpMethod.POST, pageQuery, new ParameterizedTypeReference<Result<PageQuery<JobStat>>>() {
+	public void selectJobStatById(JobStatPageQuery<JobStatDetail> pageQuery) throws Exception {
+		ResponseEntity<Result<PageQuery<JobStatDetail>>> responseEntity = restTemplate.perform(pageQuery.getClusterName(),
+				"/job/manager/selectJobStatById", HttpMethod.POST, pageQuery,
+				new ParameterizedTypeReference<Result<PageQuery<JobStatDetail>>>() {
 				});
-		PageQuery<JobStat> data = responseEntity.getBody().getData();
+		PageQuery<JobStatDetail> data = responseEntity.getBody().getData();
 		if (data != null) {
 			pageQuery.setRows(data.getRows());
 			pageQuery.setContent(data.getContent());
@@ -246,6 +248,14 @@ public class RestJobManager implements JobManager {
 	public JobStateCount[] selectJobStateCount(Query query) throws Exception {
 		ResponseEntity<Result<JobStateCount[]>> responseEntity = restTemplate.perform(query.getClusterName(),
 				"/job/manager/selectJobStateCount", HttpMethod.POST, query, new ParameterizedTypeReference<Result<JobStateCount[]>>() {
+				});
+		return responseEntity.getBody().getData();
+	}
+
+	@Override
+	public JobStat selectJobStat(Query query) throws Exception {
+		ResponseEntity<Result<JobStat>> responseEntity = restTemplate.perform(query.getClusterName(), "/job/manager/selectJobStat",
+				HttpMethod.POST, query, new ParameterizedTypeReference<Result<JobStat>>() {
 				});
 		return responseEntity.getBody().getData();
 	}

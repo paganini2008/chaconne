@@ -16,9 +16,9 @@
 package indi.atlantis.framework.chaconne.model;
 
 import java.io.Serializable;
-import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,25 +26,41 @@ import lombok.ToString;
 
 /**
  * 
- * JobServerDetail
+ * JobStatDetail
  * 
  * @author Fred Feng
  *
- * @since 1.0
+ * @version 1.0
  */
 @Getter
 @Setter
 @ToString
-public class JobServerDetail implements Serializable {
+@JsonInclude(value = Include.NON_NULL)
+public class JobStatDetail implements Serializable {
 
-	private static final long serialVersionUID = -6360857616979966695L;
+	private static final long serialVersionUID = 5741263651318840914L;
+
 	private String clusterName;
 	private String groupName;
-	private String instanceId;
-	private String contextPath;
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private Date startDate;
-	private String contactPerson;
-	private String contactEmail;
+	private Integer jobId;
+	private String jobName;
+	private int completedCount;
+	private int skippedCount;
+	private int failedCount;
+	private int finishedCount;
+	private int retryCount;
+	private String executionDate;
+
+	public JobStatDetail() {
+	}
+
+	public JobStatDetail(String executionDate) {
+		this.executionDate = executionDate;
+	}
+
+	public JobStatDetail(String clusterName, String executionDate) {
+		this.clusterName = clusterName;
+		this.executionDate = executionDate;
+	}
 
 }

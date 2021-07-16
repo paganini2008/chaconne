@@ -15,8 +15,6 @@
 */
 package indi.atlantis.framework.chaconne.console.controller;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +27,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import indi.atlantis.framework.chaconne.console.service.OverviewService;
 import indi.atlantis.framework.chaconne.console.utils.Result;
 import indi.atlantis.framework.chaconne.model.JobStat;
+import indi.atlantis.framework.chaconne.model.JobStatDetail;
 import indi.atlantis.framework.chaconne.model.JobStateCount;
 
 /**
@@ -47,15 +46,27 @@ public class OverviewController {
 	private OverviewService overviewService;
 
 	@GetMapping("")
-	public String index(@SessionAttribute("currentClusterName") String clusterName, Model ui) throws Exception {
-		Map<String, JobStateCount> stateCounts = overviewService.selectJobStateCount(clusterName);
-		ui.addAttribute("dataMap", stateCounts);
+	public String index(Model ui) {
 		return "overview";
 	}
 
-	@PostMapping("/stat")
-	public @ResponseBody Result<JobStat[]> stat(@SessionAttribute("currentClusterName") String clusterName) throws Exception {
-		JobStat[] jobStats = overviewService.selectJobStatByDay(clusterName);
+	@PostMapping("/job/state")
+	public @ResponseBody Result<JobStateCount[]> selectJobStateCount(@SessionAttribute("currentClusterName") String clusterName)
+			throws Exception {
+		JobStateCount[] stateCounts = overviewService.selectJobStateCount(clusterName);
+		return Result.success(stateCounts);
+	}
+
+	@PostMapping("/job/stat")
+	public @ResponseBody Result<JobStat> selectJobStat(@SessionAttribute("currentClusterName") String clusterName) throws Exception {
+		JobStat jobStat = overviewService.selectJobStat(clusterName);
+		return Result.success(jobStat);
+	}
+
+	@PostMapping("/job/stat/detail")
+	public @ResponseBody Result<JobStatDetail[]> selectJobStatByDay(@SessionAttribute("currentClusterName") String clusterName)
+			throws Exception {
+		JobStatDetail[] jobStats = overviewService.selectJobStatByDay(clusterName);
 		return Result.success(jobStats);
 	}
 
