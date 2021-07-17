@@ -13,6 +13,7 @@
 	          resizeMode:'fit',
 	          disabledColumns: [0,10]
 		});
+	
 		
 	})
 </script>
@@ -53,7 +54,7 @@
 					<td class="tdLeft5">
 						Create Date
 					</td>
-					<td width="15%" class="tdLeft5">
+					<td width="12%" class="tdLeft5">
 						&nbsp;
 					</td>
 				</tr>
@@ -63,7 +64,7 @@
 					<#list page.results as bean>
 						<tr>
 							<td width="3%">
-							    ${(page.page - 1) * (page.size) + (bean_index + 1)}
+							    <a href="${contextPath}/job/detail/${(bean.jobKey.identifier ? html)!}">${(page.page - 1) * (page.size) + (bean_index + 1)}</a>
 							</td>
 							<td class="tdLeft5">
 								${(bean.jobKey.clusterName)!}
@@ -95,11 +96,14 @@
 							<td class="tdLeft5">
 								${(bean.createDate? string('yyyy-MM-dd HH:mm:ss'))!}
 							</td>
-							<td width="15%" class="tdLeft5">
-								<a href="${contextPath}/job/detail/${(bean.jobKey.identifier ? html)!}">Detail</a>
-								<a href="">Pause</a>
-								<a href="">Run</a>
-								<a href="">Delete</a>
+							<td width="12%" class="tdLeft5">
+								<#if bean.jobRuntime.jobState.repr == 'Scheduling' || bean.jobRuntime.jobState.repr == 'Paused'>
+								<a class="pauseJob" href="${contextPath}/job/toggle/${(bean.jobKey.identifier ? html)!}"><#if bean.jobRuntime.jobState.repr == 'Paused'>Resume<#else>Pause</#if></a>
+								&nbsp;&nbsp;|
+								</#if>
+								<a class="runJob" href="javascript:void(0);" identifier="${(bean.jobKey.identifier ? html)!}">Run</a>
+								&nbsp;&nbsp;|
+								<a class="deleteJob" href="javascript:void(0);" identifier="${(bean.jobKey.identifier ? html)!}">Delete</a>
 							</td>
 						</tr>
 					</#list>

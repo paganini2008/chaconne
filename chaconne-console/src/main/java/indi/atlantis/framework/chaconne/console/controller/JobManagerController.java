@@ -86,6 +86,12 @@ public class JobManagerController {
 		return Result.success(data);
 	}
 
+	@GetMapping("/toggle/{jobKey}")
+	public String toggleJob(@PathVariable("jobKey") String jobKey) throws Exception {
+		jobManagerService.toggleJob(jobKey);
+		return "redirect:/job";
+	}
+
 	@GetMapping(value = { "/edit", "/edit/{jobKey}" })
 	public String editJob(@PathVariable(name = "jobKey", required = false) String jobKey, Model ui) throws Exception {
 		JobPersistParameter param;
@@ -105,7 +111,7 @@ public class JobManagerController {
 			@CookieValue(value = "DATA_LIST_SIZE", required = false, defaultValue = "10") int size, Model ui) throws Exception {
 		PageQuery<JobDetail> pageQuery = jobManagerService.selectJobDetail(clusterName, page, size);
 		ui.addAttribute("page", PageBean.wrap(pageQuery));
-		return "job_list";
+		return "job_man_list";
 	}
 
 	@PostMapping("/trace")

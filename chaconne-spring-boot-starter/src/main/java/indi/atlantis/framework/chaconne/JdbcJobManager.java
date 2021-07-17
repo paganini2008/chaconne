@@ -364,7 +364,7 @@ public class JdbcJobManager implements JobManager {
 			throw new JobException("Please unschedule the job before you delete it.");
 		}
 		try {
-			lifeCycleListenerContainer.onChange(jobKey, JobLifeCycle.DELETION);
+			lifeCycleListenerContainer.onChange(jobKey, JobLifeCycle.COMPLETION);
 			return setJobState(jobKey, JobState.FINISHED);
 		} finally {
 			jobIdCache.evict(jobKey);

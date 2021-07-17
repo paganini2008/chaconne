@@ -28,7 +28,7 @@ public interface LifeCycleListener extends Comparable<LifeCycleListener> {
 	default void afterCreation(JobKey jobKey) {
 	}
 
-	default void beforeDeletion(JobKey jobKey) {
+	default void beforeCompletion(JobKey jobKey) {
 	}
 
 	default void afterRefresh(JobKey jobKey) {

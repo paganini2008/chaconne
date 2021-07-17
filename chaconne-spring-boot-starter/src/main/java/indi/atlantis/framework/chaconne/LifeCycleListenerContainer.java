@@ -69,9 +69,9 @@ public abstract class LifeCycleListenerContainer implements ApplicationMessageLi
 				listener.afterCreation(jobKey);
 			}
 			break;
-		case DELETION:
+		case COMPLETION:
 			for (LifeCycleListener listener : lifeCycleListeners) {
-				listener.beforeDeletion(jobKey);
+				listener.beforeCompletion(jobKey);
 			}
 			break;
 		case REFRESH:

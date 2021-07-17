@@ -22,6 +22,7 @@ import com.github.paganini2008.devtools.ArrayUtils;
 
 import indi.atlantis.framework.chaconne.JobKey;
 import indi.atlantis.framework.chaconne.JobManager;
+import indi.atlantis.framework.chaconne.JobState;
 import indi.atlantis.framework.chaconne.console.utils.JobLogForm;
 import indi.atlantis.framework.chaconne.console.utils.JobTraceForm;
 import indi.atlantis.framework.chaconne.model.JobDetail;
@@ -49,6 +50,14 @@ public class JobManagerService {
 
 	public int saveJob(JobPersistParameter param) throws Exception {
 		return jobManager.persistJob(param);
+	}
+
+	public JobState toggleJob(String identifier) throws Exception {
+		JobKey jobKey = JobKey.decode(identifier);
+		if (jobManager.hasJobState(jobKey, JobState.PAUSED)) {
+			return jobManager.resumeJob(jobKey);
+		}
+		return jobManager.pauseJob(jobKey);
 	}
 
 	public String[] selectRegisteredClusterNames() throws Exception {

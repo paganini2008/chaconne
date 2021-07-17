@@ -29,7 +29,7 @@ import com.github.paganini2008.devtools.enums.EnumConstant;
  */
 public enum JobLifeCycle implements EnumConstant {
 
-	CREATION(0, "creation"), DELETION(1, "deletion"), REFRESH(2, "refresh");
+	CREATION(0, "creation"), COMPLETION(1, "completion"), REFRESH(2, "refresh");
 
 	private final int value;
 	private final String repr;
