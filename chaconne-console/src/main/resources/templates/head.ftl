@@ -11,5 +11,5 @@
 <script type="text/javascript" src="${contextPath}/static/js/lib/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="${contextPath}/static/js/lib/colResizable-1.6.min.js"></script>
 <script type="text/javascript" src="${contextPath}/static/js/lib/json2.js"></script>
-
+<link rel="shortcut icon" href="#"/>
 </head>

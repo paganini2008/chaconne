@@ -2,31 +2,53 @@
 <#include "head.ftl">
 <style type="text/css">
 	#jobStat{
-    	height: 60px;
+    	height: 360px;
     	width: 100%;
     	clear: both;
     }
+    
+    #jobStat1{
+    	float: left;
+    	height: 360px;
+    	width: 45%;
+    }
+    
+    #jobStat2{
+    	float: left;
+    	height: 360px;
+    	width: 55%;
+    }
 
 	#tabBox {
-		height: auto;
+		clear: both;
+		height: 400px;
 		width: 100%;
-		position: relative;
-		bottom: 5px;
+	}
+	
+	.division{
+		clear: both;
+		height: 20px;
+		width: 100%;
 	}
     
 	    
 </style>
-<script type="text/javascript" src="${contextPath}/static/js/common.js"></script>
-<script src="https://cdn.highcharts.com.cn/highcharts/highcharts.js"></script>
-<script src="https://cdn.highcharts.com.cn/highcharts/modules/exporting.js"></script>
-<script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
-<script src="https://cdn.highcharts.com.cn/highcharts/themes/sand-signika.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script type="text/javascript">
-	$(function(){
-		onLoad();
-	});
 	
-	function onLoad(){
+	function main(){
+	
+		showJobStateCount();
+		
+		showJobStat();
+		
+		showJobStatDetail();
+	}
+	
+	function showJobStateCount(){
 			var url = '${contextPath}/overview/job/state';
 			$.ajax({
 			    url: url,
@@ -37,15 +59,17 @@
 					var series = [];
 				    $.each(data.data,function(i,item){
 				    	series.push({
-				    		name: item.jobState.repr,
+				    		name: item.displayJobState,
 				    		y: item.jobCount
 				    	});
 				    });
-				    showStatChart('Job Execution State Statistics',series);
+				    showPieChart('jobStat1','Job Execution State Statistics',series);
 				}
 			});
-			
-			url = '${contextPath}/overview/job/stat';
+	}
+	
+	function showJobStat(){
+		    var url = '${contextPath}/overview/job/stat';
 			$.ajax({
 			    url: url,
 				type:'post',
@@ -70,13 +94,38 @@
 				    	name: 'Finished Count',
 				    	y: jobStat.finishedCount
 				    });
-				    showStatChart('Job Execution Result Statistics',series);
+				    showPieChart('jobStat2','Job Execution Result Statistics',series);
 				}
 			});
 	}
 	
-	function showStatChart(title, data){
-		Highcharts.chart('jobStat', {
+	function showJobStatDetail(){
+			var url = '${contextPath}/overview/job/stat/detail';
+			$.ajax({
+			    url: url,
+				type:'post',
+				contentType: 'application/json;',
+				dataType:'json',
+				success: function(data){
+					var categories=[];
+					var completedCount=[];
+					var failedCount=[];
+					var skippedCount=[];
+					var finishedCount=[];
+				    $.each(data.data,function(i,item){
+				    	categories.push(item.executionDate);
+				    	completedCount.push(item.completedCount);
+				    	failedCount.push(item.failedCount);
+				    	skippedCount.push(item.skippedCount);
+				    	finishedCount.push(item.finishedCount);
+				    });
+				    showStatDetailChart(categories,completedCount,failedCount,skippedCount,finishedCount);
+				}
+			});
+	}
+	
+	function showPieChart(divId, title, data){
+		Highcharts.chart(divId, {
 				chart: {
 						plotBackgroundColor: null,
 						plotBorderWidth: null,
@@ -89,6 +138,11 @@
 				tooltip: {
 						pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
 				},
+				accessibility: {
+			        point: {
+			            valueSuffix: '%'
+			        }
+			    },
 				plotOptions: {
 						pie: {
 								allowPointSelect: true,
@@ -96,28 +150,25 @@
 								dataLabels: {
 										enabled: true,
 										format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-										style: {
-												color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-										}
 								}
 						}
 				},
 				series: [{
-						name: 'Brands',
+						name: 'Job Counts',
 						colorByPoint: true,
 						data: data
 				}]
 			});
 	}
 
-	function showStatDetailChart(categories,completedCount,failedCount,skippedCount,retryCount){
+	function showStatDetailChart(categories,completedCount,failedCount,skippedCount,finishedCount){
 		$('#tabBox').html('');
 		var chart = Highcharts.chart('tabBox',{
 						chart: {
 							type: 'area'
 						},
 						title: {
-							text: 'Statistics Detail'
+							text: 'Job Execution Result Statistics By Day'
 						},
 						xAxis: {
 							categories: categories,
@@ -125,27 +176,31 @@
 						},
 						yAxis: {
 							title: {
-								text: 'Statistics Metrics'
+								text: 'Job Execution Counts'
 							}
 						},
 						tooltip: {
 					        pointFormat: '{series.name}: <b>{point.y:,.0f}</b>'
 					    },
 						series: [{
-							name: 'CompletedCount',
+							name: 'Completed Count',
 							data: completedCount
 						}, {
-							name: 'FailedCount',
+							name: 'Failed Count',
 							data: failedCount
 						}, {
-							name: 'SkippedCount',
+							name: 'Skipped Count',
 							data: skippedCount
 						}, {
-							name: 'RetryCount',
-							data: retryCount
+							name: 'Finished Count',
+							data: finishedCount
 						}]
 					});
 	}
+	
+	$(function(){
+		main();
+	});
 </script>
 <body>
 		<div id="top">
@@ -157,9 +212,13 @@
 			</div>
 			<div id="right">
 				<div id="jobStat">
+					<div id="jobStat1"></div>
+					<div id="jobStat2"></div>
 				</div>
+				<div class="division"></div>
 				<div id="tabBox">
 				</div>
+				<div class="division"></div>
 			</div>
 		</div>
 		<#include "foot.ftl">

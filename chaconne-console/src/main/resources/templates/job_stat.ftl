@@ -22,10 +22,10 @@
 	    
 </style>
 <script type="text/javascript" src="${contextPath}/static/js/common.js"></script>
-<script src="https://cdn.highcharts.com.cn/highcharts/highcharts.js"></script>
-<script src="https://cdn.highcharts.com.cn/highcharts/modules/exporting.js"></script>
-<script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
-<script src="https://cdn.highcharts.com.cn/highcharts/themes/sand-signika.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script type="text/javascript">
 	$(function(){
 		$('#searchForm').submit(function(){

@@ -1,29 +1,31 @@
 <script type="text/javascript">
 	$(function(){
 		
-		onLoad();
+		loadJobClusterList();
 	
 		$('#currentClusterName').change(function(){
 			var clusterName = $.trim($(this).val());
-			var url = '${contextPath}/index/${navIndex!0}?clusterName=' + clusterName;
+			var url = '${contextPath}/index/${navIndex!1}?clusterName=' + clusterName;
 			window.location.href = url;
 		});
 	});
 	
-	function onLoad(){
+	function loadJobClusterList(){
 		$.ajax({
-			    url: '${contextPath}/clusters',
+			    url: '${contextPath}/job/clusters',
 				type:'get',
 				dataType:'json',
 				success: function(data){
 					var html = '';
+					html += '<option value="sample1">sample1</option>';
+					html += '<option value="sample2">sample2</option>';
 				    if(data.success == true){
 				    	$.each(data.data,function(i,item){
 				    		html += '<option value="' + item + '">' + item;
 				    		html += '</option>';
 				    	});
 				    }
-					$(html).appendTo($('#currentClusterName'));
+					$('#currentClusterName').html(html);
 					$('#currentClusterName option').each(function(){
 						if($(this).text() == '${currentClusterName!}'){
 							$(this).attr('selected','true');

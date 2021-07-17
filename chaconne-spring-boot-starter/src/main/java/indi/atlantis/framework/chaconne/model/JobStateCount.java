@@ -37,6 +37,10 @@ public class JobStateCount {
 	public void setJobState(int jobState) {
 		this.jobState = JobState.valueOf(jobState);
 	}
+	
+	public String getDisplayJobState() {
+		return jobState.getRepr();
+	}
 
 	public void setJobCount(int jobCount) {
 		this.jobCount = jobCount;

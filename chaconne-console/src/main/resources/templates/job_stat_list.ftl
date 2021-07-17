@@ -30,15 +30,15 @@
 					var completedCount=[];
 					var failedCount=[];
 					var skippedCount=[];
-					var retryCount=[];
+					var finishedCount=[];
 				    $.each(data.data,function(i,item){
 				    	categories.push(item.executionDate);
 				    	completedCount.push(item.completedCount);
 				    	failedCount.push(item.failedCount);
 				    	skippedCount.push(item.skippedCount);
-				    	retryCount.push(item.retryCount);
+				    	finishedCount.push(item.finishedCount);
 				    });
-				    showStatDetailChart(categories,completedCount,failedCount,skippedCount,retryCount);
+				    showStatDetailChart(categories,completedCount,failedCount,skippedCount,finishedCount);
 				}
 			});
 			return false;
@@ -46,14 +46,14 @@
 		
 	})
 	
-	function showStatDetailChart(categories,completedCount,failedCount,skippedCount,retryCount){
+	function showStatDetailChart(categories,completedCount,failedCount,skippedCount,finishedCount){
 		$('#tabBox').html('');
 		var chart = Highcharts.chart('tabBox',{
 						chart: {
 							type: 'area'
 						},
 						title: {
-							text: 'Statistics Detail'
+							text: 'Job Execution Result Statistics By Day'
 						},
 						xAxis: {
 							categories: categories,
@@ -61,24 +61,24 @@
 						},
 						yAxis: {
 							title: {
-								text: 'Statistics Metrics'
+								text: 'Job Execution Counts'
 							}
 						},
 						tooltip: {
 					        pointFormat: '{series.name}: <b>{point.y:,.0f}</b>'
 					    },
 						series: [{
-							name: 'CompletedCount',
+							name: 'Completed Count',
 							data: completedCount
 						}, {
-							name: 'FailedCount',
+							name: 'Failed Count',
 							data: failedCount
 						}, {
-							name: 'SkippedCount',
+							name: 'Skipped Count',
 							data: skippedCount
 						}, {
-							name: 'RetryCount',
-							data: retryCount
+							name: 'Finished Count',
+							data: finishedCount
 						}]
 					});
 	}
