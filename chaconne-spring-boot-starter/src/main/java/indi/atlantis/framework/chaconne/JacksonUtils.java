@@ -1,5 +1,5 @@
 /**
-* Copyright 2021 Fred Feng (paganini.fy@gmail.com)
+* Copyright 2018-2021 Fred Feng (paganini.fy@gmail.com)
 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -47,7 +47,14 @@ public abstract class JacksonUtils {
 	}
 
 	public static String toJsonString(Object object) {
+		return toJsonString(object, false);
+	}
+
+	public static String toJsonString(Object object, boolean format) {
 		try {
+			if (format) {
+				return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+			}
 			return mapper.writeValueAsString(object);
 		} catch (JsonProcessingException e) {
 			throw new IllegalStateException(e.getMessage(), e);

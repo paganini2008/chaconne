@@ -1,5 +1,5 @@
 /**
-* Copyright 2021 Fred Feng (paganini.fy@gmail.com)
+* Copyright 2018-2021 Fred Feng (paganini.fy@gmail.com)
 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,9 +14,6 @@
 * limitations under the License.
 */
 package indi.atlantis.framework.chaconne.console.controller;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -74,21 +71,26 @@ public class JobManagerController {
 	}
 
 	@PostMapping("/save")
-	public @ResponseBody Result<Map<String, Object>> saveJob(@RequestBody JobPersistParameter param) throws Exception {
-		Map<String, Object> data = new HashMap<String, Object>();
-		try {
-			int id = jobManagerService.saveJob(param);
-			data.put("success", id > 0);
-		} catch (Exception e) {
-			data.put("success", false);
-			data.put("errorMsg", e.getMessage());
-		}
-		return Result.success(data);
+	public @ResponseBody Result<Integer> saveJob(@RequestBody JobPersistParameter param) throws Exception {
+		int id = jobManagerService.saveJob(param);
+		return Result.success(id);
 	}
 
 	@GetMapping("/toggle/{jobKey}")
 	public String toggleJob(@PathVariable("jobKey") String jobKey) throws Exception {
 		jobManagerService.toggleJob(jobKey);
+		return "redirect:/job";
+	}
+
+	@GetMapping("/trigger/{jobKey}")
+	public String triggerJob(@PathVariable("jobKey") String jobKey) throws Exception {
+		jobManagerService.triggerJob(jobKey, null);
+		return "redirect:/job";
+	}
+
+	@GetMapping("/delete/{jobKey}")
+	public String deleteJob(@PathVariable("jobKey") String jobKey) throws Exception {
+		jobManagerService.deleteJob(jobKey);
 		return "redirect:/job";
 	}
 

@@ -33,8 +33,8 @@
 					<td width="8%" class="tdLeft5">
 						Job Name
 					</td>
-					<td width="12%" class="tdLeft5">
-						Job Class Name
+					<td class="tdLeft5">
+						Job Class
 					</td>
 					<td class="tdLeft5">
 						Description
@@ -42,16 +42,16 @@
 					<td class="tdLeft5">
 						Email
 					</td>
-					<td class="tdLeft5">
+					<td width="5%" class="tdRight5">
 						Retries
 					</td>
 					<td class="tdLeft5">
 						Job State
 					</td>
-					<td class="tdLeft5">
-						Trigger Type
+					<td width="5%">
+						Type
 					</td>
-					<td class="tdLeft5">
+					<td width="12%">
 						Create Date
 					</td>
 					<td width="12%" class="tdLeft5">
@@ -66,44 +66,46 @@
 							<td width="3%">
 							    <a href="${contextPath}/job/detail/${(bean.jobKey.identifier ? html)!}">${(page.page - 1) * (page.size) + (bean_index + 1)}</a>
 							</td>
-							<td class="tdLeft5">
+							<td width="10%" class="tdLeft5">
 								${(bean.jobKey.clusterName)!}
 							</td>
-							<td class="tdLeft5">
+							<td width="8%" class="tdLeft5">
 								${(bean.jobKey.groupName)!}
 							</td>
-							<td class="tdLeft5">
+							<td width="8%" class="tdLeft5" title="${(bean.jobKey.jobName)!}">
 								${(bean.jobKey.jobName)!}
 							</td>
-							<td class="tdLeft5">
+							<td class="tdLeft5" title="${(bean.jobKey.jobClassName)!}">
 								${(bean.jobKey.jobClassName)!}
 							</td>
-							<td class="tdLeft5">
+							<td class="tdLeft5" title="${(bean.description)!}">
 								${(bean.description)!}
 							</td>
-							<td class="tdLeft5">
+							<td class="tdLeft5" title="${(bean.email)!}">
 								${(bean.email)!}
 							</td>
-							<td class="tdLeft5">
-								${(bean.retries)!}
+							<td width="5%" class="tdRight5">
+								${(bean.retries)!}&nbsp;
 							</td>
 							<td class="tdLeft5">
 								${(bean.jobRuntime.jobState.repr)!}
 							</td>
-							<td class="tdLeft5">
-								${(bean.jobTriggerDetail.triggerType.repr)!}
+							<td width="5%">
+								${(bean.jobTriggerDetail.triggerType.repr?substring(0,1))!}
 							</td>
-							<td class="tdLeft5">
+							<td width="12%">
 								${(bean.createDate? string('yyyy-MM-dd HH:mm:ss'))!}
 							</td>
 							<td width="12%" class="tdLeft5">
 								<#if bean.jobRuntime.jobState.repr == 'Scheduling' || bean.jobRuntime.jobState.repr == 'Paused'>
-								<a class="pauseJob" href="${contextPath}/job/toggle/${(bean.jobKey.identifier ? html)!}"><#if bean.jobRuntime.jobState.repr == 'Paused'>Resume<#else>Pause</#if></a>
-								&nbsp;&nbsp;|
+									<a class="pauseJob" href="${contextPath}/job/toggle/${(bean.jobKey.identifier? html)!}"><#if bean.jobRuntime.jobState.repr == 'Paused'>Resume<#else>Pause</#if></a>
+									&nbsp;|
 								</#if>
-								<a class="runJob" href="javascript:void(0);" identifier="${(bean.jobKey.identifier ? html)!}">Run</a>
-								&nbsp;&nbsp;|
-								<a class="deleteJob" href="javascript:void(0);" identifier="${(bean.jobKey.identifier ? html)!}">Delete</a>
+								<#if bean.jobRuntime.jobState.repr == 'Scheduling'>
+									<a class="runJob" href="${contextPath}/job/trigger/${(bean.jobKey.identifier? html)!}">Run</a>
+									&nbsp;|
+									<a class="deleteJob" href="${contextPath}/job/delete/${(bean.jobKey.identifier? html)!}">Delete</a>
+								</#if>
 							</td>
 						</tr>
 					</#list>

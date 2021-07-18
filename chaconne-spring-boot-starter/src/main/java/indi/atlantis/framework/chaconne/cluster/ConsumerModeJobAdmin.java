@@ -1,5 +1,5 @@
 /**
-* Copyright 2021 Fred Feng (paganini.fy@gmail.com)
+* Copyright 2018-2021 Fred Feng (paganini.fy@gmail.com)
 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -82,6 +82,16 @@ public class ConsumerModeJobAdmin implements JobAdmin {
 			job = externalJobBeanLoader.loadJobBean(jobKey);
 		}
 		return job;
+	}
+
+	@Override
+	public JobState scheduleJob(JobKey jobKey) {
+		throw new UnsupportedOperationException("Calling scheduleJob for ConsumerMode");
+	}
+
+	@Override
+	public JobState unscheduleJob(JobKey jobKey) {
+		throw new UnsupportedOperationException("Calling unscheduleJob for ConsumerMode");
 	}
 
 }

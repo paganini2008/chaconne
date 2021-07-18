@@ -2,26 +2,26 @@
 <#include "head.ftl">
 <style type="text/css">
 	#jobStat{
-    	height: 360px;
+    	height: 320px;
     	width: 100%;
     	clear: both;
     }
     
     #jobStat1{
     	float: left;
-    	height: 360px;
+    	height: 320px;
     	width: 45%;
     }
     
     #jobStat2{
     	float: left;
-    	height: 360px;
+    	height: 320px;
     	width: 55%;
     }
 
 	#tabBox {
 		clear: both;
-		height: 400px;
+		height: 360px;
 		width: 100%;
 	}
 	

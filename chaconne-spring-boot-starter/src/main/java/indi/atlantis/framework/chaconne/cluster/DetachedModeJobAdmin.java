@@ -20,23 +20,33 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+import indi.atlantis.framework.chaconne.ExceptionUtils;
+import indi.atlantis.framework.chaconne.Job;
 import indi.atlantis.framework.chaconne.JobAdmin;
+import indi.atlantis.framework.chaconne.JobBeanLoader;
 import indi.atlantis.framework.chaconne.JobKey;
 import indi.atlantis.framework.chaconne.JobLifeCycle;
 import indi.atlantis.framework.chaconne.JobState;
+import indi.atlantis.framework.chaconne.ScheduleManager;
 import indi.atlantis.framework.chaconne.model.JobLifeCycleParameter;
 import indi.atlantis.framework.chaconne.model.JobParameter;
 import indi.atlantis.framework.chaconne.model.Result;
 
 /**
  * 
- * RestJobAdmin
+ * DetachedModeJobAdmin
  * 
  * @author Fred Feng
  *
  * @since 1.0
  */
-public class RestJobAdmin implements JobAdmin {
+public class DetachedModeJobAdmin implements JobAdmin {
+
+	@Autowired
+	private JobBeanLoader jobBeanLoader;
+
+	@Autowired
+	private ScheduleManager scheduleManager;
 
 	@Autowired
 	private ClusterRestTemplate restTemplate;
@@ -59,18 +69,21 @@ public class RestJobAdmin implements JobAdmin {
 
 	@Override
 	public JobState scheduleJob(JobKey jobKey) {
-		ResponseEntity<Result<JobState>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/admin/scheduleJob",
-				HttpMethod.POST, jobKey, new ParameterizedTypeReference<Result<JobState>>() {
-				});
-		return responseEntity.getBody().getData();
+		try {
+			Job job = jobBeanLoader.loadJobBean(jobKey);
+			return scheduleManager.schedule(job);
+		} catch (Exception e) {
+			throw ExceptionUtils.wrapExeception(e);
+		}
 	}
 
 	@Override
 	public JobState unscheduleJob(JobKey jobKey) {
-		ResponseEntity<Result<JobState>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/admin/unscheduleJob",
-				HttpMethod.POST, jobKey, new ParameterizedTypeReference<Result<JobState>>() {
-				});
-		return responseEntity.getBody().getData();
+		try {
+			return scheduleManager.unscheduleJob(jobKey);
+		} catch (Exception e) {
+			throw ExceptionUtils.wrapExeception(e);
+		}
 	}
 
 }

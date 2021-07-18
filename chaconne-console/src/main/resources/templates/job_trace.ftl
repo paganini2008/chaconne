@@ -38,22 +38,22 @@
 					<td width="3%" class="tdRight5">
 						#
 					</td>
-					<td class="tdLeft5">
+					<td width="12%" class="tdLeft5">
 						Address
 					</td>
 					<td class="tdLeft5">
 						InstanceId
 					</td>
-					<td class="tdLeft5">
+					<td width="10%" class="tdLeft5">
 						Running State
 					</td>
-					<td class="tdLeft5">
+					<td width="6%" class="tdRight5">
 						Retries
 					</td>
-					<td class="tdLeft5">
+					<td width="12%">
 						Execution Time
 					</td>
-					<td class="tdLeft5">
+					<td width="12%">
 						Completion Time
 					</td>
 				</tr>
@@ -65,22 +65,22 @@
 							<td width="3%" class="tdLeft5">
 							    <a class="showLog" href="javascript:void(0);">${(page.page - 1) * (page.size) + (bean_index + 1)}</a>
 							</td>
-							<td class="tdLeft5">
+							<td width="12%" class="tdLeft5">
 								${(bean.address)!}
 							</td>
-							<td class="tdLeft5">
+							<td width="20%" class="tdLeft5">
 								${(bean.instanceId)!}
 							</td>
-							<td class="tdLeft5">
+							<td width="10%" class="tdLeft5">
 								${(bean.runningState.repr)!}
 							</td>
-							<td class="tdLeft5">
-								${(bean.retries)!}
+							<td width="6%" class="tdRight5">
+								${(bean.retries)!0}&nbsp;
 							</td>
-							<td class="tdLeft5">
+							<td width="12%">
 								${(bean.executionTime? string('yyyy-MM-dd HH:mm:ss'))!}
 							</td>
-							<td class="tdLeft5">
+							<td width="12%">
 								${(bean.completionTime? string('yyyy-MM-dd HH:mm:ss'))!}
 							</td>
 						</tr>

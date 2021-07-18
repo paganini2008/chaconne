@@ -25,6 +25,9 @@
 		
 	})
 </script>
+<div style="clear: both;text-align: left; height: 32px; line-height: 32px;">
+	<b>Slf4j Logging: </b>
+</div>
 <div id="logBox">
 	<#list logs as log>
 		<div class="logItem" traceId="${(log.traceId? string)!}">

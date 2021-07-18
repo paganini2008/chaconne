@@ -1,5 +1,5 @@
 /**
-* Copyright 2021 Fred Feng (paganini.fy@gmail.com)
+* Copyright 2018-2021 Fred Feng (paganini.fy@gmail.com)
 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -49,6 +49,9 @@ public class EmbeddedModeJobAdmin implements JobAdmin {
 
 	@Autowired
 	private JobManager jobManager;
+	
+	@Autowired
+	private ScheduleManager scheduleManager;
 
 	@Autowired
 	private ApplicationMulticastGroup applicationMulticastGroup;
@@ -67,6 +70,28 @@ public class EmbeddedModeJobAdmin implements JobAdmin {
 	public void publicLifeCycleEvent(JobKey jobKey, JobLifeCycle lifeCycle) {
 		applicationMulticastGroup.multicast(applicationName, LifeCycleListenerContainer.class.getName(),
 				new JobLifeCycleParameter(jobKey, lifeCycle));
+	}
+	
+	@Override
+	public JobState scheduleJob(JobKey jobKey) {
+		try {
+			Job job = jobBeanLoader.loadJobBean(jobKey);
+			if (job == null && externalJobBeanLoader != null) {
+				job = externalJobBeanLoader.loadJobBean(jobKey);
+			}
+			return scheduleManager.schedule(job);
+		} catch (Exception e) {
+			throw new JobException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public JobState unscheduleJob(JobKey jobKey) {
+		try {
+			return scheduleManager.unscheduleJob(jobKey);
+		} catch (Exception e) {
+			throw new JobException(e.getMessage(), e);
+		}
 	}
 
 }

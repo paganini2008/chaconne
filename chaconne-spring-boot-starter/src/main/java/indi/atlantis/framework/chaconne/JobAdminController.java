@@ -1,5 +1,5 @@
 /**
-* Copyright 2021 Fred Feng (paganini.fy@gmail.com)
+* Copyright 2018-2021 Fred Feng (paganini.fy@gmail.com)
 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -41,9 +41,6 @@ public class JobAdminController {
 	@Autowired
 	private JobAdmin jobAdmin;
 
-	@Autowired
-	private ScheduleAdmin scheduleAdmin;
-
 	@PostMapping("/triggerJob")
 	public ResponseEntity<Result<JobState>> triggerJob(@RequestBody JobParameter jobParam) throws Exception {
 		JobState jobState = jobAdmin.triggerJob(jobParam.getJobKey(), jobParam.getAttachment());
@@ -58,13 +55,13 @@ public class JobAdminController {
 
 	@PostMapping("/unscheduleJob")
 	public ResponseEntity<Result<JobState>> unscheduleJob(@RequestBody JobKey jobKey) {
-		JobState jobState = scheduleAdmin.unscheduleJob(jobKey);
+		JobState jobState = jobAdmin.unscheduleJob(jobKey);
 		return ResponseEntity.ok(Result.success(jobState));
 	}
 
 	@PostMapping("/scheduleJob")
 	public ResponseEntity<Result<JobState>> scheduleJob(@RequestBody JobKey jobKey) {
-		JobState jobState = scheduleAdmin.scheduleJob(jobKey);
+		JobState jobState = jobAdmin.scheduleJob(jobKey);
 		return ResponseEntity.ok(Result.success(jobState));
 	}
 

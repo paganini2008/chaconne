@@ -11,6 +11,19 @@
 		height: auto;
 	}
 	
+	#jobDetail{
+		margin: 0 auto;
+	}
+	
+	.jobLine{
+		clear: both;
+		height: 64px;
+		line-height: 64px;
+		text-align: center;
+		width: 100%;
+		overflow: hidden;
+	}
+	
 	.jobAttr {
 		clear: both;
 		height: 32px;
@@ -20,7 +33,7 @@
 	}
 	    
 	.jobAttr label{
-		width: 170px;
+		width: 180px;
 		height: 32px;
 		line-height: 32px;
 		display: inline-block;
@@ -32,7 +45,7 @@
 	}
 	
 	.jobAttr span {
-		width: calc(50% - 360px);
+		width: calc(50% - 300px);
 		float: left;
 		display: inline-block;
 		height: 32px;
@@ -101,6 +114,9 @@
 			</div>
 			<div id="right">
 				<div id="jobDetail">
+					<div class="jobLine">
+						<label style="font-size: 16pt;font-weight: bold;">Job Basic Info</label>
+					</div>
 					<div class="jobKey jobAttr">
 						<label>Cluster Name:</label>
 						<span id="clusterName">${(jobDetail.jobKey.clusterName)!}</span>
@@ -126,10 +142,10 @@
 						<label>End Date:</label>
 						<span id="triggerEndDate">${(jobDetail.jobTriggerDetail.endDate?string('yyyy-MM-dd HH:mm:ss'))!'-'}</span>
 					</div>
-					<div class="triggerDescription jobAttr">
+					<div class="triggerDescription jobAttr" style="height: auto;">
 						<label>Trigger Description:</label>
-						<span id="triggerDescription" style="width: calc(100% - 180px);">
-							<pre>${(jobDetail.jobTriggerDetail.triggerDescription?html?trim)!'-'}</pre>
+						<span id="triggerDescription" style="width: calc(100% - 200px); height: auto; text-align: left;">
+							<pre>${(jobDetail.jobTriggerDetail.triggerDescription?html)!'-'}</pre>
 						</span>
 					</div>
 					<div class="jobRuntime jobAttr">

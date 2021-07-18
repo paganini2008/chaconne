@@ -1,5 +1,5 @@
 /**
-* Copyright 2021 Fred Feng (paganini.fy@gmail.com)
+* Copyright 2018-2021 Fred Feng (paganini.fy@gmail.com)
 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -27,6 +27,10 @@ public interface JobAdmin {
 
 	JobState triggerJob(JobKey jobKey, Object attachment) throws Exception;
 
+	JobState scheduleJob(JobKey jobKey);
+
+	JobState unscheduleJob(JobKey jobKey);
+	
 	void publicLifeCycleEvent(JobKey jobKey, JobLifeCycle lifeCycle);
 
 }

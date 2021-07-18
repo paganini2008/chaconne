@@ -1,5 +1,5 @@
 /**
-* Copyright 2021 Fred Feng (paganini.fy@gmail.com)
+* Copyright 2018-2021 Fred Feng (paganini.fy@gmail.com)
 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,7 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.github.paganini2008.devtools.ArrayUtils;
+import com.github.paganini2008.devtools.StringUtils;
 
+import indi.atlantis.framework.chaconne.JacksonUtils;
+import indi.atlantis.framework.chaconne.JobAdmin;
 import indi.atlantis.framework.chaconne.JobKey;
 import indi.atlantis.framework.chaconne.JobManager;
 import indi.atlantis.framework.chaconne.JobState;
@@ -48,16 +51,37 @@ public class JobManagerService {
 	@Autowired
 	private JobManager jobManager;
 
+	@Autowired
+	private JobAdmin jobAdmin;
+
 	public int saveJob(JobPersistParameter param) throws Exception {
 		return jobManager.persistJob(param);
 	}
 
+	public JobState deleteJob(String identifier) throws Exception {
+		final JobKey jobKey = JobKey.decode(identifier);
+		JobState jobState = jobAdmin.unscheduleJob(jobKey);
+		if (jobState == JobState.NOT_SCHEDULED) {
+			jobState = jobManager.finishJob(jobKey);
+		}
+		return jobState;
+	}
+
 	public JobState toggleJob(String identifier) throws Exception {
-		JobKey jobKey = JobKey.decode(identifier);
+		final JobKey jobKey = JobKey.decode(identifier);
 		if (jobManager.hasJobState(jobKey, JobState.PAUSED)) {
 			return jobManager.resumeJob(jobKey);
 		}
 		return jobManager.pauseJob(jobKey);
+	}
+
+	public void triggerJob(String identifier, String attachment) throws Exception {
+		final JobKey jobKey = JobKey.decode(identifier);
+		if (StringUtils.isBlank(attachment)) {
+			JobDetail jobDetail = jobManager.getJobDetail(jobKey, false);
+			attachment = jobDetail.getAttachment();
+		}
+		jobAdmin.triggerJob(jobKey, attachment);
 	}
 
 	public String[] selectRegisteredClusterNames() throws Exception {
@@ -84,7 +108,10 @@ public class JobManagerService {
 	}
 
 	public JobDetail getJobDetail(String jobKey) throws Exception {
-		return jobManager.getJobDetail(JobKey.decode(jobKey), true);
+		JobDetail jobDetail = jobManager.getJobDetail(JobKey.decode(jobKey), true);
+		String formattedTriggerDescription = JacksonUtils.toJsonString(jobDetail.getJobTriggerDetail().getTriggerDescriptionObject(), true);
+		jobDetail.getJobTriggerDetail().setTriggerDescription(formattedTriggerDescription);
+		return jobDetail;
 	}
 
 	public JobLog[] selectJobLog(JobLogForm form) throws Exception {

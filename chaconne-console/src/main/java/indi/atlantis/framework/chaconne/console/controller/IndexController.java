@@ -1,5 +1,5 @@
 /**
-* Copyright 2021 Fred Feng (paganini.fy@gmail.com)
+* Copyright 2018-2021 Fred Feng (paganini.fy@gmail.com)
 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -47,6 +47,11 @@ public class IndexController {
 		return "forward:/index/1";
 	}
 
+	@GetMapping("/index/99")
+	public String underConstruction() {
+		return "under_construction";
+	}
+
 	@GetMapping("/index/{index}")
 	public String index(@PathVariable("index") int index, @RequestParam(name = "clusterName", required = false) String clusterName,
 			WebRequest webRequest, Model ui) throws Exception {
@@ -65,7 +70,7 @@ public class IndexController {
 		case 3:
 			return "redirect:/job/stat";
 		default:
-			return "redirect:/overview";
+			return "redirect:/index/99";
 		}
 	}
 

@@ -12,7 +12,7 @@ body {
 	background-color: #FCFCFC;
 	font-style: normal;
 	font-size: 14px;
-	font-family: Open Sans,sans-serif;
+	font-family: Arial,Helvetica,sans-serif;
 	color: #000;
 }
 
@@ -74,12 +74,16 @@ body {
 	background-color: #fff;
 }
 
+#tabBox{
+	min-height: 360px;
+}
+
 #currentClusterName {
 	float: right;
 	display: inline-block;
 	margin-right: 15px;
 	margin-top: 30px;
-	width: 120px;
+	width: 160px;
 	height: 30px;
 	line-height: 30px;
 	padding-left: 5px;
@@ -117,7 +121,7 @@ body {
 }
 
 input, select, textarea {
-	font: 14px 微软雅黑;
+	font: 14px Arial,Helvetica,sans-serif;
 }
 
 img {

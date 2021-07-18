@@ -1,5 +1,5 @@
 /**
-* Copyright 2021 Fred Feng (paganini.fy@gmail.com)
+* Copyright 2018-2021 Fred Feng (paganini.fy@gmail.com)
 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -79,7 +79,6 @@ import indi.atlantis.framework.chaconne.LogManager;
 import indi.atlantis.framework.chaconne.MailContentSource;
 import indi.atlantis.framework.chaconne.PrintableMailContentSource;
 import indi.atlantis.framework.chaconne.RetryPolicy;
-import indi.atlantis.framework.chaconne.ScheduleAdmin;
 import indi.atlantis.framework.chaconne.ScheduleManager;
 import indi.atlantis.framework.chaconne.Scheduler;
 import indi.atlantis.framework.chaconne.SchedulerErrorHandler;
@@ -223,12 +222,7 @@ public class DetachedModeConfiguration {
 
 		@Bean
 		public JobAdmin jobAdmin() {
-			return new RestJobAdmin();
-		}
-
-		@Bean
-		public ScheduleAdmin scheduleAdmin() {
-			return new DetachedModeScheduleAdmin();
+			return new DetachedModeJobAdmin();
 		}
 
 		@Bean
