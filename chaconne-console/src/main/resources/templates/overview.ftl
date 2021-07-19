@@ -136,7 +136,7 @@
 						text: title
 				},
 				tooltip: {
-						pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+						pointFormat: '{series.name}: <b>&nbsp;{point.y}/{point.percentage:.1f} %</b>'
 				},
 				accessibility: {
 			        point: {
@@ -149,12 +149,12 @@
 								cursor: 'pointer',
 								dataLabels: {
 										enabled: true,
-										format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+										format: '<b>{point.name}</b>:&nbsp;{point.y}/{point.percentage:.1f} %',
 								}
 						}
 				},
 				series: [{
-						name: 'Job Counts',
+						name: 'Count/Percentage',
 						colorByPoint: true,
 						data: data
 				}]

@@ -11,7 +11,7 @@
 	          gripInnerHtml:"<div class='grip'></div>", 
 	          draggingClass:"dragging", 
 	          resizeMode:'fit',
-	          disabledColumns: [0,10]
+	          disabledColumns: [0,8]
 		});
 		
 		$('.statDetail').click(function(){
@@ -96,8 +96,11 @@
 					<td width="10%" class="tdLeft5">
 						Group Name
 					</td>
-					<td class="tdLeft5">
+					<td width="10%" class="tdLeft5">
 						Job Name
+					</td>
+					<td class="tdLeft5">
+						Job Class Name
 					</td>
 					<td width="8%" class="tdLeft5">
 						Completed
@@ -129,8 +132,11 @@
 							<td width="10%" class="tdLeft5">
 								${(bean.groupName)!}
 							</td>
-							<td class="tdLeft5">
+							<td width="10%" class="tdLeft5">
 								${(bean.jobName)!}
+							</td>
+							<td class="tdLeft5">
+								${(bean.jobClassName)!}
 							</td>
 							<td width="8%" class="tdLeft5">
 								${(bean.completedCount)!}
@@ -151,7 +157,7 @@
 					</#list>
 				<#else>
 					<tr>
-						<td colspan="9">
+						<td colspan="10">
 							<p class="tabNoData">
 								No data and please search again.
 							</p>

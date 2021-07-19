@@ -11,7 +11,7 @@
 	          gripInnerHtml:"<div class='grip'></div>", 
 	          draggingClass:"dragging", 
 	          resizeMode:'fit',
-	          disabledColumns: [0,10]
+	          disabledColumns: [0,9]
 		});
 	
 		
@@ -30,22 +30,19 @@
 					<td width="8%" class="tdLeft5">
 						Group Name
 					</td>
-					<td width="8%" class="tdLeft5">
+					<td width="10%" class="tdLeft5">
 						Job Name
 					</td>
 					<td class="tdLeft5">
-						Job Class
+						Job Class Name
 					</td>
-					<td class="tdLeft5">
-						Description
-					</td>
-					<td class="tdLeft5">
+					<td width="12%" class="tdLeft5">
 						Email
 					</td>
 					<td width="5%" class="tdRight5">
 						Retries
 					</td>
-					<td class="tdLeft5">
+					<td width="8%" class="tdLeft5">
 						Job State
 					</td>
 					<td width="5%">
@@ -72,22 +69,19 @@
 							<td width="8%" class="tdLeft5">
 								${(bean.jobKey.groupName)!}
 							</td>
-							<td width="8%" class="tdLeft5" title="${(bean.jobKey.jobName)!}">
+							<td width="10%" class="tdLeft5" title="${(bean.jobKey.jobName)!}">
 								${(bean.jobKey.jobName)!}
 							</td>
 							<td class="tdLeft5" title="${(bean.jobKey.jobClassName)!}">
 								${(bean.jobKey.jobClassName)!}
 							</td>
-							<td class="tdLeft5" title="${(bean.description)!}">
-								${(bean.description)!}
-							</td>
-							<td class="tdLeft5" title="${(bean.email)!}">
+							<td width="12%" class="tdLeft5" title="${(bean.email)!}">
 								${(bean.email)!}
 							</td>
 							<td width="5%" class="tdRight5">
 								${(bean.retries)!}&nbsp;
 							</td>
-							<td class="tdLeft5">
+							<td width="8%" class="tdLeft5">
 								${(bean.jobRuntime.jobState.repr)!}
 							</td>
 							<td width="5%">
@@ -111,7 +105,7 @@
 					</#list>
 				<#else>
 					<tr>
-						<td colspan="12">
+						<td colspan="11">
 							<p class="tabNoData">
 								No data and please search again.
 							</p>

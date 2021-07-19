@@ -40,10 +40,11 @@ public class JobStatDetail implements Serializable {
 
 	private static final long serialVersionUID = 5741263651318840914L;
 
+	private Integer jobId;
 	private String clusterName;
 	private String groupName;
-	private Integer jobId;
 	private String jobName;
+	private String jobClassName;
 	private int completedCount;
 	private int skippedCount;
 	private int failedCount;
