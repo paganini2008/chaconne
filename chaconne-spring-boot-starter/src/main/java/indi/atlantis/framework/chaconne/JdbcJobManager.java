@@ -119,12 +119,14 @@ public class JdbcJobManager implements JobManager {
 	}
 
 	private int doGetJobId(JobKey jobKey) {
-		Integer jobId = jobQueryDao.selectJobId(jobKey.getClusterName(), jobKey.getGroupName(), jobKey.getJobName(),
-				jobKey.getJobClassName());
-		if (jobId == null) {
-			throw new JobBeanNotFoundException(jobKey);
+		if (hasJob(jobKey)) {
+			Integer jobId = jobQueryDao.selectJobId(jobKey.getClusterName(), jobKey.getGroupName(), jobKey.getJobName(),
+					jobKey.getJobClassName());
+			if (jobId != null) {
+				return jobId.intValue();
+			}
 		}
-		return jobId.intValue();
+		throw new JobBeanNotFoundException(jobKey);
 	}
 
 	@Override
