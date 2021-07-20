@@ -13,21 +13,23 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package indi.atlantis.framework.chaconne.management;
+package indi.atlantis.framework.chaconne.utils;
 
 import java.time.Duration;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnection;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -35,11 +37,12 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * 
- * ResourceConfig
+ * ExternalResourceAutoConfig
  * 
  * @author Fred Feng
  *
@@ -47,12 +50,14 @@ import redis.clients.jedis.JedisPoolConfig;
  */
 @Slf4j
 @Configuration
-public class ResourceConfig {
+public class ExternalResourceAutoConfig {
 
 	@Setter
 	@Configuration(proxyBeanMethods = false)
 	@ConfigurationProperties(prefix = "spring.datasource")
-	public static class DataSourceConfig {
+	@ConditionalOnClass(HikariDataSource.class)
+	@ConditionalOnMissingBean(DataSource.class)
+	public static class DataSourceAutoConfig {
 
 		private String jdbcUrl;
 		private String username;
@@ -88,7 +93,6 @@ public class ResourceConfig {
 			return config;
 		}
 
-		@Primary
 		@Bean
 		public DataSource dataSource() {
 			return new HikariDataSource(getDbConfig());
@@ -99,7 +103,9 @@ public class ResourceConfig {
 	@Setter
 	@Configuration(proxyBeanMethods = false)
 	@ConfigurationProperties(prefix = "spring.redis")
-	public static class RedisConfig {
+	@ConditionalOnClass({ GenericObjectPool.class, JedisConnection.class, Jedis.class })
+	@ConditionalOnMissingBean(RedisConnectionFactory.class)
+	public static class RedisAutoConfig {
 
 		private String host;
 		private String password;
@@ -107,7 +113,6 @@ public class ResourceConfig {
 		private int dbIndex;
 
 		@Bean
-		@ConditionalOnMissingBean(RedisConnectionFactory.class)
 		public RedisConnectionFactory redisConnectionFactory() {
 			RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
 			redisStandaloneConfiguration.setHostName(host);

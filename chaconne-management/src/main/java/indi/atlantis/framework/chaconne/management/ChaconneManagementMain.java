@@ -18,13 +18,11 @@ package indi.atlantis.framework.chaconne.management;
 import java.io.File;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.github.paganini2008.devtools.Env;
 import com.github.paganini2008.devtools.io.FileUtils;
 
-import indi.atlantis.framework.chaconne.cluster.DetachedMode;
-import indi.atlantis.framework.chaconne.cluster.EnableChaconneDetachedMode;
+import indi.atlantis.framework.chaconne.utils.ChaconneSpringApplication;
 
 /**
  * 
@@ -34,8 +32,7 @@ import indi.atlantis.framework.chaconne.cluster.EnableChaconneDetachedMode;
  *
  * @version 1.0
  */
-@EnableChaconneDetachedMode(DetachedMode.PRODUCER)
-@SpringBootApplication
+@ChaconneSpringApplication
 public class ChaconneManagementMain {
 
 	static {
