@@ -60,8 +60,14 @@
 		</dependency>
 
 		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.lettuce</groupId>
+			<artifactId>lettuce-core</artifactId>
 			<scope>provided</scope>
 		</dependency>
 

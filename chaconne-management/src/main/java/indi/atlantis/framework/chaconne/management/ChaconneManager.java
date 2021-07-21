@@ -26,14 +26,14 @@ import indi.atlantis.framework.chaconne.utils.ChaconneSpringApplication;
 
 /**
  * 
- * ChaconneManagementMain
+ * ChaconneManager
  * 
  * @author Fred Feng
  *
  * @version 1.0
  */
 @ChaconneSpringApplication
-public class ChaconneManagementMain {
+public class ChaconneManager {
 
 	static {
 		System.setProperty("spring.devtools.restart.enabled", "false");
@@ -45,7 +45,7 @@ public class ChaconneManagementMain {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(ChaconneManagementMain.class, args);
+		SpringApplication.run(ChaconneManager.class, args);
 		System.out.println(Env.getPid());
 	}
 }

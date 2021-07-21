@@ -20,6 +20,7 @@ import java.time.Duration;
 import javax.sql.DataSource;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -28,21 +29,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisConnection;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import io.lettuce.core.RedisClient;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * 
- * ExternalResourceAutoConfig
+ * ChaconneDataStoreAutoConfiguration
  * 
  * @author Fred Feng
  *
@@ -50,11 +50,11 @@ import redis.clients.jedis.JedisPoolConfig;
  */
 @Slf4j
 @Configuration
-public class ExternalResourceAutoConfig {
+public class ChaconneDataStoreAutoConfiguration {
 
 	@Setter
 	@Configuration(proxyBeanMethods = false)
-	@ConfigurationProperties(prefix = "spring.datasource")
+	@ConfigurationProperties(prefix = "chaconne.datasource")
 	@ConditionalOnClass(HikariDataSource.class)
 	@ConditionalOnMissingBean(DataSource.class)
 	public static class DataSourceAutoConfig {
@@ -63,13 +63,14 @@ public class ExternalResourceAutoConfig {
 		private String username;
 		private String password;
 		private String driverClassName;
+		private int maxPoolSize = 8;
 
 		private HikariConfig getDbConfig() {
 			if (log.isTraceEnabled()) {
-				log.trace("DataSourceConfig JdbcUrl: " + jdbcUrl);
-				log.trace("DataSourceConfig Username: " + username);
-				log.trace("DataSourceConfig Password: " + password);
-				log.trace("DataSourceConfig DriverClassName: " + driverClassName);
+				log.trace("HikariDataSource JdbcUrl: " + jdbcUrl);
+				log.trace("HikariDataSource Username: " + username);
+				log.trace("HikariDataSource Password: " + password);
+				log.trace("HikariDataSource DriverClassName: " + driverClassName);
 			}
 			final HikariConfig config = new HikariConfig();
 			config.setDriverClassName(driverClassName);
@@ -77,8 +78,8 @@ public class ExternalResourceAutoConfig {
 			config.setUsername(username);
 			config.setPassword(password);
 			config.setMinimumIdle(1);
-			config.setMaximumPoolSize(20);
-			config.setMaxLifetime(60 * 1000);
+			config.setMaximumPoolSize(maxPoolSize);
+			config.setMaxLifetime(3 * 60 * 1000);
 			config.setIdleTimeout(60 * 1000);
 			config.setValidationTimeout(3000);
 			config.setReadOnly(false);
@@ -102,8 +103,8 @@ public class ExternalResourceAutoConfig {
 
 	@Setter
 	@Configuration(proxyBeanMethods = false)
-	@ConfigurationProperties(prefix = "spring.redis")
-	@ConditionalOnClass({ GenericObjectPool.class, JedisConnection.class, Jedis.class })
+	@ConfigurationProperties(prefix = "chaconne.redis")
+	@ConditionalOnClass({ GenericObjectPool.class, RedisClient.class })
 	@ConditionalOnMissingBean(RedisConnectionFactory.class)
 	public static class RedisAutoConfig {
 
@@ -111,6 +112,8 @@ public class ExternalResourceAutoConfig {
 		private String password;
 		private int port;
 		private int dbIndex;
+		private int maxTotalSize = 20;
+		private long timeout = 60000L;
 
 		@Bean
 		public RedisConnectionFactory redisConnectionFactory() {
@@ -119,22 +122,22 @@ public class ExternalResourceAutoConfig {
 			redisStandaloneConfiguration.setPort(port);
 			redisStandaloneConfiguration.setDatabase(dbIndex);
 			redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
-			JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration = JedisClientConfiguration.builder();
-			jedisClientConfiguration.connectTimeout(Duration.ofMillis(60000)).readTimeout(Duration.ofMillis(60000)).usePooling()
-					.poolConfig(jedisPoolConfig());
-			JedisConnectionFactory factory = new JedisConnectionFactory(redisStandaloneConfiguration, jedisClientConfiguration.build());
+			LettuceClientConfiguration redisClientConfiguration = LettucePoolingClientConfiguration.builder()
+					.commandTimeout(Duration.ofMillis(timeout)).shutdownTimeout(Duration.ofMillis(timeout)).poolConfig(redisPoolConfig())
+					.build();
+			LettuceConnectionFactory factory = new LettuceConnectionFactory(redisStandaloneConfiguration, redisClientConfiguration);
 			return factory;
 		}
 
 		@Bean
-		public JedisPoolConfig jedisPoolConfig() {
-			JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-			jedisPoolConfig.setMinIdle(1);
-			jedisPoolConfig.setMaxIdle(10);
-			jedisPoolConfig.setMaxTotal(200);
-			jedisPoolConfig.setMaxWaitMillis(-1);
-			jedisPoolConfig.setTestWhileIdle(true);
-			return jedisPoolConfig;
+		public GenericObjectPoolConfig<?> redisPoolConfig() {
+			GenericObjectPoolConfig<?> redisPoolConfig = new GenericObjectPoolConfig<>();
+			redisPoolConfig.setMinIdle(1);
+			redisPoolConfig.setMaxIdle(10);
+			redisPoolConfig.setMaxTotal(maxTotalSize);
+			redisPoolConfig.setMaxWaitMillis(-1);
+			redisPoolConfig.setTestWhileIdle(true);
+			return redisPoolConfig;
 		}
 
 	}

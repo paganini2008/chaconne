@@ -22,9 +22,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Import;
 
 import indi.atlantis.framework.chaconne.cluster.DetachedMode;
@@ -41,9 +38,8 @@ import indi.atlantis.framework.chaconne.cluster.EnableChaconneDetachedMode;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import(ExternalResourceAutoConfig.class)
+@Import(ChaconneDataStoreAutoConfiguration.class)
 @EnableChaconneDetachedMode(DetachedMode.PRODUCER)
-@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, RedisAutoConfiguration.class,
-		RedisRepositoriesAutoConfiguration.class })
+@SpringBootApplication
 public @interface ChaconneSpringApplication {
 }
