@@ -115,7 +115,7 @@
 	
 	<profiles>
         <profile>
-            <id>release-4</id>
+            <id>release-5</id>
             <build>
                 <plugins>
                     <!-- Source -->
