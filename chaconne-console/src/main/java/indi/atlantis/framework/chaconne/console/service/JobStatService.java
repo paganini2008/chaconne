@@ -22,6 +22,7 @@ import com.github.paganini2008.devtools.beans.BeanUtils;
 
 import indi.atlantis.framework.chaconne.JobManager;
 import indi.atlantis.framework.chaconne.console.utils.JobStatForm;
+import indi.atlantis.framework.chaconne.model.JobStat;
 import indi.atlantis.framework.chaconne.model.JobStatDetail;
 import indi.atlantis.framework.chaconne.model.JobStatPageQuery;
 import indi.atlantis.framework.chaconne.model.JobStatQuery;
@@ -54,10 +55,19 @@ public class JobStatService {
 	}
 
 	public JobStatDetail[] selectJobStatByDay(String clusterName, JobStatForm form) throws Exception {
-		JobStatQuery query = new JobStatQuery();
-		query.setClusterName(clusterName);
+		JobStatQuery query = new JobStatQuery(clusterName);
 		BeanUtils.copyProperties(form, query);
 		return jobManager.selectJobStatByDay(query);
+	}
+
+	public JobStatDetail[] selectJobStatByMonth(String clusterName, JobStatForm form) throws Exception {
+		JobStatQuery query = new JobStatQuery(clusterName);
+		BeanUtils.copyProperties(form, query);
+		return jobManager.selectJobStatByMonth(query);
+	}
+
+	public JobStat selectJobStatById(String clusterName, int jobId) throws Exception {
+		return jobManager.selectJobStat(new JobStatQuery(clusterName, jobId));
 	}
 
 }

@@ -252,6 +252,14 @@ public class RestJobManager implements JobManager {
 	}
 
 	@Override
+	public JobStatDetail[] selectJobStatByMonth(JobStatQuery query) throws Exception {
+		ResponseEntity<Result<JobStatDetail[]>> responseEntity = restTemplate.perform(query.getClusterName(),
+				"/job/manager/selectJobStatByMonth", HttpMethod.POST, query, new ParameterizedTypeReference<Result<JobStatDetail[]>>() {
+				});
+		return responseEntity.getBody().getData();
+	}
+
+	@Override
 	public void selectJobStatById(JobStatPageQuery<JobStatDetail> pageQuery) throws Exception {
 		ResponseEntity<Result<PageQuery<JobStatDetail>>> responseEntity = restTemplate.perform(pageQuery.getClusterName(),
 				"/job/manager/selectJobStatById", HttpMethod.POST, pageQuery,
@@ -274,7 +282,7 @@ public class RestJobManager implements JobManager {
 	}
 
 	@Override
-	public JobStat selectJobStat(Query query) throws Exception {
+	public JobStat selectJobStat(JobStatQuery query) throws Exception {
 		ResponseEntity<Result<JobStat>> responseEntity = restTemplate.perform(query.getClusterName(), "/job/manager/selectJobStat",
 				HttpMethod.POST, query, new ParameterizedTypeReference<Result<JobStat>>() {
 				});

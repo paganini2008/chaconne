@@ -45,7 +45,7 @@
 					<td width="8%" class="tdLeft5">
 						Job State
 					</td>
-					<td width="5%">
+					<td width="4%">
 						Type
 					</td>
 					<td width="12%">
@@ -84,7 +84,7 @@
 							<td width="8%" class="tdLeft5">
 								${(bean.jobRuntime.jobState.repr)!}
 							</td>
-							<td width="5%">
+							<td width="4%">
 								${(bean.jobTriggerDetail.triggerType.repr?substring(0,1))!}
 							</td>
 							<td width="12%">

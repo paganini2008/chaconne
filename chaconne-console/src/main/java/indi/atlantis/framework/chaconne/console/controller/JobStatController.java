@@ -65,10 +65,17 @@ public class JobStatController {
 		return "job_stat_list";
 	}
 
-	@PostMapping("/detail")
-	public @ResponseBody Result<JobStatDetail[]> selectJobStatByDay(@SessionAttribute("currentClusterName") String clusterName, @RequestBody JobStatForm form)
-			throws Exception {
+	@PostMapping("/detail/day")
+	public @ResponseBody Result<JobStatDetail[]> selectJobStatByDay(@SessionAttribute("currentClusterName") String clusterName,
+			@RequestBody JobStatForm form) throws Exception {
 		JobStatDetail[] jobStats = jobStatService.selectJobStatByDay(clusterName, form);
+		return Result.success(jobStats);
+	}
+
+	@PostMapping("/detail/month")
+	public @ResponseBody Result<JobStatDetail[]> selectJobStatById(@SessionAttribute("currentClusterName") String clusterName,
+			@RequestBody JobStatForm form) throws Exception {
+		JobStatDetail[] jobStats = jobStatService.selectJobStatByMonth(clusterName, form);
 		return Result.success(jobStats);
 	}
 

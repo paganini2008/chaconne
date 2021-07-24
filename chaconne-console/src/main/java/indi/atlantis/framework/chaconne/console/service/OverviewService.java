@@ -40,7 +40,7 @@ public class OverviewService {
 	private JobManager jobManager;
 
 	public JobStat selectJobStat(String clusterName) throws Exception {
-		return jobManager.selectJobStat(new Query(clusterName));
+		return jobManager.selectJobStat(new JobStatQuery(clusterName));
 	}
 
 	public JobStateCount[] selectJobStateCount(String clusterName) throws Exception {
@@ -48,8 +48,7 @@ public class OverviewService {
 	}
 
 	public JobStatDetail[] selectJobStatByDay(String clusterName) throws Exception {
-		JobStatQuery query = new JobStatQuery();
-		query.setClusterName(clusterName);
+		JobStatQuery query = new JobStatQuery(clusterName);
 		return jobManager.selectJobStatByDay(query);
 	}
 

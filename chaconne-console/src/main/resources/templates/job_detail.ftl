@@ -19,9 +19,17 @@
 		clear: both;
 		height: 64px;
 		line-height: 64px;
-		text-align: center;
+		text-align: left;
 		width: 100%;
 		overflow: hidden;
+	}
+	
+	.jobLine label {
+		font-size: 16pt;
+		font-weight: 800;
+		margin-left: 15px;
+		display: inline-block;
+		float: left;
 	}
 	
 	.jobAttr {
@@ -41,7 +49,7 @@
 		padding-right: 5px;
 		float: left;
 		vertical-align: top;
-		font-weight: bold;
+		font-weight: 800;
 	}
 	
 	.jobAttr span {
@@ -55,16 +63,17 @@
 	}
 	
 	#saveBtn{
-		width: calc(100% - 5px);
+		width: calc(100% - 10px);
 		height: 36px;
 		line-height: 36px;
-		padding: 2px 10px;
+		padding: 5px auto;
 		cursor: pointer;
 		text-align: center;
-		font-weight: bold;
+		font-weight: 800;
 		float: left;
 		display: inline-block;
 		margin: 10px auto;
+		background-color: #97CBFF;
 	}
 	
 	#searchBox{
@@ -115,7 +124,7 @@
 			<div id="right">
 				<div id="jobDetail">
 					<div class="jobLine">
-						<label style="font-size: 16pt;font-weight: bold;">Job Basic Info</label>
+						<label>Job Basic Info</label>
 					</div>
 					<div class="jobKey jobAttr">
 						<label>Cluster Name:</label>

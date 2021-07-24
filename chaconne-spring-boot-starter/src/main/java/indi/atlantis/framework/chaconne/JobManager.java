@@ -68,10 +68,12 @@ public interface JobManager extends JobPersistence {
 	JobLog[] selectJobLog(JobTraceQuery query) throws Exception;
 
 	JobStatDetail[] selectJobStatByDay(JobStatQuery query) throws Exception;
+	
+	JobStatDetail[] selectJobStatByMonth(JobStatQuery query) throws Exception;
 
 	void selectJobStatById(JobStatPageQuery<JobStatDetail> query) throws Exception;
 
-	JobStat selectJobStat(Query query) throws Exception;
+	JobStat selectJobStat(JobStatQuery query) throws Exception;
 
 	JobStateCount[] selectJobStateCount(Query query) throws Exception;
 

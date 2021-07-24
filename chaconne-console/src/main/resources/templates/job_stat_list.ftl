@@ -15,8 +15,41 @@
 		});
 		
 		$('.statDetail').click(function(){
+			$('#tabBox').html('<div id="statByMonth"></div><div id="statByDay"></div>');
 			var jobId = $(this).attr("jobId");
-			var url = '${contextPath}/job/stat/detail';
+			statByMonth(jobId);
+			statByDay(jobId);
+			return false;
+		});
+		
+	})
+	
+	function statByMonth(jobId){
+		var url = '${contextPath}/job/stat/detail/month';
+			$.ajax({
+			    url: url,
+				type:'post',
+				contentType: 'application/json;',
+				data: JSON.stringify({
+					"jobId": jobId
+				}),
+				dataType:'json',
+				success: function(data){
+					var categories=['Completed Count', 'Failed Count', 'Skipped Count', 'Finished Count', 'Retry Count'];
+					var series=[];
+				    $.each(data.data,function(i,item){
+				    	series.push({
+				    		name: item.executionDate,
+				    		data: [item.completedCount,item.failedCount,item.skippedCount,item.finishedCount,item.retryCount]
+				    	});
+				    });
+				    showBarChart(categories, series);
+				}
+			});
+	}
+	
+	function statByDay(jobId){
+		var url = '${contextPath}/job/stat/detail/day';
 			$.ajax({
 			    url: url,
 				type:'post',
@@ -41,20 +74,71 @@
 				    showStatDetailChart(categories,completedCount,failedCount,skippedCount,finishedCount);
 				}
 			});
-			return false;
+	}
+	
+	function showBarChart(categories,data){
+		Highcharts.chart('statByMonth', {
+		    chart: {
+		        type: 'bar'
+		    },
+		    title: {
+		        text: '<font style="font-weight: 800;">Job Execution Result Statistics</font>'
+		    },
+		    xAxis: {
+		        categories: categories,
+		        title: {
+		            text: null
+		        }
+		    },
+		    yAxis: {
+		        min: 0,
+		        title: {
+		            text: 'Execution Count',
+		            align: 'high'
+		        },
+		        labels: {
+		            overflow: 'justify'
+		        }
+		    },
+		    tooltip: {
+		        valueSuffix: ' '
+		    },
+		    plotOptions: {
+		        bar: {
+		            dataLabels: {
+		                enabled: true
+		            }
+		        }
+		    },
+		    legend: {
+		        layout: 'vertical',
+		        align: 'right',
+		        verticalAlign: 'top',
+		        x: 0,
+		        y: 0,
+		        floating: true,
+		        borderWidth: 1,
+		        backgroundColor:
+		            Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+		        shadow: true
+		    },
+		    credits: {
+		        enabled: false
+		    },
+		    exporting: false,
+		    series: data
 		});
-		
-	})
+	}
 	
 	function showStatDetailChart(categories,completedCount,failedCount,skippedCount,finishedCount){
-		$('#tabBox').html('');
-		var chart = Highcharts.chart('tabBox',{
+		var chart = Highcharts.chart('statByDay',{
 						chart: {
 							type: 'area'
 						},
 						title: {
-							text: 'Job Execution Result Statistics By Day'
+							text: '<font style="font-weight: 800;">Job Execution Result Statistics By Day</font>'
 						},
+						exporting: false,
 						xAxis: {
 							categories: categories,
 							allowDecimals: false

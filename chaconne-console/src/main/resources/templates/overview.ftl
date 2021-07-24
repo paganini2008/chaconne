@@ -133,8 +133,9 @@
 						type: 'pie'
 				},
 				title: {
-						text: title
+						text: '<font style="font-weight: 800;">' + title + '</font>'
 				},
+				exporting: false,
 				tooltip: {
 						pointFormat: '{series.name}: <b>&nbsp;{point.y}/{point.percentage:.1f} %</b>'
 				},
@@ -168,8 +169,9 @@
 							type: 'area'
 						},
 						title: {
-							text: 'Job Execution Result Statistics By Day'
+							text: '<font style="font-weight: 800;">Job Execution Result Statistics By Day</font>'
 						},
+						exporting: false,
 						xAxis: {
 							categories: categories,
 							allowDecimals: false

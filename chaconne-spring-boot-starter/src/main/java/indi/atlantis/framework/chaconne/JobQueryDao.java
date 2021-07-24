@@ -67,9 +67,10 @@ public interface JobQueryDao {
 	public static final String DEF_SELECT_JOB_LOG = "select * from chac_job_log where job_id=:jobId and trace_id=:traceId";
 	public static final String DEF_SELECT_JOB_EXCEPTION = "select * from chac_job_exception where job_id=:jobId and trace_id=:traceId";
 	public static final String DEF_SELECT_JOB_STAT_BY_DAY = "select date_format(execution_time,'%M %d,%Y') as executionDate, cluster_name as clusterName, group_name as groupName, sum(completed) as completedCount, sum(failed) as failedCount, sum(skipped) as skippedCount, sum(finished) as finishedCount, sum(retries) as retryCount from chac_job_trace where 1=1 @sql group by 1,2,3 limit :days";
+	public static final String DEF_SELECT_JOB_STAT_BY_MONTH = "select date_format(execution_time,'%M,%Y') as executionDate, cluster_name as clusterName, group_name as groupName, sum(completed) as completedCount, sum(failed) as failedCount, sum(skipped) as skippedCount, sum(finished) as finishedCount, sum(retries) as retryCount from chac_job_trace where 1=1 @sql group by 1,2,3 limit 3";
 	public static final String DEF_SELECT_JOB_STAT_BY_ID = "select a.cluster_name as clusterName, a.group_name as groupName, b.job_name as jobName, b.job_class_name as jobClassName, a.job_id as jobId, date_format(max(a.execution_time),'%M %d,%Y %H:%i:%s') as executionDate, sum(a.completed) as completedCount, sum(a.failed) as failedCount, SUM(a.skipped) AS skippedCount, sum(a.finished) as finishedCount, sum(a.retries) as retryCount from chac_job_trace a join chac_job_detail b on a.job_id=b.job_id where 1=1 @sql group by 1,2,3,4 order by b.create_date desc";
 	public static final String DEF_SELECT_JOB_STATE_COUNT = "select a.job_state as jobState, count(a.job_state) as jobCount from chac_job_runtime_detail a join chac_job_detail b on a.job_id=b.job_id where b.cluster_name=:clusterName group by a.job_state";
-	public static final String DEF_SELECT_JOB_STAT = "select sum(completed) as completedCount, sum(failed) as failedCount, sum(skipped) as skippedCount, sum(finished) as finishedCount, sum(retries) as retryCount, max(execution_time) as executionDate from chac_job_trace where cluster_name=:clusterName";
+	public static final String DEF_SELECT_JOB_STAT = "select sum(completed) as completedCount, sum(failed) as failedCount, sum(skipped) as skippedCount, sum(finished) as finishedCount, sum(retries) as retryCount, max(execution_time) as executionDate from chac_job_trace where 1=1 @sql";
 
 	@Query(value = DEF_SELECT_CLUSTER_NAME, singleColumn = true)
 	List<String> selectClusterNames();
@@ -156,6 +157,9 @@ public interface JobQueryDao {
 
 	@Query(DEF_SELECT_JOB_STAT_BY_DAY)
 	List<Map<String, Object>> selectJobStatByDay(@Sql String whereClause, @Example Map<String, Object> kwargs, @Arg("days") int days);
+	
+	@Query(DEF_SELECT_JOB_STAT_BY_MONTH)
+	List<Map<String, Object>> selectJobStatByMonth(@Sql String whereClause, @Example Map<String, Object> kwargs);
 
 	@Select(DEF_SELECT_JOB_STAT_BY_ID)
 	ResultSetSlice<Map<String, Object>> selectJobStatById(@Sql String whereClause, @Example Map<String, Object> kwargs);
@@ -164,5 +168,5 @@ public interface JobQueryDao {
 	List<Map<String, Object>> selectJobStateCount(@Arg("clusterName") String clusterName);
 
 	@Query(DEF_SELECT_JOB_STAT)
-	List<Map<String, Object>> selectJobStat(@Arg("clusterName") String clusterName);
+	List<Map<String, Object>> selectJobStat(@Sql String whereClause, @Example Map<String, Object> kwargs);
 }

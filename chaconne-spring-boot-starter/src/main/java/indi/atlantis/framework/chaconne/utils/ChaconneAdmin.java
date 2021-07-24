@@ -28,7 +28,7 @@ import indi.atlantis.framework.chaconne.cluster.EnableChaconneDetachedMode;
 
 /**
  * 
- * ChaconneSpringApplication
+ * ChaconneAdmin
  * 
  * @author Fred Feng
  *

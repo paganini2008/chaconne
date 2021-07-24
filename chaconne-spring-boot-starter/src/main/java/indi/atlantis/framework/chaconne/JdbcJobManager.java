@@ -591,6 +591,45 @@ public class JdbcJobManager implements JobManager {
 	}
 
 	@Override
+	public JobStatDetail[] selectJobStatByMonth(JobStatQuery query) throws Exception {
+		Map<String, JobStatDetail> results = new LinkedHashMap<String, JobStatDetail>();
+		Date startDate = DateUtils.addMonths(new Date(), -2);
+		startDate = DateUtils.setTime(DateUtils.setDay(startDate, 1), 0, 0, 0);
+		Date endDate = DateUtils.setTime(DateUtils.setDay(new Date(), 1), 0, 0, 0);
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(startDate);
+		while (startCal.getTime().compareTo(endDate) <= 0) {
+			String executionDate = DateUtils.format(startCal.getTime(), "MMMM,yyyy");
+			results.put(executionDate, new JobStatDetail(query.getClusterName(), executionDate));
+			startCal.add(Calendar.MONTH, 1);
+		}
+		StringBuilder whereClause = new StringBuilder();
+		if (StringUtils.isNotBlank(query.getClusterName())) {
+			whereClause.append(" and cluster_name=:clusterName");
+		}
+		if (StringUtils.isNotBlank(query.getApplicationName())) {
+			whereClause.append(" and group_name=:applicationName");
+		}
+		if (query.getJobId() != null) {
+			whereClause.append(" and job_id=:jobId");
+		}
+		if (StringUtils.isNotBlank(query.getAddress())) {
+			whereClause.append(" and address=:address");
+		}
+		whereClause.append(" and execution_time between :startDate and :endDate");
+
+		Map<String, Object> kwargs = PropertyUtils.convertToMap(query);
+		kwargs.put("startDate", startDate);
+		kwargs.put("endDate", DateUtils.setTime(new Date(), 23, 59, 59));
+		List<Map<String, Object>> dataList = jobQueryDao.selectJobStatByMonth(whereClause.toString(), kwargs);
+		for (Map<String, Object> data : dataList) {
+			JobStatDetail jobStat = convertAsBean(data, JobStatDetail.class);
+			results.put(jobStat.getExecutionDate(), jobStat);
+		}
+		return results.values().toArray(new JobStatDetail[0]);
+	}
+
+	@Override
 	public JobStatDetail[] selectJobStatByDay(JobStatQuery query) throws Exception {
 		Map<String, JobStatDetail> results = new LinkedHashMap<String, JobStatDetail>();
 		Date startDate = DateUtils.setTime(DateUtils.addDays(new Date(), -1 * query.getLastDays()), 0, 0, 0);
@@ -608,7 +647,7 @@ public class JdbcJobManager implements JobManager {
 			whereClause.append(" and cluster_name=:clusterName");
 		}
 		if (StringUtils.isNotBlank(query.getApplicationName())) {
-			whereClause.append(" and cluster_name=:clusterName");
+			whereClause.append(" and group_name=:applicationName");
 		}
 		if (query.getJobId() != null) {
 			whereClause.append(" and job_id=:jobId");
@@ -686,8 +725,22 @@ public class JdbcJobManager implements JobManager {
 	}
 
 	@Override
-	public JobStat selectJobStat(Query query) throws Exception {
-		List<Map<String, Object>> dataList = jobQueryDao.selectJobStat(query.getClusterName());
+	public JobStat selectJobStat(JobStatQuery query) throws Exception {
+		StringBuilder whereClause = new StringBuilder();
+		if (StringUtils.isNotBlank(query.getClusterName())) {
+			whereClause.append(" and cluster_name=:clusterName");
+		}
+		if (StringUtils.isNotBlank(query.getApplicationName())) {
+			whereClause.append(" and group_name=:applicationName");
+		}
+		if (query.getJobId() != null) {
+			whereClause.append(" and job_id=:jobId");
+		}
+		if (StringUtils.isNotBlank(query.getAddress())) {
+			whereClause.append(" and address=:address");
+		}
+		Map<String, Object> kwargs = PropertyUtils.convertToMap(query);
+		List<Map<String, Object>> dataList = jobQueryDao.selectJobStat(whereClause.toString(), kwargs);
 		return convertAsBean(dataList.get(0), JobStat.class);
 	}
 

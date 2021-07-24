@@ -21,16 +21,17 @@
 	}
 	
 	#saveBtn{
-		width: calc(100% - 5px);
+		width: calc(100% - 10px);
 		height: 36px;
 		line-height: 36px;
-		padding: 2px 10px;
+		padding: 5px auto;
 		cursor: pointer;
 		text-align: center;
-		font-weight: bold;
+		font-weight: 800;
 		float: left;
 		display: inline-block;
 		margin: 10px auto;
+		background-color: #97CBFF;
 	}
 	    
 </style>

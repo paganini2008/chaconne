@@ -39,7 +39,7 @@ body {
 	bottom: 0;
 	text-align: center;
 	clear: both;
-	font-weight: bold;
+	font-weight: 800;
 }
 
 #container {
@@ -75,6 +75,7 @@ body {
 }
 
 #tabBox{
+	width: 100%;
 	min-height: 360px;
 }
 
@@ -129,7 +130,7 @@ img {
 }
 
 #logoText {
-	font-weight: bold;
+	font-weight: 800;
 	font-size: 26pt;
 	float: left;
 	display: inline-block;
@@ -155,7 +156,6 @@ img {
 	text-align: left;
 	margin-top: 5px;
 	cursor: pointer;
-	font-weight: bold;
 	clear: both;
 }
 
@@ -163,6 +163,7 @@ img {
 	display: inline-block;
 	float: left;
 	margin-left: 10px;
+	font-weight: 800;
 }
 
 #sec-nav {
@@ -239,7 +240,7 @@ img {
 .tblCom thead tr td {
 	height: 38px;
 	line-height: 38px;
-	font-weight: bold;
+	font-weight: 800;
 	color: #fff;
 	border-left: 1px solid #BEBEBE;
 	border-top: 1px solid #BEBEBE;
@@ -369,7 +370,6 @@ a:visited {
 
 a:hover {
 	text-decoration: none;
-	font-weight: bold;
 }
 
 a:active {

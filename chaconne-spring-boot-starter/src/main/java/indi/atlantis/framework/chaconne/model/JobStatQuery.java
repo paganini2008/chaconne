@@ -30,6 +30,18 @@ import lombok.Setter;
 @Setter
 public class JobStatQuery extends Query {
 
+	public JobStatQuery() {
+	}
+
+	public JobStatQuery(String clusterName) {
+		super(clusterName);
+	}
+
+	public JobStatQuery(String clusterName, Integer jobId) {
+		super(clusterName);
+		this.jobId = jobId;
+	}
+
 	private String applicationName;
 	private Integer jobId;
 	private String address;

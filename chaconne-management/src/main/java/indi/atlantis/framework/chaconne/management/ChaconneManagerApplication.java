@@ -35,7 +35,7 @@ import indi.atlantis.framework.chaconne.utils.ChaconneAdmin;
  */
 @ChaconneAdmin
 @SpringBootApplication
-public class ChaconneManager {
+public class ChaconneManagerApplication {
 
 	static {
 		System.setProperty("spring.devtools.restart.enabled", "false");
@@ -44,11 +44,10 @@ public class ChaconneManager {
 			logDir.mkdirs();
 		}
 		System.setProperty("LOG_BASE", logDir.getAbsolutePath());
-		System.setProperty("app", "chaconne.redis");
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(ChaconneManager.class, args);
+		SpringApplication.run(ChaconneManagerApplication.class, args);
 		System.out.println(Env.getPid());
 	}
 }

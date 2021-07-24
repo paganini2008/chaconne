@@ -228,6 +228,12 @@ public class JobManagerController {
 		return ResponseEntity.ok(Result.success(jobStats));
 	}
 
+	@PostMapping("/selectJobStatByMonth")
+	public ResponseEntity<Result<JobStatDetail[]>> selectJobStatByMonth(@RequestBody JobStatQuery query) throws Exception {
+		JobStatDetail[] jobStats = jobManager.selectJobStatByMonth(query);
+		return ResponseEntity.ok(Result.success(jobStats));
+	}
+
 	@PostMapping("/selectJobStatById")
 	public ResponseEntity<Result<PageQuery<JobStatDetail>>> selectJobStatById(@RequestBody JobStatPageQuery<JobStatDetail> query)
 			throws Exception {
@@ -242,7 +248,7 @@ public class JobManagerController {
 	}
 
 	@PostMapping("/selectJobStat")
-	public ResponseEntity<Result<JobStat>> selectJobStat(@RequestBody Query query) throws Exception {
+	public ResponseEntity<Result<JobStat>> selectJobStat(@RequestBody JobStatQuery query) throws Exception {
 		JobStat jobStat = jobManager.selectJobStat(query);
 		return ResponseEntity.ok(Result.success(jobStat));
 	}
