@@ -21,7 +21,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 
 import indi.atlantis.framework.chaconne.cluster.DetachedMode;
@@ -38,8 +37,7 @@ import indi.atlantis.framework.chaconne.cluster.EnableChaconneDetachedMode;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import(ChaconneDataStoreAutoConfiguration.class)
+@Import(ChaconneMetadataConfiguration.class)
 @EnableChaconneDetachedMode(DetachedMode.PRODUCER)
-@SpringBootApplication
-public @interface ChaconneSpringApplication {
+public @interface ChaconneAdmin {
 }

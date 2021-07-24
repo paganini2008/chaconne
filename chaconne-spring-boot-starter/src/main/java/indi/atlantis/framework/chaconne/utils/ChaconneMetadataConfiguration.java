@@ -15,55 +15,46 @@
 */
 package indi.atlantis.framework.chaconne.utils;
 
-import java.time.Duration;
-
 import javax.sql.DataSource;
 
-import org.apache.commons.pool2.impl.GenericObjectPool;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisPassword;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 
+import com.github.paganini2008.springdessert.reditools.common.EnableRedisClient;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import io.lettuce.core.RedisClient;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
- * ChaconneDataStoreAutoConfiguration
+ * ChaconneMetadataConfiguration
  * 
  * @author Fred Feng
  *
  * @version 1.0
  */
 @Slf4j
-@Configuration
-public class ChaconneDataStoreAutoConfiguration {
+@EnableRedisClient
+@Configuration(proxyBeanMethods = false)
+public class ChaconneMetadataConfiguration {
 
 	@Setter
 	@Configuration(proxyBeanMethods = false)
-	@ConfigurationProperties(prefix = "chaconne.datasource")
+	@ConfigurationProperties(prefix = "spring.datasource")
 	@ConditionalOnClass(HikariDataSource.class)
 	@ConditionalOnMissingBean(DataSource.class)
-	public static class DataSourceAutoConfig {
+	public static class DataSourceConfiguration {
 
 		private String jdbcUrl;
 		private String username;
 		private String password;
 		private String driverClassName;
-		private int maxPoolSize = 8;
+		private int maxPoolSize = 16;
 
 		private HikariConfig getDbConfig() {
 			if (log.isTraceEnabled()) {
@@ -97,47 +88,6 @@ public class ChaconneDataStoreAutoConfiguration {
 		@Bean
 		public DataSource dataSource() {
 			return new HikariDataSource(getDbConfig());
-		}
-
-	}
-
-	@Setter
-	@Configuration(proxyBeanMethods = false)
-	@ConfigurationProperties(prefix = "chaconne.redis")
-	@ConditionalOnClass({ GenericObjectPool.class, RedisClient.class })
-	@ConditionalOnMissingBean(RedisConnectionFactory.class)
-	public static class RedisAutoConfig {
-
-		private String host;
-		private String password;
-		private int port;
-		private int dbIndex;
-		private int maxTotalSize = 20;
-		private long timeout = 60000L;
-
-		@Bean
-		public RedisConnectionFactory redisConnectionFactory() {
-			RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-			redisStandaloneConfiguration.setHostName(host);
-			redisStandaloneConfiguration.setPort(port);
-			redisStandaloneConfiguration.setDatabase(dbIndex);
-			redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
-			LettuceClientConfiguration redisClientConfiguration = LettucePoolingClientConfiguration.builder()
-					.commandTimeout(Duration.ofMillis(timeout)).shutdownTimeout(Duration.ofMillis(timeout)).poolConfig(redisPoolConfig())
-					.build();
-			LettuceConnectionFactory factory = new LettuceConnectionFactory(redisStandaloneConfiguration, redisClientConfiguration);
-			return factory;
-		}
-
-		@Bean
-		public GenericObjectPoolConfig<?> redisPoolConfig() {
-			GenericObjectPoolConfig<?> redisPoolConfig = new GenericObjectPoolConfig<>();
-			redisPoolConfig.setMinIdle(1);
-			redisPoolConfig.setMaxIdle(10);
-			redisPoolConfig.setMaxTotal(maxTotalSize);
-			redisPoolConfig.setMaxWaitMillis(-1);
-			redisPoolConfig.setTestWhileIdle(true);
-			return redisPoolConfig;
 		}
 
 	}

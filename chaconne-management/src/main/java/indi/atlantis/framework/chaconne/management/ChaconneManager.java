@@ -18,11 +18,12 @@ package indi.atlantis.framework.chaconne.management;
 import java.io.File;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.github.paganini2008.devtools.Env;
 import com.github.paganini2008.devtools.io.FileUtils;
 
-import indi.atlantis.framework.chaconne.utils.ChaconneSpringApplication;
+import indi.atlantis.framework.chaconne.utils.ChaconneAdmin;
 
 /**
  * 
@@ -32,7 +33,8 @@ import indi.atlantis.framework.chaconne.utils.ChaconneSpringApplication;
  *
  * @version 1.0
  */
-@ChaconneSpringApplication
+@ChaconneAdmin
+@SpringBootApplication
 public class ChaconneManager {
 
 	static {
@@ -42,6 +44,7 @@ public class ChaconneManager {
 			logDir.mkdirs();
 		}
 		System.setProperty("LOG_BASE", logDir.getAbsolutePath());
+		System.setProperty("app", "chaconne.redis");
 	}
 
 	public static void main(String[] args) {

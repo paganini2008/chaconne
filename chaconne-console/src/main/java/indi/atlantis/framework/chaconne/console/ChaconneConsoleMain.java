@@ -23,6 +23,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 import com.github.paganini2008.devtools.Env;
 import com.github.paganini2008.devtools.io.FileUtils;
+import com.github.paganini2008.springdessert.reditools.common.EnableRedisClient;
 
 import indi.atlantis.framework.chaconne.cluster.EnableChaconneClientMode;
 
@@ -34,6 +35,7 @@ import indi.atlantis.framework.chaconne.cluster.EnableChaconneClientMode;
  *
  * @since 1.0
  */
+@EnableRedisClient
 @EnableChaconneClientMode
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 public class ChaconneConsoleMain {
