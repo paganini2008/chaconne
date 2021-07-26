@@ -34,7 +34,7 @@ import com.github.paganini2008.springdesert.fastjdbc.annotations.Sql;
  * 
  * @author Fred Feng
  *
- * @version 1.0
+ * @since 2.0.1
  */
 @Dao
 public interface JobQueryDao {

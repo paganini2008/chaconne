@@ -20,7 +20,7 @@ package indi.atlantis.framework.chaconne;
  * Job
  *
  * @author Fred Feng
- * @since 1.0
+ * @since 2.0.1
  */
 public interface Job extends NotManagedJob, JobDefinition {
 }

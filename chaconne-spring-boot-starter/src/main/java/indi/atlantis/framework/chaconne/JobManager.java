@@ -37,7 +37,7 @@ import indi.atlantis.framework.chaconne.model.Query;
  * JobManager
  *
  * @author Fred Feng
- * @since 1.0
+ * @since 2.0.1
  */
 public interface JobManager extends JobPersistence {
 

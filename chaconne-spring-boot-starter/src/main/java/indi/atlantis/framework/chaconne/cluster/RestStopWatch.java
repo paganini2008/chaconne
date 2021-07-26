@@ -36,7 +36,7 @@ import indi.atlantis.framework.chaconne.model.JobRuntimeParameter;
  * 
  * @author Fred Feng
  *
- * @since 1.0
+ * @since 2.0.1
  */
 public class RestStopWatch implements StopWatch {
 

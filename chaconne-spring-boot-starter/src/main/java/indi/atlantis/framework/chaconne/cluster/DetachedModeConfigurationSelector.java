@@ -31,7 +31,7 @@ import org.springframework.core.type.AnnotationMetadata;
  * 
  * @author Fred Feng
  *
- * @version 1.0
+ * @since 2.0.1
  */
 public class DetachedModeConfigurationSelector implements ImportSelector, EnvironmentAware {
 

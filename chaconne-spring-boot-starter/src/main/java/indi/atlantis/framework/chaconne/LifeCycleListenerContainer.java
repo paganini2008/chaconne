@@ -31,7 +31,7 @@ import indi.atlantis.framework.tridenter.multicast.ApplicationMessageListener;
  * 
  * @author Fred Feng
  *
- * @since 1.0
+ * @since 2.0.1
  */
 public abstract class LifeCycleListenerContainer implements ApplicationMessageListener {
 

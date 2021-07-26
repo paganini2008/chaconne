@@ -30,7 +30,7 @@ import indi.atlantis.framework.chaconne.model.TriggerDescription.Periodic;
  * 
  * @author Fred Feng
  *
- * @since 1.0
+ * @since 2.0.1
  */
 public enum TriggerType implements EnumConstant {
 

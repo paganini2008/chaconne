@@ -50,7 +50,7 @@ import indi.atlantis.framework.chaconne.model.PageQuery;
  * 
  * @author Fred Feng
  *
- * @since 1.0
+ * @since 2.0.1
  */
 @RequestMapping("/job")
 @Controller

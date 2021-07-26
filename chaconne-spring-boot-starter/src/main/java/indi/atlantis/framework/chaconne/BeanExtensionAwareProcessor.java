@@ -27,7 +27,7 @@ import com.github.paganini2008.devtools.beans.BeanInstantiationException;
  * 
  * @author Fred Feng
  *
- * @since 1.0
+ * @since 2.0.1
  */
 public class BeanExtensionAwareProcessor implements BeanPostProcessor {
 

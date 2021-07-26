@@ -29,7 +29,7 @@ import indi.atlantis.framework.tridenter.multicast.ApplicationMessageListener;
  * LoadBalancedJobBeanProcessor
  *
  * @author Fred Feng
- * @since 1.0
+ * @since 2.0.1
  */
 public class LoadBalancedJobBeanProcessor implements ApplicationMessageListener {
 

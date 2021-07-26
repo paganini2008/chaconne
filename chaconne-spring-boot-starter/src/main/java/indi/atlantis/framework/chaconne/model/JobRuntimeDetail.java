@@ -32,7 +32,7 @@ import lombok.Getter;
  * JobRuntimeDetail
  *
  * @author Fred Feng
- * @since 1.0
+ * @since 2.0.1
  */
 @JsonInclude(value = Include.NON_NULL)
 @Getter

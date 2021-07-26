@@ -55,7 +55,7 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * @author Fred Feng
  *
- * @since 1.0
+ * @since 2.0.1
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -120,7 +120,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	 * 
 	 * @author Fred Feng
 	 *
-	 * @version 1.0
+	 * @since 2.0.1
 	 */
 	public static class ContextHandlerInterceptor implements HandlerInterceptor {
 
@@ -145,7 +145,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	 * 
 	 * @author Fred Feng
 	 *
-	 * @since 1.0
+	 * @since 2.0.1
 	 */
 	public static class BasicHandlerInterceptor implements HandlerInterceptor, EnvironmentAware {
 
@@ -178,7 +178,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	 * 
 	 * @author Fred Feng
 	 *
-	 * @since 1.0
+	 * @since 2.0.1
 	 */
 	@Slf4j
 	public static class SignHandlerInterceptor implements HandlerInterceptor {
@@ -209,7 +209,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	 * 
 	 * @author Fred Feng
 	 *
-	 * @since 1.0
+	 * @since 2.0.1
 	 */
 	@Slf4j
 	@RestControllerAdvice
