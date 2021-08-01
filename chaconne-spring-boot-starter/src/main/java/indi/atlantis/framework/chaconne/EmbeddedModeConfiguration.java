@@ -314,6 +314,7 @@ public class EmbeddedModeConfiguration {
 
 	@Setter
 	@Configuration
+	@ConditionalOnMissingBean(JavaMailSender.class)
 	@ConfigurationProperties(prefix = "atlantis.framework.chaconne.mail")
 	public static class JavaMailConfig {
 

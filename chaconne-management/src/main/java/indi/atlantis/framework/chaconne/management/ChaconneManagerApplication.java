@@ -27,7 +27,7 @@ import indi.atlantis.framework.chaconne.utils.ChaconneAdmin;
 
 /**
  * 
- * ChaconneManager
+ * ChaconneManagerApplication
  * 
  * @author Fred Feng
  *
