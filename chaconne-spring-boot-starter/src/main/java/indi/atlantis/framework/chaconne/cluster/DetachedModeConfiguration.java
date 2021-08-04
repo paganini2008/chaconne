@@ -25,6 +25,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -455,8 +456,9 @@ public class DetachedModeConfiguration {
 	}
 
 	@Setter
-	@Configuration
+	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnDetachedMode(DetachedMode.CONSUMER)
+	@ConditionalOnClass(JavaMailSender.class)
 	@ConfigurationProperties(prefix = "atlantis.framework.chaconne.mail")
 	public static class JavaMailConfig {
 
@@ -465,6 +467,7 @@ public class DetachedModeConfiguration {
 		private String password;
 		private String defaultEncoding;
 
+		@ConditionalOnMissingBean(name = "jobMailSender")
 		@Bean
 		public JavaMailSender jobMailSender() {
 			JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();

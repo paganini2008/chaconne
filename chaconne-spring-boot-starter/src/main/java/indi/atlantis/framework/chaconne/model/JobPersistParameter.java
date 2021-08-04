@@ -62,7 +62,7 @@ public class JobPersistParameter {
 		JobPersistParameter parameter = new JobPersistParameter();
 		parameter.setJobKey(JobKey.by("yourCluster", "yourGroup", "yourJob", "com.yourcompany.yourapp.YourJob"));
 		parameter.setDescription("Describe your job shortly");
-		parameter.setEmail("Set your email if job run abnormally");
+		parameter.setEmail("yourEmail@yourcompany.com");
 		parameter.setRetries(0);
 		parameter.setTimeout(-1L);
 		parameter.setAttachment("Set initial parameter of your job. Data with json format is recommended.");
