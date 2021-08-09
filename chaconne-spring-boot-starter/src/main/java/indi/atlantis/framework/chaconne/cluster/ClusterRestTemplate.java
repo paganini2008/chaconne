@@ -31,6 +31,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.github.paganini2008.devtools.ArrayUtils;
+import com.github.paganini2008.devtools.multithreads.AtomicLongSequence;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,27 +64,55 @@ public abstract class ClusterRestTemplate extends RestTemplate {
 		defaultHeaders.set(headerName, headerValue);
 	}
 
+	private final AtomicLongSequence counter = new AtomicLongSequence();
+	private int hostNameSize = 3;
+
+	public void setHostNameSize(int hostNameSize) {
+		this.hostNameSize = hostNameSize;
+	}
+
 	public <R> ResponseEntity<R> perform(String clusterName, String path, HttpMethod method, Object body,
 			ParameterizedTypeReference<R> responseType) {
 		String[] contextPaths = getClusterContextPaths(clusterName);
 		if (ArrayUtils.isEmpty(contextPaths)) {
 			throw new NoJobResourceException(clusterName);
 		}
-		String url;
 		RestClientException reason = null;
-		for (String contextPath : contextPaths) {
-			url = contextPath + path;
-			if (log.isTraceEnabled()) {
-				log.trace("Perform job with url: " + url);
+		if (contextPaths.length > hostNameSize) {
+			String[] copy = contextPaths.clone();
+			String contextPath, url;
+			while (copy.length > 0) {
+				contextPath = copy[(int) (counter.getAndIncrement() % copy.length)];
+				url = contextPath + path;
+				if (log.isTraceEnabled()) {
+					log.trace("Perform job with url: " + url);
+				}
+				try {
+					return super.exchange(url, method, new HttpEntity<Object>(body, getHttpHeaders()), responseType);
+				} catch (RestClientException e) {
+					log.error(e.getMessage(), e);
+					reason = e;
+					copy = ArrayUtils.remove(copy, contextPath);
+				}
 			}
-			try {
-				return super.exchange(url, method, new HttpEntity<Object>(body, getHttpHeaders()), responseType);
-			} catch (RestClientException e) {
-				log.error(e.getMessage(), e);
-				reason = e;
+			throw reason;
+		} else {
+			String url;
+			for (String contextPath : contextPaths) {
+				url = contextPath + path;
+				if (log.isTraceEnabled()) {
+					log.trace("Perform job with url: " + url);
+				}
+				try {
+					return super.exchange(url, method, new HttpEntity<Object>(body, getHttpHeaders()), responseType);
+				} catch (RestClientException e) {
+					log.error(e.getMessage(), e);
+					reason = e;
+				}
 			}
+			throw reason;
 		}
-		throw reason;
+
 	}
 
 	protected abstract String[] getClusterContextPaths(String clusterName);
