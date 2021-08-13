@@ -135,7 +135,7 @@ public class EmbeddedModeConfiguration {
 	@ConditionalOnMissingBean(name = "executorThreadPool")
 	@Bean("executorThreadPool")
 	public Executor schedulerExecutorThreadPool(@Value("${atlantis.framework.chaconne.scheduler.executor.poolSize:16}") int maxPoolSize) {
-		return ThreadPoolBuilder.common(maxPoolSize).setTimeout(-1L).setQueueSize(Integer.MAX_VALUE)
+		return ThreadPoolBuilder.common(maxPoolSize).setMaxPermits(maxPoolSize * 2).setTimeout(-1L)
 				.setThreadFactory(new PooledThreadFactory("scheduler-executor-threads")).build();
 	}
 
@@ -222,14 +222,14 @@ public class EmbeddedModeConfiguration {
 
 	@DependsOn("schemaUpdater")
 	@Bean
-	@ConditionalOnMissingBean(JobManager.class)
+	@ConditionalOnMissingBean
 	public JobManager jobManager() {
 		return new JdbcJobManager();
 	}
 
 	@DependsOn("schemaUpdater")
 	@Bean
-	@ConditionalOnMissingBean(StopWatch.class)
+	@ConditionalOnMissingBean
 	public StopWatch stopWatch() {
 		return new JdbcStopWatch();
 	}
@@ -240,7 +240,7 @@ public class EmbeddedModeConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnMissingBean(ScheduleManager.class)
+	@ConditionalOnMissingBean
 	public ScheduleManager scheduleManager() {
 		return new DefaultScheduleManager();
 	}
@@ -297,8 +297,8 @@ public class EmbeddedModeConfiguration {
 	}
 
 	@Bean
-	public JobTimeoutResolver timeoutResolver() {
-		return new JobTimeoutResolver();
+	public JobTimeoutResolver jobTimeoutResolver() {
+		return new EmbeddedModeJobTimeoutResolver();
 	}
 
 	@Bean

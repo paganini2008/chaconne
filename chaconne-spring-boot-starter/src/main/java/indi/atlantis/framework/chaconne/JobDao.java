@@ -53,7 +53,7 @@ public interface JobDao {
 
 	public static final String DEF_DELETE_JOB_DEPENDENCY = "delete from chac_job_dependency where job_id=:jobId and dependency_type=:dependencyType";
 	public static final String DEF_CLEAN_JOB_SERVER_DETAIL = "delete from chac_job_server_detail";
-	public static final String DEF_DELETE_JOB_SERVER_DETAIL = "delete from chac_job_server_detail where cluster_name=:clusterName";
+	public static final String DEF_DELETE_JOB_SERVER_DETAIL = "delete from chac_job_server_detail where cluster_name=:clusterName and group_name=:groupName and context_path=:contextPath";
 
 	@Insert(DEF_INSERT_JOB_SERVER_DETAIL)
 	int saveJobServerDetail(@Example Map<String, Object> kwargs);

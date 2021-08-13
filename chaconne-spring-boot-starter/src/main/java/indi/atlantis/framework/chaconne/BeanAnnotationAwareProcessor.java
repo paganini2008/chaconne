@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -28,15 +29,17 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import com.github.paganini2008.devtools.ArrayUtils;
 import com.github.paganini2008.devtools.StringUtils;
 import com.github.paganini2008.devtools.date.DateUtils;
+import com.github.paganini2008.devtools.multithreads.RetryableTimer;
 
 import indi.atlantis.framework.chaconne.annotations.ChacDependency;
 import indi.atlantis.framework.chaconne.annotations.ChacFork;
 import indi.atlantis.framework.chaconne.annotations.ChacJob;
 import indi.atlantis.framework.chaconne.annotations.ChacJobKey;
 import indi.atlantis.framework.chaconne.annotations.ChacTrigger;
+import indi.atlantis.framework.chaconne.cluster.RestClientRetryable;
+import indi.atlantis.framework.chaconne.cluster.RestJobManager;
 import indi.atlantis.framework.chaconne.utils.GenericJobDefinition;
 import indi.atlantis.framework.chaconne.utils.GenericTrigger;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
@@ -46,7 +49,6 @@ import lombok.extern.slf4j.Slf4j;
  *
  * @since 2.0.1
  */
-@Slf4j
 public class BeanAnnotationAwareProcessor implements BeanPostProcessor {
 
 	private static final String[] datePatterns = new String[] { "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss" };
@@ -60,22 +62,30 @@ public class BeanAnnotationAwareProcessor implements BeanPostProcessor {
 	@Autowired
 	private JobManager jobManager;
 
+	@Autowired(required = false)
+	private RetryableTimer retryableTimer;
+
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		if (bean.getClass().isAnnotationPresent(ChacJob.class)) {
-			JobDefinition jobDefinition = parseObject(bean, beanName);
-			try {
-				jobManager.persistJob(jobDefinition, null);
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
+			final ChacJob job = bean.getClass().getAnnotation(ChacJob.class);
+			JobDefinition jobDefinition = parseObject(bean, beanName, job);
+			if (jobManager instanceof RestJobManager && retryableTimer != null) {
+				retryableTimer.executeAndRetryWithFixedDelay(new PersistRetrier(jobDefinition, job.attachment()),
+						RestClientRetryable.DEFAULT_RETRY_INTERVAL, TimeUnit.SECONDS);
+			} else {
+				try {
+					jobManager.persistJob(jobDefinition, job.attachment());
+				} catch (Exception e) {
+					throw new BeanInitializationException(e.getMessage(), e);
+				}
 			}
 		}
 		return bean;
 	}
 
-	private JobDefinition parseObject(Object bean, String beanName) {
+	private JobDefinition parseObject(Object bean, String beanName, ChacJob job) {
 		final Class<?> jobBeanClass = bean.getClass();
-		final ChacJob job = jobBeanClass.getAnnotation(ChacJob.class);
 		String jobName = StringUtils.isNotBlank(job.name()) ? job.name() : beanName;
 		GenericJobDefinition.Builder builder = GenericJobDefinition.newJob(clusterName, applicationName, jobName, jobBeanClass);
 		builder.setDescription(job.description()).setTimeout(job.timeout()).setEmail(job.email()).setRetries(job.retries())
@@ -139,6 +149,23 @@ public class BeanAnnotationAwareProcessor implements BeanPostProcessor {
 		}
 
 		return builder.build();
+	}
+
+	private class PersistRetrier extends RestClientRetryable {
+
+		private final JobDefinition jobDefinition;
+		private final String attachment;
+
+		PersistRetrier(JobDefinition jobDefinition, String attachment) {
+			this.jobDefinition = jobDefinition;
+			this.attachment = attachment;
+		}
+
+		@Override
+		public void execute() throws Throwable {
+			jobManager.persistJob(jobDefinition, attachment);
+		}
+
 	}
 
 }

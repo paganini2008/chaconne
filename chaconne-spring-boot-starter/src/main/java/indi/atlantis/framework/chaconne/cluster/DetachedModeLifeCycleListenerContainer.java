@@ -41,7 +41,7 @@ public class DetachedModeLifeCycleListenerContainer extends LifeCycleListenerCon
 	public void onChange(JobKey jobKey, JobLifeCycle lifeCycle) {
 		try {
 			jobAdmin.publicLifeCycleEvent(jobKey, lifeCycle);
-		} catch (NoJobResourceException e) {
+		} catch (UnavailableJobServiceException e) {
 			log.warn("Job: " + jobKey.toString() + " is not available now.");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

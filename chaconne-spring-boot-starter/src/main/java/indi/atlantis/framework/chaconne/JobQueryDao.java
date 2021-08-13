@@ -40,8 +40,9 @@ import com.github.paganini2008.springdesert.fastjdbc.annotations.Sql;
 public interface JobQueryDao {
 
 	public static final String DEF_SELECT_CLUSTER_NAME = "select distinct cluster_name from chac_job_server_detail";
-	public static final String DEF_SELECT_JOB_SERVER_DETAIL = "select * from chac_job_server_detail where cluster_name=:clusterName";
-	public static final String DEF_SELECT_CONTEXT_PATH = "select distinct context_path from chac_job_server_detail where cluster_name=:clusterName";
+	public static final String DEF_SELECT_JOB_SERVER_DETAIL = "select * from chac_job_server_detail where cluster_name=:clusterName @sql";
+	public static final String DEF_SELECT_JOB_SERVER_EXISTS = "select count(*) from chac_job_server_detail where cluster_name=:clusterName and group_name=:groupName and context_path=:contextPath";
+	public static final String DEF_SELECT_CONTEXT_PATH = "select distinct context_path from chac_job_server_detail where cluster_name=:clusterName order by start_date asc";
 	public static final String DEF_SELECT_ALL_JOB_DETAIL = "select * from chac_job_detail";
 	public static final String DEF_SELECT_JOB_DETAIL_BY_CLUSTER_NAMES = "select * from chac_job_detail where cluster_name in (:clusterNames)";
 	public static final String DEF_SELECT_JOB_DETAIL_BY_GROUP_NAMES = "select * from chac_job_detail where group_name in (:groupNames)";
@@ -55,7 +56,7 @@ public interface JobQueryDao {
 	public static final String DEF_SELECT_JOB_TRIGGER = "select * from chac_job_trigger_detail where job_id=:jobId";
 	public static final String DEF_SELECT_LATEST_EXECUTION_TIME = "select min(next_execution_time) from chac_job_runtime_detail where next_execution_time is not null and job_id in (:jobIds)";
 	public static final String DEF_SELECT_JOB_RUNTIME = "select * from chac_job_runtime_detail where job_id=:jobId";
-	public static final String DEF_SELECT_JOB_RUNTIME_BY_JOB_STATE = "select a.*,b.* from chac_job_detail a join chac_job_runtime_detail b on a.job_id=b.job_id where a.cluster_name=:clusterName and b.job_state=:jobState";
+	public static final String DEF_SELECT_JOB_RUNTIME_BY_JOB_STATE = "select a.*,b.* from chac_job_detail a join chac_job_runtime_detail b on a.job_id=b.job_id where 1=1 @sql and b.job_state=:jobState";
 	public static final String DEF_SELECT_DEPENDENT_JOB_DETAIL = "select * from chac_job_detail where job_id in (select dependent_job_id from chac_job_dependency where job_id=:jobId and dependency_type=:dependencyType)";
 	public static final String DEF_SELECT_JOB_HAS_RELATIONS = "select count(*) from chac_job_dependency where dependent_job_id=:dependentJobId and dependency_type=:dependencyType";
 	public static final String DEF_SELECT_JOB_RELATIONS = "select * from chac_job_detail where job_id in (select job_id from chac_job_dependency where dependent_job_id=:dependentJobId and dependency_type=:dependencyType)";
@@ -76,7 +77,12 @@ public interface JobQueryDao {
 	List<String> selectClusterNames();
 
 	@Query(DEF_SELECT_JOB_SERVER_DETAIL)
-	List<Map<String, Object>> selectJobServerDetail(@Arg("clusterName") String clusterName);
+	List<Map<String, Object>> selectJobServerDetail(@Arg("clusterName") String clusterName, @Sql String whereClause,
+			@Example Map<String, Object> kwargs);
+
+	@Get(value = DEF_SELECT_JOB_SERVER_EXISTS, javaType = true)
+	int selectJobServerExists(@Arg("clusterName") String clusterName, @Arg("groupName") String groupName,
+			@Arg("contextPath") String contextPath);
 
 	@Query(value = DEF_SELECT_CONTEXT_PATH, singleColumn = true)
 	List<String> selectContextPath(@Arg("clusterName") String clusterName);
@@ -124,7 +130,7 @@ public interface JobQueryDao {
 	Map<String, Object> selectJobRuntime(@Arg("jobId") int jobId);
 
 	@Query(DEF_SELECT_JOB_RUNTIME_BY_JOB_STATE)
-	List<Map<String, Object>> selectJobRuntimeByJobState(@Arg("clusterName") String clusterName, @Arg("jobState") int jobState);
+	List<Map<String, Object>> selectJobRuntimeByJobState(@Sql String whereClause, @Example Map<String, Object> kwargs);
 
 	@Query(DEF_SELECT_DEPENDENT_JOB_DETAIL)
 	List<Map<String, Object>> selectDependentJobDetail(@Arg("jobId") int jobId, @Arg("dependencyType") int dependencyType);
@@ -157,7 +163,7 @@ public interface JobQueryDao {
 
 	@Query(DEF_SELECT_JOB_STAT_BY_DAY)
 	List<Map<String, Object>> selectJobStatByDay(@Sql String whereClause, @Example Map<String, Object> kwargs, @Arg("days") int days);
-	
+
 	@Query(DEF_SELECT_JOB_STAT_BY_MONTH)
 	List<Map<String, Object>> selectJobStatByMonth(@Sql String whereClause, @Example Map<String, Object> kwargs);
 

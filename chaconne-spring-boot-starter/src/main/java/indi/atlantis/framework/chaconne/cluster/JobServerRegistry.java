@@ -16,7 +16,6 @@
 package indi.atlantis.framework.chaconne.cluster;
 
 import java.sql.Timestamp;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +52,7 @@ public class JobServerRegistry implements BeanLifeCycle {
 		log.info("Clean up cluster registry ok.");
 	}
 
-	public void registerCluster(ApplicationInfo applicationInfo) {
+	public void registerJobExecutor(ApplicationInfo applicationInfo) {
 		Map<String, Object> kwargs = new HashMap<String, Object>();
 		kwargs.put("clusterName", applicationInfo.getClusterName());
 		kwargs.put("groupName", applicationInfo.getApplicationName());
@@ -63,13 +62,20 @@ public class JobServerRegistry implements BeanLifeCycle {
 		Contact contact = applicationInfo.getContact();
 		kwargs.put("contactPerson", contact.getName());
 		kwargs.put("contactEmail", contact.getEmail());
-		jobDao.saveJobServerDetail(kwargs);
-		log.info("Registered cluster: " + applicationInfo.getClusterName());
+		if (jobQueryDao.selectJobServerExists(applicationInfo.getClusterName(), applicationInfo.getApplicationName(),
+				applicationInfo.getApplicationContextPath()) == 0) {
+			jobDao.saveJobServerDetail(kwargs);
+			log.info("Registered job executor: {}", kwargs);
+		}
 	}
 
-	public void unregisterCluster(String clusterName) {
-		jobDao.deleteJobServerDetail(Collections.singletonMap("clusterName", clusterName));
-		log.info("Unregistered cluster: " + clusterName);
+	public void unregisterJobExecutor(String clusterName, String groupName, String address) {
+		Map<String, Object> kwargs = new HashMap<String, Object>();
+		kwargs.put("clusterName", clusterName);
+		kwargs.put("groupName", groupName);
+		kwargs.put("contextPath", address);
+		jobDao.deleteJobServerDetail(kwargs);
+		log.info("Unregistered job executor: {}", kwargs);
 	}
 
 	public String[] getClusterContextPaths(String clusterName) {

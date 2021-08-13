@@ -45,6 +45,7 @@ import org.springframework.util.ErrorHandler;
 import com.github.paganini2008.devtools.cron4j.TaskExecutor;
 import com.github.paganini2008.devtools.cron4j.ThreadPoolTaskExecutor;
 import com.github.paganini2008.devtools.multithreads.PooledThreadFactory;
+import com.github.paganini2008.devtools.multithreads.RetryableTimer;
 import com.github.paganini2008.devtools.multithreads.ThreadPoolBuilder;
 import com.github.paganini2008.springdesert.fastjdbc.annotations.DaoScan;
 
@@ -294,8 +295,8 @@ public class DetachedModeConfiguration {
 		}
 
 		@Bean
-		public JobTimeoutResolver timeoutResolver() {
-			return new JobTimeoutResolver();
+		public JobTimeoutResolver jobTimeoutResolver() {
+			return new DetachedModeJobTimeoutResolver();
 		}
 
 	}
@@ -315,7 +316,12 @@ public class DetachedModeConfiguration {
 			return new BeanAnnotationAwareProcessor();
 		}
 
-		@ConditionalOnMissingBean(ClusterRestTemplate.class)
+		@Bean(destroyMethod = "cancel")
+		public RetryableTimer retryableTimer() {
+			return new RetryableTimer();
+		}
+
+		@ConditionalOnMissingBean
 		@Bean
 		public ClusterRestTemplate clusterRestTemplate(ClientHttpRequestFactory httpRequestFactory) {
 			return new ConsumerModeRestTemplate(httpRequestFactory);
@@ -387,7 +393,7 @@ public class DetachedModeConfiguration {
 		@Bean("executorThreadPool")
 		public Executor schedulerExecutorThreadPool(
 				@Value("${atlantis.framework.chaconne.scheduler.executor.poolSize:16}") int maxPoolSize) {
-			return ThreadPoolBuilder.common(maxPoolSize).setTimeout(-1L).setQueueSize(Integer.MAX_VALUE)
+			return ThreadPoolBuilder.common(maxPoolSize).setMaxPermits(maxPoolSize * 2).setTimeout(-1L)
 					.setThreadFactory(new PooledThreadFactory("scheduler-executor-threads")).build();
 		}
 

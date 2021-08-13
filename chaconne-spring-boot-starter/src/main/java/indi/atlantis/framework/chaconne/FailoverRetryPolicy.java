@@ -51,7 +51,7 @@ public class FailoverRetryPolicy implements RetryPolicy {
 			try {
 				jobManager.setJobState(jobKey, JobState.SCHEDULING);
 			} catch (Exception e) {
-				log.error(e.getMessage(), e);
+				throw ExceptionUtils.wrapExeception(e);
 			}
 		}
 		throw reason;

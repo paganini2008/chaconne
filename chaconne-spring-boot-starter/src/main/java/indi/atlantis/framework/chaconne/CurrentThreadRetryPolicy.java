@@ -33,8 +33,16 @@ public class CurrentThreadRetryPolicy implements RetryPolicy {
 	@Autowired
 	private JobExecutor jobExecutor;
 
+	@Autowired
+	private JobManager jobManager;
+
 	@Override
 	public Object retryIfNecessary(JobKey jobKey, Job job, Object attachment, Throwable reason, int retries, Logger log) throws Throwable {
+		try {
+			jobManager.setJobState(jobKey, JobState.SCHEDULING);
+		} catch (Exception e) {
+			throw ExceptionUtils.wrapExeception(e);
+		}
 		jobExecutor.execute(job, attachment, retries);
 		throw reason;
 	}

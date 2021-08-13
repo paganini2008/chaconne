@@ -15,11 +15,14 @@
 */
 package indi.atlantis.framework.chaconne.cluster;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.github.paganini2008.devtools.ArrayUtils;
+import com.github.paganini2008.devtools.multithreads.RetryableTimer;
 
 import indi.atlantis.framework.chaconne.ChaconneBeanNames;
 import indi.atlantis.framework.chaconne.DependencyType;
@@ -41,7 +44,7 @@ import indi.atlantis.framework.chaconne.model.JobKeyQuery;
  *
  * @since 2.0.1
  */
-public class ConsumerModeJobBeanInitializer implements JobBeanInitializer {
+public class ConsumerModeJobBeanInitializer extends RestClientRetryable implements JobBeanInitializer {
 
 	@Value("${spring.application.cluster.name}")
 	private String clusterName;
@@ -63,11 +66,20 @@ public class ConsumerModeJobBeanInitializer implements JobBeanInitializer {
 	@Autowired
 	private JobFutureHolder jobFutureHolder;
 
+	@Autowired
+	private RetryableTimer retryableTimer;
+
+	@Override
 	public void initializeJobBeans() throws Exception {
-		handleSerialJobDependencies();
+		retryableTimer.executeAndRetryWithFixedDelay(this, DEFAULT_RETRY_INTERVAL, TimeUnit.SECONDS);
 	}
 
-	private void handleSerialJobDependencies() throws Exception {
+	@Override
+	public void execute() throws Throwable {
+		handleSerialDependencies();
+	}
+
+	private void handleSerialDependencies() throws Exception {
 		JobKeyQuery jobQuery = new JobKeyQuery();
 		jobQuery.setClusterName(clusterName);
 		jobQuery.setTriggerType(TriggerType.DEPENDENT);

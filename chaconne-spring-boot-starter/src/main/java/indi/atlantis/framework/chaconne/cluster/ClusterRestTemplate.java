@@ -65,7 +65,7 @@ public abstract class ClusterRestTemplate extends RestTemplate {
 	}
 
 	private final AtomicLongSequence counter = new AtomicLongSequence();
-	private int hostNameSize = 3;
+	private int hostNameSize = 1;
 
 	public void setHostNameSize(int hostNameSize) {
 		this.hostNameSize = hostNameSize;
@@ -73,16 +73,16 @@ public abstract class ClusterRestTemplate extends RestTemplate {
 
 	public <R> ResponseEntity<R> perform(String clusterName, String path, HttpMethod method, Object body,
 			ParameterizedTypeReference<R> responseType) {
-		String[] contextPaths = getClusterContextPaths(clusterName);
+		final String[] contextPaths = getClusterContextPaths(clusterName);
 		if (ArrayUtils.isEmpty(contextPaths)) {
-			throw new NoJobResourceException(clusterName);
+			throw new UnavailableJobServiceException(clusterName);
 		}
 		RestClientException reason = null;
 		if (contextPaths.length > hostNameSize) {
 			String[] copy = contextPaths.clone();
-			String contextPath, url;
+			String contextPath = null, url = null;
 			while (copy.length > 0) {
-				contextPath = copy[(int) (counter.getAndIncrement() % copy.length)];
+				contextPath = selectContextPath(copy);
 				url = contextPath + path;
 				if (log.isTraceEnabled()) {
 					log.trace("Perform job with url: " + url);
@@ -90,14 +90,13 @@ public abstract class ClusterRestTemplate extends RestTemplate {
 				try {
 					return super.exchange(url, method, new HttpEntity<Object>(body, getHttpHeaders()), responseType);
 				} catch (RestClientException e) {
-					log.error(e.getMessage(), e);
 					reason = e;
 					copy = ArrayUtils.remove(copy, contextPath);
 				}
 			}
-			throw reason;
+			throw new JobServiceAccessException(url, reason);
 		} else {
-			String url;
+			String url = null;
 			for (String contextPath : contextPaths) {
 				url = contextPath + path;
 				if (log.isTraceEnabled()) {
@@ -106,16 +105,19 @@ public abstract class ClusterRestTemplate extends RestTemplate {
 				try {
 					return super.exchange(url, method, new HttpEntity<Object>(body, getHttpHeaders()), responseType);
 				} catch (RestClientException e) {
-					log.error(e.getMessage(), e);
 					reason = e;
 				}
 			}
-			throw reason;
+			throw new JobServiceAccessException(url, reason);
 		}
 
 	}
 
 	protected abstract String[] getClusterContextPaths(String clusterName);
+
+	protected String selectContextPath(String[] contextPaths) {
+		return contextPaths[(int) (counter.getAndIncrement() % contextPaths.length)];
+	}
 
 	protected HttpHeaders getHttpHeaders() {
 		HttpHeaders headers = new HttpHeaders();

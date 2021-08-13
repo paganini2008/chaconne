@@ -49,4 +49,6 @@ public @interface ChacJob {
 
 	String email() default "";
 
+	String attachment() default "";
+
 }

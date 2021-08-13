@@ -17,7 +17,6 @@ package indi.atlantis.framework.chaconne.cluster;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.client.RestClientException;
 
 import indi.atlantis.framework.chaconne.Job;
 import indi.atlantis.framework.chaconne.JobAdmin;
@@ -88,13 +87,17 @@ public class DetachedModeJobBeanProxy implements Job {
 	public Object execute(JobKey jobKey, Object result, Logger log) {
 		try {
 			return jobAdmin.triggerJob(jobKey, result);
-		} catch (RestClientException e) {
+		} catch (JobServiceAccessException e) {
+			if (log.isWarnEnabled()) {
+				log.warn(e.getMessage());
+			}
 			resetJobState();
-			jobServerRegistry.unregisterCluster(jobKey.getClusterName());
-			log.error(e.getMessage(), e);
-		} catch (NoJobResourceException e) {
+			jobServerRegistry.unregisterJobExecutor(jobKey.getClusterName(), jobKey.getGroupName(), e.getContextPath());
+		} catch (UnavailableJobServiceException e) {
+			if (log.isWarnEnabled()) {
+				log.warn("Job: " + jobKey.toString() + " has no available resource to execute now.");
+			}
 			resetJobState();
-			log.warn("Job: " + jobKey.toString() + " is not available now.");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}

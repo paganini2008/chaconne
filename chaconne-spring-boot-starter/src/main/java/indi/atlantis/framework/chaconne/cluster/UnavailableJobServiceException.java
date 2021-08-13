@@ -19,17 +19,17 @@ import indi.atlantis.framework.chaconne.JobException;
 
 /**
  * 
- * NoJobResourceException
+ * UnavailableJobServiceException
  * 
  * @author Fred Feng
  *
  * @since 2.0.1
  */
-public class NoJobResourceException extends JobException {
-	
+public class UnavailableJobServiceException extends JobException {
+
 	private static final long serialVersionUID = 3321347517738601224L;
-	
-	public NoJobResourceException(String clusterName) {
+
+	public UnavailableJobServiceException(String clusterName) {
 		super(clusterName);
 	}
 

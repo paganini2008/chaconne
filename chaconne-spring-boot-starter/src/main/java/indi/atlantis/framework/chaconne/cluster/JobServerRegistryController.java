@@ -40,9 +40,9 @@ public class JobServerRegistryController {
 	@Autowired
 	private JobServerRegistry jobServerRegistry;
 
-	@PostMapping("/registerCluster")
-	public ResponseEntity<Result<Boolean>> registerCluster(@RequestBody ApplicationInfo applicationInfo) {
-		jobServerRegistry.registerCluster(applicationInfo);
+	@PostMapping("/registerJobExecutor")
+	public ResponseEntity<Result<Boolean>> registerJobExecutor(@RequestBody ApplicationInfo applicationInfo) {
+		jobServerRegistry.registerJobExecutor(applicationInfo);
 		return ResponseEntity.ok(Result.success(Boolean.TRUE));
 	}
 

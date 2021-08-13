@@ -15,6 +15,8 @@
 */
 package indi.atlantis.framework.chaconne.cluster;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
@@ -24,6 +26,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.github.paganini2008.devtools.ArrayUtils;
+import com.github.paganini2008.devtools.multithreads.RetryableTimer;
 
 import indi.atlantis.framework.chaconne.DependencyType;
 import indi.atlantis.framework.chaconne.ForkJoinJobListener;
@@ -48,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2.0.1
  */
 @Slf4j
-public class ConsumerModeStarterListener implements ApplicationListener<ApplicationClusterRefreshedEvent> {
+public class ConsumerModeStarterListener extends RestClientRetryable implements ApplicationListener<ApplicationClusterRefreshedEvent> {
 
 	@Value("${spring.application.cluster.name}")
 	private String clusterName;
@@ -64,45 +67,47 @@ public class ConsumerModeStarterListener implements ApplicationListener<Applicat
 
 	@Autowired
 	private JobListenerContainer jobListenerContainer;
+	
+	@Autowired
+	private RetryableTimer retryableTimer;
 
 	@Override
 	public void onApplicationEvent(ApplicationClusterRefreshedEvent event) {
-		registerCluster();
+		retryableTimer.executeAndRetryWithFixedDelay(this, DEFAULT_RETRY_INTERVAL, TimeUnit.SECONDS);
+	}
 
+	@Override
+	public void execute() throws Throwable {
+		registerJobAdmin();
 		handleParallelDependencies();
 	}
 
-	private void registerCluster() {
+	private void registerJobAdmin() throws Exception {
 		final ApplicationInfo applicationInfo = instanceId.getApplicationInfo();
-		ResponseEntity<Result<Boolean>> responseEntity = restTemplate.perform(null, "/job/admin/registerCluster", HttpMethod.POST,
+		ResponseEntity<Result<Boolean>> responseEntity = restTemplate.perform("", "/job/admin/registerJobExecutor", HttpMethod.POST,
 				applicationInfo, new ParameterizedTypeReference<Result<Boolean>>() {
 				});
 		if (responseEntity.getStatusCode() == HttpStatus.OK && responseEntity.getBody().getData()) {
-			log.info("'{}' register to job producer ok.", applicationInfo);
+			log.info("'{}' register to job admin ok.", applicationInfo);
 		}
 	}
 
-	private void handleParallelDependencies() {
+	private void handleParallelDependencies() throws Exception {
 		JobKeyQuery jobQuery = new JobKeyQuery();
 		jobQuery.setClusterName(clusterName);
 		jobQuery.setTriggerType(TriggerType.DEPENDENT);
-		try {
-			JobKey[] jobKeys = jobManager.getJobKeys(jobQuery);
-			if (ArrayUtils.isNotEmpty(jobKeys)) {
-				JobKey[] dependentKeys;
-				for (JobKey jobKey : jobKeys) {
-					// add listener to watch parallel dependency job done
-					dependentKeys = jobManager.getDependentKeys(jobKey, DependencyType.PARALLEL);
-					if (ArrayUtils.isNotEmpty(dependentKeys)) {
-						for (JobKey dependency : dependentKeys) {
-							jobListenerContainer.addListener(dependency,
-									ApplicationContextUtils.instantiateClass(ForkJoinJobListener.class));
-						}
+		JobKey[] jobKeys = jobManager.getJobKeys(jobQuery);
+		if (ArrayUtils.isNotEmpty(jobKeys)) {
+			JobKey[] dependentKeys;
+			for (JobKey jobKey : jobKeys) {
+				// add listener to watch parallel dependency job done
+				dependentKeys = jobManager.getDependentKeys(jobKey, DependencyType.PARALLEL);
+				if (ArrayUtils.isNotEmpty(dependentKeys)) {
+					for (JobKey dependency : dependentKeys) {
+						jobListenerContainer.addListener(dependency, ApplicationContextUtils.instantiateClass(ForkJoinJobListener.class));
 					}
 				}
 			}
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
 		}
 	}
 
