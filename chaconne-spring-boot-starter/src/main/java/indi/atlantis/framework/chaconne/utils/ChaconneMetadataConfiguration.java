@@ -15,19 +15,24 @@
 */
 package indi.atlantis.framework.chaconne.utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.sql.DataSource;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.github.paganini2008.springdessert.reditools.common.EnableRedisClient;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -39,37 +44,41 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2.0.1
  */
 @Slf4j
-@EnableRedisClient
 @Configuration(proxyBeanMethods = false)
 public class ChaconneMetadataConfiguration {
 
+	@ConfigurationProperties(prefix = "atlantis.framework.chaconne.datasource")
+	@Getter
 	@Setter
-	@Configuration(proxyBeanMethods = false)
-	@ConfigurationProperties(prefix = "spring.datasource")
-	@ConditionalOnClass(HikariDataSource.class)
-	@ConditionalOnMissingBean(DataSource.class)
-	public static class DataSourceConfiguration {
-
+	@ToString
+	public static class DataSourceSettings {
 		private String jdbcUrl;
 		private String username;
 		private String password;
 		private String driverClassName;
 		private int maxPoolSize = 16;
 
-		private HikariConfig getDbConfig() {
+		private Map<String, String> settings = new HashMap<String, String>();
+	}
+
+	@Configuration(proxyBeanMethods = false)
+	@ConditionalOnClass(HikariDataSource.class)
+	@EnableConfigurationProperties(ChaconneMetadataConfiguration.DataSourceSettings.class)
+	@ConditionalOnMissingBean(DataSource.class)
+	public static class HikariDataSourceConfiguration {
+
+		private HikariConfig getDbConfig(DataSourceSettings dataSourceSettings) {
+
 			if (log.isTraceEnabled()) {
-				log.trace("HikariDataSource JdbcUrl: " + jdbcUrl);
-				log.trace("HikariDataSource Username: " + username);
-				log.trace("HikariDataSource Password: " + password);
-				log.trace("HikariDataSource DriverClassName: " + driverClassName);
+				log.trace("HikariDataSource DataSourceSettings: " + dataSourceSettings);
 			}
 			final HikariConfig config = new HikariConfig();
-			config.setDriverClassName(driverClassName);
-			config.setJdbcUrl(jdbcUrl);
-			config.setUsername(username);
-			config.setPassword(password);
+			config.setDriverClassName(dataSourceSettings.getDriverClassName());
+			config.setJdbcUrl(dataSourceSettings.getJdbcUrl());
+			config.setUsername(dataSourceSettings.getUsername());
+			config.setPassword(dataSourceSettings.getPassword());
 			config.setMinimumIdle(1);
-			config.setMaximumPoolSize(maxPoolSize);
+			config.setMaximumPoolSize(dataSourceSettings.getMaxPoolSize());
 			config.setMaxLifetime(3 * 60 * 1000);
 			config.setIdleTimeout(60 * 1000);
 			config.setValidationTimeout(3000);
@@ -86,8 +95,8 @@ public class ChaconneMetadataConfiguration {
 		}
 
 		@Bean
-		public DataSource dataSource() {
-			return new HikariDataSource(getDbConfig());
+		public DataSource dataSource(DataSourceSettings dataSourceSettings) {
+			return new HikariDataSource(getDbConfig(dataSourceSettings));
 		}
 
 	}

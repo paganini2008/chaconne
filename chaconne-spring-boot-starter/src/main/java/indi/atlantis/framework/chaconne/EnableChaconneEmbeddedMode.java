@@ -37,6 +37,6 @@ import indi.atlantis.framework.tridenter.EnableApplicationCluster;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @EnableApplicationCluster(enableLeaderElection = true, enableMonitor = true)
-@Import(EmbeddedModeConfiguration.class)
+@Import({ EmbeddedModeConfiguration.class})
 public @interface EnableChaconneEmbeddedMode {
 }

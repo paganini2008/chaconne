@@ -29,6 +29,7 @@ import com.github.paganini2008.devtools.StringUtils;
 import com.github.paganini2008.devtools.date.Duration;
 import com.github.paganini2008.devtools.proxy.Aspect;
 import com.github.paganini2008.devtools.reflection.MethodUtils;
+import com.github.paganini2008.springdessert.reditools.RedisComponentNames;
 import com.github.paganini2008.springdessert.reditools.common.RedisCountDownLatch;
 
 import indi.atlantis.framework.chaconne.model.JobDetail;
@@ -68,6 +69,7 @@ public class ForkJoinJobExecutor implements Aspect {
 	private JobBeanLoader externalJobBeanLoader;
 
 	@Autowired
+	@Qualifier(RedisComponentNames.REDIS_TEMPLATE)
 	private RedisTemplate<String, Object> redisTemplate;
 
 	@Autowired
