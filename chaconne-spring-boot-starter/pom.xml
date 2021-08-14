@@ -13,6 +13,7 @@
 
 	<name>chaconne-spring-boot-starter</name>
 	<url>https://github.com/paganini2008/chaconne</url>
+	<description>Distributed task scheduling application framework</description>
 
 	<dependencies>
 
