@@ -34,6 +34,7 @@ import indi.atlantis.framework.chaconne.cluster.EnableChaconneDetachedMode;
  *
  * @since 2.0.1
  */
+@Deprecated
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

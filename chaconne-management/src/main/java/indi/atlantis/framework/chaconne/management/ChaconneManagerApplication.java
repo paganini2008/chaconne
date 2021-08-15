@@ -23,7 +23,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.github.paganini2008.devtools.Env;
 import com.github.paganini2008.devtools.io.FileUtils;
 
-import indi.atlantis.framework.chaconne.utils.ChaconneAdmin;
+import indi.atlantis.framework.chaconne.cluster.DetachedMode;
+import indi.atlantis.framework.chaconne.cluster.EnableChaconneDetachedMode;
 
 /**
  * 
@@ -33,7 +34,7 @@ import indi.atlantis.framework.chaconne.utils.ChaconneAdmin;
  *
  * @since 2.0.1
  */
-@ChaconneAdmin
+@EnableChaconneDetachedMode(DetachedMode.PRODUCER)
 @SpringBootApplication
 public class ChaconneManagerApplication {
 

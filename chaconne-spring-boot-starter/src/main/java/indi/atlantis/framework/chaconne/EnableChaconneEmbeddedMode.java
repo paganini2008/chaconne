@@ -23,6 +23,7 @@ import java.lang.annotation.Target;
 
 import org.springframework.context.annotation.Import;
 
+import indi.atlantis.framework.chaconne.utils.ChaconneMetadataConfiguration;
 import indi.atlantis.framework.tridenter.EnableApplicationCluster;
 
 /**
@@ -37,6 +38,6 @@ import indi.atlantis.framework.tridenter.EnableApplicationCluster;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @EnableApplicationCluster(enableLeaderElection = true, enableMonitor = true)
-@Import({ EmbeddedModeConfiguration.class})
+@Import({ EmbeddedModeConfiguration.class, ChaconneMetadataConfiguration.class })
 public @interface EnableChaconneEmbeddedMode {
 }
