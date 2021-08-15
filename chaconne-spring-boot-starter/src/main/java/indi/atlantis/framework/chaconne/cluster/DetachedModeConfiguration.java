@@ -94,6 +94,7 @@ import indi.atlantis.framework.chaconne.StopWatch;
 import indi.atlantis.framework.chaconne.TimeBasedTraceIdGenerator;
 import indi.atlantis.framework.chaconne.TraceIdGenerator;
 import indi.atlantis.framework.chaconne.cron4j.Cron4jScheduler;
+import indi.atlantis.framework.chaconne.utils.ChaconneMetadataConfiguration;
 import indi.atlantis.framework.chaconne.utils.JavaMailService;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -163,7 +164,8 @@ public class DetachedModeConfiguration {
 	}
 
 	@Configuration(proxyBeanMethods = false)
-	@Import({ JobServerRegistryController.class, JobManagerController.class, JobAdminController.class })
+	@Import({ ChaconneMetadataConfiguration.class, JobServerRegistryController.class, JobManagerController.class,
+			JobAdminController.class })
 	@DaoScan(basePackages = "indi.atlantis.framework.chaconne")
 	@ConditionalOnDetachedMode(DetachedMode.PRODUCER)
 	public static class ProducerModeConfig {
