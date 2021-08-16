@@ -21,8 +21,8 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.sql.DataSource;
 
+import com.github.paganini2008.devtools.jdbc.ConnectionFactory;
 import com.github.paganini2008.devtools.jdbc.JdbcUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -38,10 +38,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CreateDroppedSchemaUpdater implements SchemaUpdater {
 
-	private final DataSource dataSource;
+	private final ConnectionFactory connectionFactory;
 
-	public CreateDroppedSchemaUpdater(DataSource dataSource) {
-		this.dataSource = dataSource;
+	public CreateDroppedSchemaUpdater(ConnectionFactory connectionFactory) {
+		this.connectionFactory = connectionFactory;
 	}
 
 	@PostConstruct
@@ -49,7 +49,7 @@ public class CreateDroppedSchemaUpdater implements SchemaUpdater {
 	public void onCluserOnline() throws Exception {
 		Connection connection = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = connectionFactory.getConnection();
 			for (Map.Entry<String, String> entry : new HashMap<String, String>(DdlScripts.CreateScripts.ddls()).entrySet()) {
 				if (!JdbcUtils.existsTable(connection, null, entry.getKey())) {
 					JdbcUtils.update(connection, entry.getValue());
@@ -67,7 +67,7 @@ public class CreateDroppedSchemaUpdater implements SchemaUpdater {
 	public void onClusterOffline() {
 		Connection connection = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = connectionFactory.getConnection();
 			for (Map.Entry<String, String> entry : new HashMap<String, String>(DdlScripts.DropScripts.ddls()).entrySet()) {
 				if (JdbcUtils.existsTable(connection, null, entry.getKey())) {
 					JdbcUtils.update(connection, entry.getValue());

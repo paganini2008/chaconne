@@ -15,12 +15,11 @@
 */
 package indi.atlantis.framework.chaconne;
 
+import java.sql.SQLException;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-
-import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,6 +42,8 @@ import org.springframework.util.ErrorHandler;
 
 import com.github.paganini2008.devtools.cron4j.TaskExecutor;
 import com.github.paganini2008.devtools.cron4j.ThreadPoolTaskExecutor;
+import com.github.paganini2008.devtools.jdbc.DataSourceFactory;
+import com.github.paganini2008.devtools.jdbc.PooledConnectionFactory;
 import com.github.paganini2008.devtools.multithreads.PooledThreadFactory;
 import com.github.paganini2008.devtools.multithreads.ThreadPoolBuilder;
 import com.github.paganini2008.springdesert.fastjdbc.annotations.DaoScan;
@@ -215,9 +216,10 @@ public class EmbeddedModeConfiguration {
 		return new EmbeddedModeStarterListener();
 	}
 
+	@ConditionalOnMissingBean
 	@Bean
-	public SchemaUpdater schemaUpdater(DataSource dataSource) {
-		return new CreatedSchemaUpdater(dataSource);
+	public SchemaUpdater schemaUpdater(DataSourceFactory dataSourceFactory) throws SQLException {
+		return new CreatedSchemaUpdater(new PooledConnectionFactory(dataSourceFactory.getDataSource()));
 	}
 
 	@DependsOn("schemaUpdater")

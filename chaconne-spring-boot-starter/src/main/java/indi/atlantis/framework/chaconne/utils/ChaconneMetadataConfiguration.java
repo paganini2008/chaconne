@@ -15,20 +15,20 @@
 */
 package indi.atlantis.framework.chaconne.utils;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.github.paganini2008.devtools.jdbc.DataSourceFactory;
+import com.github.paganini2008.devtools.jdbc.SingletonDataSoruceFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -46,7 +46,6 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2.0.4
  */
 @Slf4j
-@AutoConfigureAfter(DataSourceAutoConfiguration.class)
 @Configuration(proxyBeanMethods = false)
 public class ChaconneMetadataConfiguration {
 
@@ -64,14 +63,22 @@ public class ChaconneMetadataConfiguration {
 		private Map<String, String> settings = new HashMap<String, String>();
 	}
 
+	/**
+	 * 
+	 * DefaultDataSourceConfiguration
+	 *
+	 * @author Fred Feng
+	 *
+	 * @since 2.0.4
+	 */
 	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnClass(HikariDataSource.class)
 	@EnableConfigurationProperties(ChaconneMetadataConfiguration.DataSourceSettings.class)
-	@ConditionalOnMissingBean(DataSource.class)
 	public static class DefaultDataSourceConfiguration {
 
+		@ConditionalOnMissingBean(name = "chaconneDataSourceConfig")
 		@Bean
-		public HikariConfig hikariConfig(DataSourceSettings dataSourceSettings) {
+		public HikariConfig chaconneDataSourceConfig(DataSourceSettings dataSourceSettings) {
 
 			if (log.isTraceEnabled()) {
 				log.trace("HikariDataSource DataSourceSettings: " + dataSourceSettings);
@@ -98,9 +105,33 @@ public class ChaconneMetadataConfiguration {
 			return config;
 		}
 
-		@Bean
-		public DataSource dataSource(DataSourceSettings dataSourceSettings) {
-			return new HikariDataSource(hikariConfig(dataSourceSettings));
+		@Bean(destroyMethod = "close")
+		public DataSourceFactory chaconneDataSourceFactory(@Qualifier("chaconneDataSourceConfig") HikariConfig hikariConfig) {
+			HikariDataSource dataSource = new HikariDataSource(hikariConfig);
+			return new ChaconneDataSourceFactory(dataSource);
+		}
+
+	}
+
+	/**
+	 * 
+	 * ChaconneDataSourceFactory
+	 *
+	 * @author Fred Feng
+	 *
+	 * @since 2.0.4
+	 */
+	public static class ChaconneDataSourceFactory extends SingletonDataSoruceFactory {
+
+		ChaconneDataSourceFactory(HikariDataSource dataSource) {
+			super(dataSource);
+		}
+
+		public void close() {
+			try {
+				((HikariDataSource) getDataSource()).close();
+			} catch (SQLException ignored) {
+			}
 		}
 
 	}

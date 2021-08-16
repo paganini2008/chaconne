@@ -15,12 +15,11 @@
 */
 package indi.atlantis.framework.chaconne.cluster;
 
+import java.sql.SQLException;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-
-import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,6 +43,8 @@ import org.springframework.util.ErrorHandler;
 
 import com.github.paganini2008.devtools.cron4j.TaskExecutor;
 import com.github.paganini2008.devtools.cron4j.ThreadPoolTaskExecutor;
+import com.github.paganini2008.devtools.jdbc.DataSourceFactory;
+import com.github.paganini2008.devtools.jdbc.PooledConnectionFactory;
 import com.github.paganini2008.devtools.multithreads.PooledThreadFactory;
 import com.github.paganini2008.devtools.multithreads.RetryableTimer;
 import com.github.paganini2008.devtools.multithreads.ThreadPoolBuilder;
@@ -170,9 +171,10 @@ public class DetachedModeConfiguration {
 	@ConditionalOnDetachedMode(DetachedMode.PRODUCER)
 	public static class ProducerModeConfig {
 
+		@ConditionalOnMissingBean
 		@Bean
-		public SchemaUpdater schemaUpdater(DataSource dataSource) {
-			return new CreatedSchemaUpdater(dataSource);
+		public SchemaUpdater schemaUpdater(DataSourceFactory dataSourceFactory) throws SQLException {
+			return new CreatedSchemaUpdater(new PooledConnectionFactory(dataSourceFactory.getDataSource()));
 		}
 
 		@DependsOn("schemaUpdater")

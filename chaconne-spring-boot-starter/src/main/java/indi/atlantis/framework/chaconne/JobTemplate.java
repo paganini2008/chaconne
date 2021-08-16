@@ -115,7 +115,7 @@ public abstract class JobTemplate implements JobExecutor, BeanLifeCycle {
 				});
 				if (job.getTimeout() > 0) {
 					result = future.get(job.getTimeout(), TimeUnit.MILLISECONDS);
-				} else {
+				} else if (job.getTimeout() < 0) {
 					result = future.get();
 				}
 			} else {

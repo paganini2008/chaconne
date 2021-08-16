@@ -19,6 +19,7 @@ import java.io.File;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 import com.github.paganini2008.devtools.Env;
 import com.github.paganini2008.devtools.io.FileUtils;
@@ -35,7 +36,7 @@ import indi.atlantis.framework.chaconne.cluster.EnableChaconneDetachedMode;
  * @since 2.0.1
  */
 @EnableChaconneDetachedMode(DetachedMode.PRODUCER)
-@SpringBootApplication
+@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 public class ChaconneManagerApplication {
 
 	static {
