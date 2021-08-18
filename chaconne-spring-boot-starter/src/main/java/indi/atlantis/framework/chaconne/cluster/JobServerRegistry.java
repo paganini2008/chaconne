@@ -57,6 +57,7 @@ public class JobServerRegistry implements BeanLifeCycle {
 		kwargs.put("clusterName", applicationInfo.getClusterName());
 		kwargs.put("groupName", applicationInfo.getApplicationName());
 		kwargs.put("instanceId", applicationInfo.getId());
+		kwargs.put("leader", applicationInfo.isLeader() ? 1 : 0);
 		kwargs.put("contextPath", applicationInfo.getApplicationContextPath());
 		kwargs.put("startDate", new Timestamp(applicationInfo.getStartTime()));
 		Contact contact = applicationInfo.getContact();

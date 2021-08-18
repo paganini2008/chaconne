@@ -42,7 +42,7 @@ public interface JobQueryDao {
 	public static final String DEF_SELECT_CLUSTER_NAME = "select distinct cluster_name from chac_job_server_detail";
 	public static final String DEF_SELECT_JOB_SERVER_DETAIL = "select * from chac_job_server_detail where cluster_name=:clusterName @sql";
 	public static final String DEF_SELECT_JOB_SERVER_EXISTS = "select count(*) from chac_job_server_detail where cluster_name=:clusterName and group_name=:groupName and context_path=:contextPath";
-	public static final String DEF_SELECT_CONTEXT_PATH = "select distinct context_path from chac_job_server_detail where cluster_name=:clusterName order by start_date asc";
+	public static final String DEF_SELECT_CONTEXT_PATH = "select distinct context_path from chac_job_server_detail where cluster_name=:clusterName order by leader desc";
 	public static final String DEF_SELECT_ALL_JOB_DETAIL = "select * from chac_job_detail";
 	public static final String DEF_SELECT_JOB_DETAIL_BY_CLUSTER_NAMES = "select * from chac_job_detail where cluster_name in (:clusterNames)";
 	public static final String DEF_SELECT_JOB_DETAIL_BY_GROUP_NAMES = "select * from chac_job_detail where group_name in (:groupNames)";

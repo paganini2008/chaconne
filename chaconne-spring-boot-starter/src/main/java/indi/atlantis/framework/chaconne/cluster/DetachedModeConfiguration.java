@@ -20,6 +20,7 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,6 +44,7 @@ import org.springframework.util.ErrorHandler;
 
 import com.github.paganini2008.devtools.cron4j.TaskExecutor;
 import com.github.paganini2008.devtools.cron4j.ThreadPoolTaskExecutor;
+import com.github.paganini2008.devtools.date.DateUtils;
 import com.github.paganini2008.devtools.jdbc.DataSourceFactory;
 import com.github.paganini2008.devtools.jdbc.PooledConnectionFactory;
 import com.github.paganini2008.devtools.multithreads.PooledThreadFactory;
@@ -303,6 +305,11 @@ public class DetachedModeConfiguration {
 			return new DetachedModeJobTimeoutResolver();
 		}
 
+		@Bean
+		public ContextPathAccessor contextPathAccessor() {
+			return new ContextPathAccessor();
+		}
+
 	}
 
 	@Configuration(proxyBeanMethods = false)
@@ -393,12 +400,18 @@ public class DetachedModeConfiguration {
 			return new PrintableMailContentSource();
 		}
 
-		@ConditionalOnMissingBean(name = "executorThreadPool")
-		@Bean("executorThreadPool")
-		public Executor schedulerExecutorThreadPool(
-				@Value("${atlantis.framework.chaconne.scheduler.executor.poolSize:16}") int maxPoolSize) {
+		@ConditionalOnMissingBean(name = ChaconneBeanNames.EXECUTOR_THREAD_POOL)
+		@Bean(name = ChaconneBeanNames.EXECUTOR_THREAD_POOL, destroyMethod = "shutdown")
+		public Executor executorThreadPool(@Value("${atlantis.framework.chaconne.scheduler.executor.poolSize:16}") int maxPoolSize) {
 			return ThreadPoolBuilder.common(maxPoolSize).setMaxPermits(maxPoolSize * 2).setTimeout(-1L)
 					.setThreadFactory(new PooledThreadFactory("scheduler-executor-threads")).build();
+		}
+
+		@Bean
+		public ContextPathAccessor contextPathAccessor() {
+			ContextPathAccessor contextPathAccessor = new ContextPathAccessor();
+			contextPathAccessor.setCheckWindowTime(DateUtils.convertToMillis(1, TimeUnit.MINUTES));
+			return contextPathAccessor;
 		}
 
 	}
@@ -409,7 +422,7 @@ public class DetachedModeConfiguration {
 	public static class MasterSlaveConfig {
 
 		@Bean(ChaconneBeanNames.MAIN_JOB_EXECUTOR)
-		public JobExecutor jobExecutor(@Qualifier("executorThreadPool") Executor threadPool) {
+		public JobExecutor jobExecutor(@Qualifier(ChaconneBeanNames.EXECUTOR_THREAD_POOL) Executor threadPool) {
 			ConsumerModeJobExecutor jobExecutor = new ConsumerModeJobExecutor();
 			jobExecutor.setThreadPool(threadPool);
 			return jobExecutor;
@@ -423,6 +436,13 @@ public class DetachedModeConfiguration {
 		@Bean
 		public RetryPolicy retryPolicy() {
 			return new CurrentThreadRetryPolicy();
+		}
+
+		@ConditionalOnMissingBean(name = ChaconneBeanNames.MAIN_THREAD_POOL)
+		@Bean(name = ChaconneBeanNames.MAIN_THREAD_POOL, destroyMethod = "shutdown")
+		public Executor mainThreadPool(@Value("${atlantis.framework.chaconne.scheduler.poolSize:16}") int maxPoolSize) {
+			return ThreadPoolBuilder.common(maxPoolSize).setTimeout(-1L).setThreadFactory(new PooledThreadFactory("scheduler-main-threads"))
+					.build();
 		}
 	}
 
@@ -447,7 +467,7 @@ public class DetachedModeConfiguration {
 		}
 
 		@Bean(ChaconneBeanNames.TARGET_JOB_EXECUTOR)
-		public JobExecutor consumerModeJobExecutor(@Qualifier("executorThreadPool") Executor threadPool) {
+		public JobExecutor targetJobExecutor(@Qualifier(ChaconneBeanNames.EXECUTOR_THREAD_POOL) Executor threadPool) {
 			ConsumerModeJobExecutor jobExecutor = new ConsumerModeJobExecutor();
 			jobExecutor.setThreadPool(threadPool);
 			return jobExecutor;

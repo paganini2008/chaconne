@@ -29,7 +29,7 @@ public abstract class DdlScripts {
 
 	public static abstract class CreateScripts {
 
-		static final String DEF_DDL_JOB_SERVER_DETAIL = "create table chac_job_server_detail(id int primary key auto_increment, cluster_name varchar(45) not null, group_name varchar(45) not null, instance_id varchar(255) not null, context_path varchar(255) not null, start_date timestamp not null, contact_person varchar(45), contact_email varchar(255))";
+		static final String DEF_DDL_JOB_SERVER_DETAIL = "create table chac_job_server_detail(id int primary key auto_increment, cluster_name varchar(45) not null, group_name varchar(45) not null, instance_id varchar(255) not null, leader int, context_path varchar(255) not null, start_date timestamp not null, contact_person varchar(45), contact_email varchar(255))";
 		static final String DEF_DDL_JOB_DETAIL = "create table chac_job_detail(job_id int primary key auto_increment, cluster_name varchar(45) not null, group_name varchar(45) not null, job_name varchar(255) not null, job_class_name varchar(255) not null, description varchar(255), attachment varchar(255), email varchar(45), retries int, weight int, timeout bigint, create_date timestamp)";
 		static final String DEF_DDL_JOB_TRIGGER_DETAIL = "create table chac_job_trigger_detail(job_id int not null, trigger_type int not null, trigger_description text not null, start_date timestamp, end_date timestamp, repeat_count int)";
 		static final String DEF_DDL_JOB_RUNTIME_DETAIL = "create table chac_job_runtime_detail(job_id int not null, job_state int not null, last_running_state int, last_execution_time timestamp, last_completion_time timestamp, next_execution_time timestamp)";

@@ -15,6 +15,7 @@
 */
 package indi.atlantis.framework.chaconne.cluster;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.ClientHttpRequestFactory;
 
@@ -34,10 +35,24 @@ public class ClientModeClusterRestTemplate extends ClusterRestTemplate {
 
 	@Value("${atlantis.framework.chaconne.producer.location}")
 	private String contextPaths;
+	
+	@Autowired
+	private ContextPathAccessor contextPathAccessor;
 
 	@Override
 	protected String[] getClusterContextPaths(String clusterName) {
 		return this.contextPaths.split(",");
+	}
+	
+	
+	@Override
+	protected boolean canAccessContextPath(String contextPath) {
+		return contextPathAccessor.canAccess(contextPath);
+	}
+
+	@Override
+	protected void invalidateContextPath(String contextPath) {
+		contextPathAccessor.watchContextPath(contextPath);
 	}
 
 }

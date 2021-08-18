@@ -52,4 +52,9 @@ public class ClientModeConfiguration {
 	public JobAdmin jobAdmin() {
 		return new RestJobAdmin();
 	}
+
+	@Bean
+	public ContextPathAccessor contextPathAccessor() {
+		return new ContextPathAccessor();
+	}
 }

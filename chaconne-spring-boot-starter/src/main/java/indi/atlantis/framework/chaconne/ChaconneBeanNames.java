@@ -36,5 +36,9 @@ public abstract class ChaconneBeanNames {
 	public static final String EXTERNAL_JOB_BEAN_LOADER = "chaconne:external-job-bean-loader";
 
 	public static final String SCHEDULER_ERROR_HANDLER = "chaconne:scheduler-error-handler";
+	
+	public static final String MAIN_THREAD_POOL = "chaconne:main-thread-pool";
+
+	public static final String EXECUTOR_THREAD_POOL = "chaconne:executor-thread-pool";
 
 }

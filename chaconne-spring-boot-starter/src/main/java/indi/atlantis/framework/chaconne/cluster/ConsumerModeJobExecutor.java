@@ -16,18 +16,21 @@
 package indi.atlantis.framework.chaconne.cluster;
 
 import java.util.Date;
+import java.util.concurrent.Executor;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
+import indi.atlantis.framework.chaconne.ChaconneBeanNames;
 import indi.atlantis.framework.chaconne.DependencyType;
 import indi.atlantis.framework.chaconne.Job;
 import indi.atlantis.framework.chaconne.JobException;
 import indi.atlantis.framework.chaconne.JobExecutor;
 import indi.atlantis.framework.chaconne.JobKey;
+import indi.atlantis.framework.chaconne.JobListenerContainer;
 import indi.atlantis.framework.chaconne.JobLoggerFactory;
 import indi.atlantis.framework.chaconne.JobManager;
-import indi.atlantis.framework.chaconne.JobListenerContainer;
 import indi.atlantis.framework.chaconne.JobTemplate;
 import indi.atlantis.framework.chaconne.LogManager;
 import indi.atlantis.framework.chaconne.RetryPolicy;
@@ -68,6 +71,10 @@ public class ConsumerModeJobExecutor extends JobTemplate implements JobExecutor 
 	@Autowired
 	private JobListenerContainer jobListenerContainer;
 
+	@Qualifier(ChaconneBeanNames.MAIN_THREAD_POOL)
+	@Autowired(required = false)
+	private Executor mainThreadPool;
+
 	@Autowired(required = false)
 	private JavaMailService mailService;
 
@@ -80,7 +87,13 @@ public class ConsumerModeJobExecutor extends JobTemplate implements JobExecutor 
 
 	@Override
 	public void execute(Job job, Object attachment, int retries) {
-		runJob(job, attachment, retries);
+		if (mainThreadPool != null) {
+			mainThreadPool.execute(() -> {
+				runJob(job, attachment, retries);
+			});
+		} else {
+			runJob(job, attachment, retries);
+		}
 	}
 
 	@Override

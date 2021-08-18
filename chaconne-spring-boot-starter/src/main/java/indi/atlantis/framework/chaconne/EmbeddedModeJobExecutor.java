@@ -16,9 +16,11 @@
 package indi.atlantis.framework.chaconne;
 
 import java.util.Date;
+import java.util.concurrent.Executor;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.github.paganini2008.devtools.StringUtils;
 
@@ -58,6 +60,10 @@ public class EmbeddedModeJobExecutor extends JobTemplate implements JobExecutor 
 	@Autowired
 	private JobListenerContainer jobListenerContainer;
 
+	@Qualifier(ChaconneBeanNames.MAIN_THREAD_POOL)
+	@Autowired
+	private Executor mainThreadPool;
+
 	@Autowired(required = false)
 	private JavaMailService mailService;
 
@@ -77,7 +83,9 @@ public class EmbeddedModeJobExecutor extends JobTemplate implements JobExecutor 
 
 	@Override
 	public void execute(Job job, Object attachment, int retries) {
-		runJob(job, attachment, retries);
+		mainThreadPool.execute(() -> {
+			runJob(job, attachment, retries);
+		});
 	}
 
 	@Override

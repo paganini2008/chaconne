@@ -83,7 +83,7 @@ public class EmbeddedModeConfiguration {
 		}
 
 		@Bean(ChaconneBeanNames.TARGET_JOB_EXECUTOR)
-		public JobExecutor consumerModeJobExecutor(@Qualifier("executorThreadPool") Executor threadPool) {
+		public JobExecutor targetJobExecutor(@Qualifier(ChaconneBeanNames.EXECUTOR_THREAD_POOL) Executor threadPool) {
 			ConsumerModeJobExecutor jobExecutor = new ConsumerModeJobExecutor();
 			jobExecutor.setThreadPool(threadPool);
 			return jobExecutor;
@@ -121,7 +121,7 @@ public class EmbeddedModeConfiguration {
 		}
 
 		@Bean(ChaconneBeanNames.MAIN_JOB_EXECUTOR)
-		public JobExecutor jobExecutor(@Qualifier("executorThreadPool") Executor threadPool) {
+		public JobExecutor jobExecutor(@Qualifier(ChaconneBeanNames.EXECUTOR_THREAD_POOL) Executor threadPool) {
 			EmbeddedModeJobExecutor jobExecutor = new EmbeddedModeJobExecutor();
 			jobExecutor.setThreadPool(threadPool);
 			return jobExecutor;
@@ -131,11 +131,18 @@ public class EmbeddedModeConfiguration {
 		public RetryPolicy retryPolicy() {
 			return new CurrentThreadRetryPolicy();
 		}
+
+		@ConditionalOnMissingBean(name = ChaconneBeanNames.MAIN_THREAD_POOL)
+		@Bean(name = ChaconneBeanNames.MAIN_THREAD_POOL, destroyMethod = "shutdown")
+		public Executor mainThreadPool(@Value("${atlantis.framework.chaconne.scheduler.poolSize:16}") int maxPoolSize) {
+			return ThreadPoolBuilder.common(maxPoolSize).setTimeout(-1L).setThreadFactory(new PooledThreadFactory("scheduler-main-threads"))
+					.build();
+		}
 	}
 
-	@ConditionalOnMissingBean(name = "executorThreadPool")
-	@Bean("executorThreadPool")
-	public Executor schedulerExecutorThreadPool(@Value("${atlantis.framework.chaconne.scheduler.executor.poolSize:16}") int maxPoolSize) {
+	@ConditionalOnMissingBean(name = ChaconneBeanNames.EXECUTOR_THREAD_POOL)
+	@Bean(name = ChaconneBeanNames.EXECUTOR_THREAD_POOL, destroyMethod = "shutdown")
+	public Executor executorThreadPool(@Value("${atlantis.framework.chaconne.scheduler.executor.poolSize:16}") int maxPoolSize) {
 		return ThreadPoolBuilder.common(maxPoolSize).setMaxPermits(maxPoolSize * 2).setTimeout(-1L)
 				.setThreadFactory(new PooledThreadFactory("scheduler-executor-threads")).build();
 	}

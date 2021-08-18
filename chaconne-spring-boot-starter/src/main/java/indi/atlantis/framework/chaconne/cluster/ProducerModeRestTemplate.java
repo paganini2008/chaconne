@@ -16,7 +16,10 @@
 package indi.atlantis.framework.chaconne.cluster;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.ClientHttpRequestFactory;
+
+import com.github.paganini2008.devtools.ArrayUtils;
 
 /**
  * 
@@ -33,11 +36,33 @@ public class ProducerModeRestTemplate extends ClusterRestTemplate {
 	}
 
 	@Autowired
-	private JobServerRegistry clusterRegistry;
+	private JobServerRegistry serverRegistry;
+
+	@Value("${atlantis.framework.chaconne.scheduler.running.mode}")
+	private String runningMode;
+
+	@Autowired
+	private ContextPathAccessor contextPathAccessor;
 
 	@Override
 	protected String[] getClusterContextPaths(String clusterName) {
-		return clusterRegistry.getClusterContextPaths(clusterName);
+		String[] contextPaths = serverRegistry.getClusterContextPaths(clusterName);
+		if (ArrayUtils.isNotEmpty(contextPaths)) {
+			if ("master-slave".equals(runningMode)) {
+				contextPaths = new String[] { contextPaths[0] };
+			}
+		}
+		return contextPaths;
+	}
+
+	@Override
+	protected boolean canAccessContextPath(String contextPath) {
+		return contextPathAccessor.canAccess(contextPath);
+	}
+
+	@Override
+	protected void invalidateContextPath(String contextPath) {
+		contextPathAccessor.watchContextPath(contextPath);
 	}
 
 }

@@ -82,7 +82,11 @@ public abstract class ClusterRestTemplate extends RestTemplate {
 			String[] copy = contextPaths.clone();
 			String contextPath = null, url = null;
 			while (copy.length > 0) {
-				contextPath = selectContextPath(copy);
+				contextPath = selectContextPath(clusterName, copy);
+				if (!canAccessContextPath(contextPath)) {
+					copy = ArrayUtils.remove(copy, contextPath);
+					continue;
+				}
 				url = contextPath + path;
 				if (log.isTraceEnabled()) {
 					log.trace("Perform job with url: " + url);
@@ -92,12 +96,17 @@ public abstract class ClusterRestTemplate extends RestTemplate {
 				} catch (RestClientException e) {
 					reason = e;
 					copy = ArrayUtils.remove(copy, contextPath);
+					invalidateContextPath(contextPath);
 				}
 			}
-			throw new JobServiceAccessException(url, reason);
+			throw reason != null ? new JobServiceAccessException(url, reason)
+					: new JobServiceAccessException("Connection timeout: " + ArrayUtils.toString(contextPaths));
 		} else {
 			String url = null;
 			for (String contextPath : contextPaths) {
+				if (!canAccessContextPath(contextPath)) {
+					continue;
+				}
 				url = contextPath + path;
 				if (log.isTraceEnabled()) {
 					log.trace("Perform job with url: " + url);
@@ -106,16 +115,25 @@ public abstract class ClusterRestTemplate extends RestTemplate {
 					return super.exchange(url, method, new HttpEntity<Object>(body, getHttpHeaders()), responseType);
 				} catch (RestClientException e) {
 					reason = e;
+					invalidateContextPath(contextPath);
 				}
 			}
-			throw new JobServiceAccessException(url, reason);
+			throw reason != null ? new JobServiceAccessException(url, reason)
+					: new JobServiceAccessException("Connection timeout: " + ArrayUtils.toString(contextPaths));
 		}
 
 	}
 
 	protected abstract String[] getClusterContextPaths(String clusterName);
+	
+	protected boolean canAccessContextPath(String contextPath) {
+		return true;
+	}
+	
+	protected void invalidateContextPath(String contextPath) {
+	}
 
-	protected String selectContextPath(String[] contextPaths) {
+	protected String selectContextPath(String clusterName, String[] contextPaths) {
 		return contextPaths[(int) (counter.getAndIncrement() % contextPaths.length)];
 	}
 

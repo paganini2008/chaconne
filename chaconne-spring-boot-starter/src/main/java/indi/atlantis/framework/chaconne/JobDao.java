@@ -36,7 +36,7 @@ import com.github.paganini2008.springdesert.fastjdbc.annotations.Update;
 @Dao
 public interface JobDao {
 
-	public static final String DEF_INSERT_JOB_SERVER_DETAIL = "insert into chac_job_server_detail(cluster_name,group_name,instance_id,context_path,start_date,contact_person,contact_email) values (:clusterName,:groupName,:instanceId,:contextPath,:startDate,:contactPerson,:contactEmail)";
+	public static final String DEF_INSERT_JOB_SERVER_DETAIL = "insert into chac_job_server_detail(cluster_name,group_name,instance_id,leader,context_path,start_date,contact_person,contact_email) values (:clusterName,:groupName,:instanceId,:leader,:contextPath,:startDate,:contactPerson,:contactEmail)";
 	public static final String DEF_INSERT_JOB_DETAIL = "insert into chac_job_detail(cluster_name,group_name,job_name,job_class_name,description,attachment,email,retries,weight,timeout,create_date) values (:clusterName,:groupName,:jobName,:jobClassName,:description,:attachment,:email,:retries,:weight,:timeout,:createDate)";
 	public static final String DEF_INSERT_JOB_RUNTIME = "insert into chac_job_runtime_detail(job_id, job_state) values (:jobId, :jobState)";
 	public static final String DEF_INSERT_JOB_TRACE = "insert into chac_job_trace(trace_id,cluster_name,group_name,job_id,running_state,address,instance_id,completed,failed,skipped,finished,retries,execution_time,completion_time) values (:traceId,:clusterName,:groupName,:jobId,:runningState,:address,:instanceId,:completed,:failed,:skipped,:finished,:retries,:executionTime,:completionTime)";
