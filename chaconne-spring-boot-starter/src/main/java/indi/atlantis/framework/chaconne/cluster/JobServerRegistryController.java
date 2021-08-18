@@ -46,4 +46,11 @@ public class JobServerRegistryController {
 		return ResponseEntity.ok(Result.success(Boolean.TRUE));
 	}
 
+	@PostMapping("/hasRegistered")
+	public ResponseEntity<Result<Boolean>> hasRegistered(@RequestBody ApplicationInfo applicationInfo) {
+		boolean exists = jobServerRegistry.selectJobServerExists(applicationInfo.getClusterName(), applicationInfo.getApplicationName(),
+				applicationInfo.getApplicationContextPath());
+		return ResponseEntity.ok(Result.success(exists));
+	}
+
 }

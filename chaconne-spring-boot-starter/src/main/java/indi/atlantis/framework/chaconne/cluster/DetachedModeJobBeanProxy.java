@@ -92,7 +92,9 @@ public class DetachedModeJobBeanProxy implements Job {
 				log.warn(e.getMessage());
 			}
 			resetJobState();
-			jobServerRegistry.unregisterJobExecutor(jobKey.getClusterName(), jobKey.getGroupName(), e.getContextPath());
+			for (String contextPath : e.getContextPaths()) {
+				jobServerRegistry.unregisterJobExecutor(jobKey.getClusterName(), jobKey.getGroupName(), contextPath);
+			}
 		} catch (UnavailableJobServiceException e) {
 			if (log.isWarnEnabled()) {
 				log.warn("Job: " + jobKey.toString() + " has no available resource to execute now.");

@@ -63,18 +63,21 @@ public class JobServerRegistry implements BeanLifeCycle {
 		Contact contact = applicationInfo.getContact();
 		kwargs.put("contactPerson", contact.getName());
 		kwargs.put("contactEmail", contact.getEmail());
-		if (jobQueryDao.selectJobServerExists(applicationInfo.getClusterName(), applicationInfo.getApplicationName(),
-				applicationInfo.getApplicationContextPath()) == 0) {
+		if (selectJobServerExists(applicationInfo.getClusterName(), applicationInfo.getApplicationName(),
+				applicationInfo.getApplicationContextPath())) {
+			jobDao.updateJobServerDetail(kwargs);
+			log.info("Update registered job executor: {}", kwargs);
+		} else {
 			jobDao.saveJobServerDetail(kwargs);
-			log.info("Registered job executor: {}", kwargs);
+			log.info("Register new job executor: {}", kwargs);
 		}
 	}
 
-	public void unregisterJobExecutor(String clusterName, String groupName, String address) {
+	public void unregisterJobExecutor(String clusterName, String groupName, String contextPath) {
 		Map<String, Object> kwargs = new HashMap<String, Object>();
 		kwargs.put("clusterName", clusterName);
 		kwargs.put("groupName", groupName);
-		kwargs.put("contextPath", address);
+		kwargs.put("contextPath", contextPath);
 		jobDao.deleteJobServerDetail(kwargs);
 		log.info("Unregistered job executor: {}", kwargs);
 	}
@@ -82,6 +85,10 @@ public class JobServerRegistry implements BeanLifeCycle {
 	public String[] getClusterContextPaths(String clusterName) {
 		List<String> results = jobQueryDao.selectContextPath(clusterName);
 		return results.toArray(new String[0]);
+	}
+
+	public boolean selectJobServerExists(String clusterName, String groupName, String contextPath) {
+		return jobQueryDao.selectJobServerExists(clusterName, groupName, contextPath) > 0;
 	}
 
 }

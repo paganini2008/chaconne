@@ -15,13 +15,16 @@
 */
 package indi.atlantis.framework.chaconne.cluster;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.github.paganini2008.devtools.multithreads.RetryableTimer;
 
 import indi.atlantis.framework.chaconne.JobAdmin;
 import indi.atlantis.framework.chaconne.JobKey;
 import indi.atlantis.framework.chaconne.JobLifeCycle;
 import indi.atlantis.framework.chaconne.LifeCycleListenerContainer;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
@@ -31,21 +34,29 @@ import lombok.extern.slf4j.Slf4j;
  *
  * @since 2.0.1
  */
-@Slf4j
 public class DetachedModeLifeCycleListenerContainer extends LifeCycleListenerContainer {
 
 	@Autowired
 	private JobAdmin jobAdmin;
 
+	@Autowired
+	private RetryableTimer timer;
+
 	@Override
 	public void onChange(JobKey jobKey, JobLifeCycle lifeCycle) {
-		try {
-			jobAdmin.publicLifeCycleEvent(jobKey, lifeCycle);
-		} catch (UnavailableJobServiceException e) {
-			log.warn("Job: " + jobKey.toString() + " is not available now.");
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
+		timer.executeAndRetryWithFixedDelay(new RestClientRetryable() {
+			@Override
+			public void execute() throws Throwable {
+				jobAdmin.publicLifeCycleEvent(jobKey, lifeCycle);
+			}
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public Class<? extends Exception>[] captureClasses() {
+				return new Class[] { UnavailableJobServiceException.class };
+			}
+
+		}, RestClientRetryable.DEFAULT_RETRY_INTERVAL, TimeUnit.SECONDS);
 	}
 
 }

@@ -45,6 +45,7 @@ public interface JobDao {
 	public static final String DEF_INSERT_JOB_TRIGGER = "insert into chac_job_trigger_detail(job_id, trigger_type, trigger_description, start_date, end_date, repeat_count) values (:jobId, :triggerType, :triggerDescription, :startDate, :endDate, :repeatCount)";
 	public static final String DEF_INSERT_JOB_DEPENDENCY = "insert into chac_job_dependency(job_id, dependent_job_id, dependency_type) value (:jobId, :dependentJobId, :dependencyType)";
 
+	public static final String DEF_UPDATE_SERVER_DETAIL ="update chac_job_server_detail set instance_id=:instanceId, leader=:leader, start_date=:startDate, contact_person=:contactPerson, contact_email=:contactEmail where cluster_name=:clusterName and group_name=:groupName and context_path=:contextPath";
 	public static final String DEF_UPDATE_JOB_DETAIL = "update chac_job_detail set description=:description, attachment=:attachment, email=:email, retries=:retries, weight=:weight, timeout=:timeout where cluster_name=:clusterName and group_name=:groupName and job_name=:jobName and job_class_name=:jobClassName";
 	public static final String DEF_UPDATE_JOB_TRIGGER = "update chac_job_trigger_detail set trigger_type=:triggerType, trigger_description=:triggerDescription, start_date=:startDate, end_date=:endDate, repeat_count=:repeatCount where job_id=:jobId";
 	public static final String DEF_UPDATE_JOB_RUNNING_BEGIN = "update chac_job_runtime_detail set job_state=:jobState, last_execution_time=:lastExecutionTime, next_execution_time=:nextExecutionTime where job_id=(select job_id from chac_job_detail where cluster_name=:clusterName and group_name=:groupName and job_name=:jobName and job_class_name=:jobClassName)";
@@ -81,6 +82,9 @@ public interface JobDao {
 
 	@Update(DEF_UPDATE_JOB_DETAIL)
 	int updateJobDetail(@Example Map<String, Object> kwargs);
+	
+	@Update(DEF_UPDATE_SERVER_DETAIL)
+	int updateJobServerDetail(@Example Map<String, Object> kwargs);
 
 	@Update(DEF_UPDATE_JOB_TRIGGER)
 	int updateJobTrigger(@Example Map<String, Object> kwargs);

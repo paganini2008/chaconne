@@ -20,7 +20,6 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +43,6 @@ import org.springframework.util.ErrorHandler;
 
 import com.github.paganini2008.devtools.cron4j.TaskExecutor;
 import com.github.paganini2008.devtools.cron4j.ThreadPoolTaskExecutor;
-import com.github.paganini2008.devtools.date.DateUtils;
 import com.github.paganini2008.devtools.jdbc.DataSourceFactory;
 import com.github.paganini2008.devtools.jdbc.PooledConnectionFactory;
 import com.github.paganini2008.devtools.multithreads.PooledThreadFactory;
@@ -310,6 +308,11 @@ public class DetachedModeConfiguration {
 			return new ContextPathAccessor();
 		}
 
+		@Bean(destroyMethod = "cancel")
+		public RetryableTimer retryableTimer() {
+			return new RetryableTimer();
+		}
+
 	}
 
 	@Configuration(proxyBeanMethods = false)
@@ -405,13 +408,6 @@ public class DetachedModeConfiguration {
 		public Executor executorThreadPool(@Value("${atlantis.framework.chaconne.scheduler.executor.poolSize:16}") int maxPoolSize) {
 			return ThreadPoolBuilder.common(maxPoolSize).setMaxPermits(maxPoolSize * 2).setTimeout(-1L)
 					.setThreadFactory(new PooledThreadFactory("scheduler-executor-threads")).build();
-		}
-
-		@Bean
-		public ContextPathAccessor contextPathAccessor() {
-			ContextPathAccessor contextPathAccessor = new ContextPathAccessor();
-			contextPathAccessor.setCheckWindowTime(DateUtils.convertToMillis(1, TimeUnit.MINUTES));
-			return contextPathAccessor;
 		}
 
 	}

@@ -99,8 +99,7 @@ public abstract class ClusterRestTemplate extends RestTemplate {
 					invalidateContextPath(contextPath);
 				}
 			}
-			throw reason != null ? new JobServiceAccessException(url, reason)
-					: new JobServiceAccessException("Connection timeout: " + ArrayUtils.toString(contextPaths));
+			throw reason != null ? new JobServiceAccessException(contextPaths, reason) : new JobServiceAccessException(contextPaths);
 		} else {
 			String url = null;
 			for (String contextPath : contextPaths) {
@@ -118,18 +117,17 @@ public abstract class ClusterRestTemplate extends RestTemplate {
 					invalidateContextPath(contextPath);
 				}
 			}
-			throw reason != null ? new JobServiceAccessException(url, reason)
-					: new JobServiceAccessException("Connection timeout: " + ArrayUtils.toString(contextPaths));
+			throw reason != null ? new JobServiceAccessException(contextPaths, reason) : new JobServiceAccessException(contextPaths);
 		}
 
 	}
 
 	protected abstract String[] getClusterContextPaths(String clusterName);
-	
+
 	protected boolean canAccessContextPath(String contextPath) {
 		return true;
 	}
-	
+
 	protected void invalidateContextPath(String contextPath) {
 	}
 

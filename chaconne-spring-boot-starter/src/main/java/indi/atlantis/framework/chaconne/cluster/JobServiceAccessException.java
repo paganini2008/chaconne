@@ -2,8 +2,7 @@ package indi.atlantis.framework.chaconne.cluster;
 
 import org.springframework.web.client.RestClientException;
 
-import com.github.paganini2008.devtools.StringUtils;
-import com.github.paganini2008.devtools.net.Urls;
+import com.github.paganini2008.devtools.ArrayUtils;
 
 import indi.atlantis.framework.chaconne.JobException;
 
@@ -19,27 +18,20 @@ public class JobServiceAccessException extends JobException {
 
 	private static final long serialVersionUID = 6741654358476739898L;
 
-	public JobServiceAccessException(String msg) {
-		super(msg);
-		this.url = null;
+	public JobServiceAccessException(String[] contextPaths) {
+		super(ArrayUtils.toString(contextPaths));
+		this.contextPaths = contextPaths;
 	}
 
-	public JobServiceAccessException(String url, RestClientException e) {
+	public JobServiceAccessException(String[] contextPaths, RestClientException e) {
 		super(e.getMessage(), e);
-		this.url = url;
+		this.contextPaths = contextPaths;
 	}
 
-	private final String url;
+	private final String[] contextPaths;
 
-	public String getContextPath() {
-		if (StringUtils.isBlank(url)) {
-			return "";
-		}
-		return Urls.toHostUrl(url).toString();
-	}
-
-	public String getUrl() {
-		return url;
+	public String[] getContextPaths() {
+		return contextPaths;
 	}
 
 }
