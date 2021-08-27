@@ -109,9 +109,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(signHandlerInterceptor()).addPathPatterns("/**").order(1);
-		registry.addInterceptor(basicHandlerInterceptor()).addPathPatterns("/**").order(2);
-		registry.addInterceptor(contextHandlerInterceptor()).addPathPatterns("/**").order(3);
+		registry.addInterceptor(signHandlerInterceptor()).addPathPatterns("/**").excludePathPatterns("/application/cluster/**").order(1);
+		registry.addInterceptor(basicHandlerInterceptor()).addPathPatterns("/**").excludePathPatterns("/application/cluster/**").order(2);
+		registry.addInterceptor(contextHandlerInterceptor()).addPathPatterns("/**").excludePathPatterns("/application/cluster/**").order(3);
 	}
 
 	/**
