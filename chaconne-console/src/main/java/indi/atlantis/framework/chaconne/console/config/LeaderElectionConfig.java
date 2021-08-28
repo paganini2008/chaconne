@@ -16,7 +16,6 @@
 package indi.atlantis.framework.chaconne.console.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import indi.atlantis.framework.tridenter.election.CcrLeaderElection;
 import indi.atlantis.framework.tridenter.election.CcrLeaderElectionListener;

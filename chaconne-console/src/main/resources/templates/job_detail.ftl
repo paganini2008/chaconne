@@ -1,6 +1,10 @@
 <#setting number_format="#">
 <#include "head.ftl">
 <style type="text/css">
+	#right {
+		overflow-x: hidden;
+		overflow-y: scroll;
+	}
 
 	#tabBox {
 		width: 100%;
@@ -63,7 +67,7 @@
 	}
 	
 	#saveBtn{
-		width: calc(100% - 10px);
+		width: calc(100% - 20px);
 		height: 36px;
 		line-height: 36px;
 		padding: 5px auto;
@@ -72,7 +76,7 @@
 		font-weight: 800;
 		float: left;
 		display: inline-block;
-		margin: 10px auto;
+		margin: 10px 10px;
 		background-color: #97CBFF;
 	}
 	

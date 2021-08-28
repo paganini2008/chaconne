@@ -1,6 +1,11 @@
 <#setting number_format="#">
 <#include "head.ftl">
 <style type="text/css">
+	#right {
+		overflow-x: hidden;
+		overflow-y: scroll;
+	}
+
 	#searchBox{
     	height: 60px;
     	width: 100%;
@@ -8,10 +13,9 @@
     }
 
 	#tabBox {
-		height: auto;
+		height: calc(100%-60px);
 		width: 100%;
-		position: relative;
-		bottom: 5px;
+		clear: both;
 	}
 	    
 	

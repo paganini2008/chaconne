@@ -5,7 +5,7 @@
 		width: 100%;
 		height: 60px;
 		clear: both;
-		background-color: #FCFCFC;
+		background-color: #fff;
 	}
 
 	.pageUL {

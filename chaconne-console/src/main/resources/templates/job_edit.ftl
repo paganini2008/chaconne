@@ -7,33 +7,27 @@
     	width: 100%;
     	clear: both;
     }
-
-	#tabBox {
-		width: 100%;
-		height: auto;
-	}
-	
-	#tabContent{
-		height: auto;
-	}
 	
 	#saveBtn {
-		width: calc(100% - 5px);
+		width: calc(100% - 20px);
 		height: 36px;
 		line-height: 36px;
-		padding: 2px 10px;
+		padding: 5px auto;
 		cursor: pointer;
 		text-align: center;
-		font-weight: bold;
+		font-weight: 800;
 		float: left;
 		display: inline-block;
-		margin: 10px auto;
+		margin: 10px 10px;
+		background-color: #97CBFF;
 	}
 	
 	#jsonBox {
 		width: 100%;
+		height: calc(100%-60px);
 		clear: both;
 		text-align: left;
+		background-color: #fff;
 	}
 	
 	#jsonEditor {

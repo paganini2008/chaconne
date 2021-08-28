@@ -1,33 +1,42 @@
 <#setting number_format="#">
 <#include "head.ftl">
 <style type="text/css">
-	#jobStat{
+	#right {
+		overflow-x: hidden;
+		overflow-y: scroll;
+	}
+
+	#jobStat {
     	height: 320px;
-    	width: 100%;
+    	width: calc(100% - 20px);
+    	margin: 0px auto;
     	clear: both;
     }
     
-    #jobStat1{
+    #jobStat1 {
     	float: left;
     	height: 320px;
-    	width: 45%;
+    	width: 49%;
+    	border-top-left-radius:30px;
     }
     
     #jobStat2{
     	float: left;
     	height: 320px;
-    	width: 55%;
+    	width: 51%;
     }
 
 	#tabBox {
 		clear: both;
 		height: 360px;
-		width: 100%;
+		width: calc(100% - 20px);
+    	margin: 0px auto;
+    	border-bottom-left-radius:30px;
 	}
 	
 	.division{
 		clear: both;
-		height: 20px;
+		height: 10px;
 		width: 100%;
 	}
     
@@ -130,7 +139,8 @@
 						plotBackgroundColor: null,
 						plotBorderWidth: null,
 						plotShadow: false,
-						type: 'pie'
+						type: 'pie',
+						backgroundColor: '#fff'
 				},
 				title: {
 						text: '<font style="font-weight: 800;">' + title + '</font>'
@@ -166,7 +176,8 @@
 		$('#tabBox').html('');
 		var chart = Highcharts.chart('tabBox',{
 						chart: {
-							type: 'area'
+							type: 'area',
+							backgroundColor: '#fff'
 						},
 						title: {
 							text: '<font style="font-weight: 800;">Job Execution Result Statistics By Day</font>'
@@ -213,11 +224,11 @@
 				<#include "nav.ftl">
 			</div>
 			<div id="right">
+				<div class="division"></div>
 				<div id="jobStat">
 					<div id="jobStat1"></div>
 					<div id="jobStat2"></div>
 				</div>
-				<div class="division"></div>
 				<div id="tabBox">
 				</div>
 				<div class="division"></div>
