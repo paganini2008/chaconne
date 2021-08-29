@@ -19,7 +19,7 @@
 
 .json-editor .value { 
   background-color: #ECF3C3;
-  width: 800px;
+  width: calc(100% - 260px);
 }
 .json-editor .property { 
   width: 154px;

@@ -2,18 +2,10 @@
 <#include "head.ftl">
 <style type="text/css">
 
-    #searchBox{
-    	height: 60px;
-    	width: 100%;
-    	clear: both;
-    }
-
 	#tabBox {
 		height: calc(100% - 60px);
-		width: 100%;
 	}
 	    
-	
 	#tabContent{
 		height: auto;
 	}
@@ -28,8 +20,9 @@
 		font-weight: 800;
 		float: left;
 		display: inline-block;
-		margin: 10px 10px;
-		background-color: #97CBFF;
+		margin: 10px auto;
+		background-color: #0000C6;
+		color: #fff;
 	}
 	    
 </style>
@@ -61,7 +54,7 @@
 	});
 	
 	function onLoad(){
-		$('#searchForm').attr('action','${contextPath}/job');
+		$('#searchForm').attr('action','${contextPath}/job/list');
 		$('#searchForm').submit();
 	}
 	
@@ -77,7 +70,7 @@
 			</div>
 			<div id="right">
 				<div id="searchBox">
-					<form class="pageForm" id="searchForm" action="${contextPath}/job">
+					<form class="pageForm" id="searchForm" action="${contextPath}/job/list">
 						<input type="hidden" value="${(page.page)!}" name="page" id="pageNo"/>
 						<input type="button" value="Create Your Job" id="saveBtn"></input>
 					</form>

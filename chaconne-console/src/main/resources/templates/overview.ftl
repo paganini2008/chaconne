@@ -1,10 +1,6 @@
 <#setting number_format="#">
 <#include "head.ftl">
 <style type="text/css">
-	#right {
-		overflow-x: hidden;
-		overflow-y: scroll;
-	}
 
 	#jobStat {
     	height: 320px;
@@ -32,14 +28,7 @@
 		width: calc(100% - 20px);
     	margin: 0px auto;
     	border-bottom-left-radius:30px;
-	}
-	
-	.division{
-		clear: both;
-		height: 10px;
-		width: 100%;
-	}
-    
+	}    
 	    
 </style>
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -140,7 +129,7 @@
 						plotBorderWidth: null,
 						plotShadow: false,
 						type: 'pie',
-						backgroundColor: '#fff'
+						backgroundColor: '#F0F0F0'
 				},
 				title: {
 						text: '<font style="font-weight: 800;">' + title + '</font>'
@@ -177,7 +166,7 @@
 		var chart = Highcharts.chart('tabBox',{
 						chart: {
 							type: 'area',
-							backgroundColor: '#fff'
+							backgroundColor: '#F0F0F0'
 						},
 						title: {
 							text: '<font style="font-weight: 800;">Job Execution Result Statistics By Day</font>'

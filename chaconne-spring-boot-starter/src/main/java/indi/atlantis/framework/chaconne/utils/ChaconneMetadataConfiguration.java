@@ -45,7 +45,6 @@ import lombok.extern.slf4j.Slf4j;
  *
  * @since 2.0.4
  */
-@Slf4j
 @Configuration(proxyBeanMethods = false)
 public class ChaconneMetadataConfiguration {
 
@@ -71,6 +70,7 @@ public class ChaconneMetadataConfiguration {
 	 *
 	 * @since 2.0.4
 	 */
+	@Slf4j
 	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnClass(HikariDataSource.class)
 	@EnableConfigurationProperties(ChaconneMetadataConfiguration.DataSourceSettings.class)
@@ -121,6 +121,7 @@ public class ChaconneMetadataConfiguration {
 	 *
 	 * @since 2.0.4
 	 */
+	@Slf4j
 	public static class ChaconneDataSourceFactory extends SingletonDataSoruceFactory {
 
 		ChaconneDataSourceFactory(HikariDataSource dataSource) {
@@ -130,7 +131,8 @@ public class ChaconneMetadataConfiguration {
 		public void close() {
 			try {
 				((HikariDataSource) getDataSource()).close();
-			} catch (SQLException ignored) {
+			} catch (SQLException e) {
+				log.error(e.getMessage(), e);
 			}
 		}
 

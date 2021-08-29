@@ -3,11 +3,38 @@
 	#logBox {
 		height: 100%;
 	}
+	
+	#logTitle{
+		clear: both;
+		text-align: left; 
+		height: 32px; 
+		line-height: 32px;
+		width: calc(100% - 20px);
+		margin: 0 auto;
+	}
+	
+	.show-error {
+		color: #FF0000;
+		cursor: pointer;
+		font-weight: 800;
+	}
+	
+	.show-info {
+		color: #00BB00;
+	}
+	
+	.show-warn {
+		color: #D9B300;
+	}
+	
+	.show-debug {
+		color: #0066CC;
+	}
 </style>
 <script type="text/javascript">
 	$(function(){
 		
-		$('.showError').click(function(){
+		$('.show-error').click(function(){
 			var traceId = $(this).parent().attr("traceId");
 			var url = '${contextPath}/job/error/${jobKey!}';
 			$.ajax({
@@ -25,17 +52,13 @@
 		
 	})
 </script>
-<div id="logBox">
-	<div style="clear: both;text-align: left; height: 32px; line-height: 32px;">
+	<div id="logTitle">
 		<b>Slf4j Logging: </b>
 	</div>
+<div id="logBox">
 	<#list logs as log>
 		<div class="logItem" traceId="${(log.traceId? string)!}">
-			<#if log.level == 'ERROR'>
-				${(log.createDate ? string('yyyy-MM-dd HH:mm:ss'))!} [<a class="showError" href="javascript:void(0);">ERROR</a>&nbsp;&nbsp;] - ${(log.log ? html)!}
-			<#else>
-				${(log.createDate ? string('yyyy-MM-dd HH:mm:ss'))!} [${(log.level ? upper_case)!}&nbsp;&nbsp;] - ${(log.log ? html)!}
-			</#if>
+			${(log.createDate ? string('yyyy-MM-dd HH:mm:ss'))!} [<font class="show-${(log.level ? lower_case)!}">${(log.level ? upper_case)!}&nbsp;&nbsp;</font>] - ${(log.log ? html)!}
 		</div>
 	</#list>
 </div>

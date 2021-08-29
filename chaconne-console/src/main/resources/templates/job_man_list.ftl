@@ -34,7 +34,7 @@
 						Job Name
 					</td>
 					<td class="tdLeft5">
-						Job Class Name
+						Job Class
 					</td>
 					<td width="12%" class="tdLeft5">
 						Email
@@ -42,8 +42,8 @@
 					<td width="5%" class="tdRight5">
 						Retries
 					</td>
-					<td width="8%" class="tdLeft5">
-						Job State
+					<td width="7%" class="tdLeft5">
+						State
 					</td>
 					<td width="4%">
 						Type
@@ -51,7 +51,7 @@
 					<td width="12%">
 						Create Date
 					</td>
-					<td width="12%" class="tdLeft5">
+					<td width="16%" class="tdLeft5">
 						&nbsp;
 					</td>
 				</tr>
@@ -81,7 +81,7 @@
 							<td width="5%" class="tdRight5">
 								${(bean.retries)!}&nbsp;
 							</td>
-							<td width="8%" class="tdLeft5">
+							<td width="7%" class="tdLeft5">
 								${(bean.jobRuntime.jobState.repr)!}
 							</td>
 							<td width="4%">
@@ -90,15 +90,15 @@
 							<td width="12%">
 								${(bean.createDate? string('yyyy-MM-dd HH:mm:ss'))!}
 							</td>
-							<td width="12%" class="tdLeft5">
+							<td width="16%" class="tdLeft5">
 								<#if bean.jobRuntime.jobState.repr == 'Scheduling' || bean.jobRuntime.jobState.repr == 'Paused'>
-									<a class="pauseJob" href="${contextPath}/job/toggle/${(bean.jobKey.identifier? html)!}"><#if bean.jobRuntime.jobState.repr == 'Paused'>Resume<#else>Pause</#if></a>
+									<a class="pauseJob" href="${contextPath}/job/toggle/${(bean.jobKey.identifier? html)!}"><#if bean.jobRuntime.jobState.repr == 'Paused'>[Resume]<#else>[Pause]</#if></a>
 									&nbsp;|
 								</#if>
 								<#if bean.jobRuntime.jobState.repr == 'Scheduling'>
-									<a class="runJob" href="${contextPath}/job/trigger/${(bean.jobKey.identifier? html)!}">Run</a>
+									<a class="runJob" href="${contextPath}/job/trigger/${(bean.jobKey.identifier? html)!}">[Run]</a>
 									&nbsp;|
-									<a class="deleteJob" href="${contextPath}/job/delete/${(bean.jobKey.identifier? html)!}">Delete</a>
+									<a class="deleteJob" href="${contextPath}/job/delete/${(bean.jobKey.identifier? html)!}">[Delete]</a>
 								</#if>
 							</td>
 						</tr>

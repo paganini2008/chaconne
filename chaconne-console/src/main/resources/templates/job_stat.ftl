@@ -1,28 +1,22 @@
 <#setting number_format="#">
 <#include "head.ftl">
 <style type="text/css">
-	#right {
-		overflow-x: hidden;
-		overflow-y: scroll;
-	}
-
-	#searchBox{
-    	height: 60px;
-    	width: 100%;
-    	clear: both;
-    }
 
 	#tabBox {
 		height: calc(100%-60px);
-		width: 100%;
-		clear: both;
 	}
-	    
 	
 	#tabContent{
 		height: auto;
 	}
-    
+	
+	#statByMonth{
+		border-top-left-radius: 20px;
+	}
+	
+    #statByDay{
+		border-bottom-left-radius: 20px;
+	}
 	    
 </style>
 <script type="text/javascript" src="${contextPath}/static/js/common.js"></script>
@@ -72,6 +66,7 @@
 				</div>
 				<div id="tabBox">
 				</div>
+				<div class="division"></div>
 			</div>
 		</div>
 		<#include "foot.ftl">

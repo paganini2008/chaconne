@@ -1,22 +1,9 @@
 <#setting number_format="#">
 <#include "head.ftl">
 <style type="text/css">
-	#right {
-		overflow-x: hidden;
-		overflow-y: scroll;
-	}
-
-	#tabBox {
-		width: 100%;
-		height: auto;
-	}
 	
 	#tabContent{
 		height: auto;
-	}
-	
-	#jobDetail{
-		margin: 0 auto;
 	}
 	
 	.jobLine{
@@ -79,11 +66,14 @@
 		margin: 10px 10px;
 		background-color: #97CBFF;
 	}
-	
-	#searchBox{
-    	height: 60px;
-    	width: 100%;
-    	clear: both;
+    
+    #triggerDescription{
+    	width: calc(100% - 200px); 
+    	height: auto; 
+    	text-align: left;
+    	background-color: #3C3C3C;
+    	border: 2px solid #000;
+    	border-radius: 10px;
     }
 	    
 </style>
@@ -128,7 +118,7 @@
 			<div id="right">
 				<div id="jobDetail">
 					<div class="jobLine">
-						<label>Job Basic Info</label>
+						<label>Job Basic Info:</label>
 					</div>
 					<div class="jobKey jobAttr">
 						<label>Cluster Name:</label>
@@ -157,7 +147,7 @@
 					</div>
 					<div class="triggerDescription jobAttr" style="height: auto;">
 						<label>Trigger Description:</label>
-						<span id="triggerDescription" style="width: calc(100% - 200px); height: auto; text-align: left;">
+						<span id="triggerDescription">
 							<pre>${(jobDetail.jobTriggerDetail.triggerDescription?html)!'-'}</pre>
 						</span>
 					</div>
@@ -174,7 +164,7 @@
 						<span id="lastCompletionTime">${(jobDetail.jobRuntime.lastCompletionTime?string('yyyy-MM-dd HH:mm:ss'))!}</span>
 					</div>
 				</div>
-				<div id="searchBox" style="clear: both;">
+				<div id="searchBox">
 					<form class="pageForm" id="searchForm" method="post" action="${contextPath}/job/trace">
 						<input type="hidden" value="${(page.page)!}" name="page" id="pageNo"/>
 						<input type="hidden" value="${(jobDetail.jobKey.identifier)!}" name="jobKey"/>

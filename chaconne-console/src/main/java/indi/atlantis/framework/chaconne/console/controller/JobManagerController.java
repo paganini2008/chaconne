@@ -107,7 +107,7 @@ public class JobManagerController {
 		return "job_edit";
 	}
 
-	@PostMapping("")
+	@PostMapping("/list")
 	public String selectJobDetail(@SessionAttribute("currentClusterName") String clusterName,
 			@RequestParam(value = "page", defaultValue = "1", required = false) int page,
 			@CookieValue(value = "DATA_LIST_SIZE", required = false, defaultValue = "10") int size, Model ui) throws Exception {

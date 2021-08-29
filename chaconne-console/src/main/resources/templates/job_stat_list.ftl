@@ -79,7 +79,8 @@
 	function showBarChart(categories,data){
 		Highcharts.chart('statByMonth', {
 		    chart: {
-		        type: 'bar'
+		        type: 'bar',
+		        backgroundColor: '#F0F0F0'
 		    },
 		    title: {
 		        text: '<font style="font-weight: 800;">Job Execution Result Statistics</font>'
@@ -133,7 +134,8 @@
 	function showStatDetailChart(categories,completedCount,failedCount,skippedCount,finishedCount){
 		var chart = Highcharts.chart('statByDay',{
 						chart: {
-							type: 'area'
+							type: 'area',
+							backgroundColor: '#F0F0F0'
 						},
 						title: {
 							text: '<font style="font-weight: 800;">Job Execution Result Statistics By Day</font>'
@@ -184,21 +186,21 @@
 						Job Name
 					</td>
 					<td class="tdLeft5">
-						Job Class Name
+						Job Class
 					</td>
 					<td width="8%" class="tdLeft5">
 						Completed
 					</td>
-					<td width="8%" class="tdLeft5">
+					<td width="6%" class="tdLeft5">
 						Failed
 					</td>
-					<td width="8%" class="tdLeft5">
+					<td width="6%" class="tdLeft5">
 						Skipped
 					</td>
-					<td width="8%" class="tdLeft5">
+					<td width="6%" class="tdLeft5">
 						Retries
 					</td>
-					<td width="12%" class="tdLeft5">
+					<td width="15%">
 						Last Execution
 					</td>
 				</tr>
@@ -225,16 +227,16 @@
 							<td width="8%" class="tdLeft5">
 								${(bean.completedCount)!}
 							</td>
-							<td width="8%" class="tdLeft5">
+							<td width="6%" class="tdLeft5">
 								${(bean.failedCount)!}
 							</td>
-							<td width="8%" class="tdLeft5">
+							<td width="6%" class="tdLeft5">
 								${(bean.skippedCount)!}
 							</td>
-							<td width="8%" class="tdLeft5">
+							<td width="6%" class="tdLeft5">
 								${(bean.retryCount)!}
 							</td>
-							<td width="12%" class="tdLeft5">
+							<td width="15%" class="tdLeft5">
 								${(bean.executionDate?html)!}
 							</td>
 						</tr>

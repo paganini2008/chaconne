@@ -1,12 +1,6 @@
 <#setting number_format="#">
 <#include "head.ftl">
 <style type="text/css">
-
-    #searchBox{
-    	height: 60px;
-    	width: 100%;
-    	clear: both;
-    }
 	
 	#saveBtn {
 		width: calc(100% - 20px);
@@ -19,15 +13,16 @@
 		float: left;
 		display: inline-block;
 		margin: 10px 10px;
-		background-color: #97CBFF;
+		background-color: #0000C6;
+		color: #fff;
 	}
 	
 	#jsonBox {
-		width: 100%;
-		height: calc(100%-60px);
+		width: calc(100% - 20px);
+		height: calc(100% - 80px);
 		clear: both;
 		text-align: left;
-		background-color: #fff;
+		margin: 0 auto;
 	}
 	
 	#jsonEditor {
@@ -36,19 +31,30 @@
 	
 	#jsonData {
 		width: 100%;
+		height: auto;
 		display: none;
+		background-color: #3C3C3C;
+		border: 2px solid #000;
+		border-radius: 20px;
+		margin-top: 10px;
+	}
+	
+	#jsonData pre{
+		margin: 10px;
 	}
 	
 	#editBtn {
-		background-color: #97CBFF;
+		background-color: #0000C6;
+		color: #fff;
 		display: inline-block;
+		float: left;
+		margin-left: 10px;
 		height: 32px;
 		line-height: 32px;
-		color: #fff;
 		text-align: center;
-		font-weight: bold;
+		font-weight: 800;
 		padding: 2px 10px;
-		border-radius: 8px;
+		border-radius: 6px;
 		cursor: pointer;
 	}
 
@@ -121,6 +127,8 @@
 					<div id="jsonEditor" class="json-editor"></div>
 					<div id="jsonData">
 						<pre></pre>
+					</div>
+					<div style="width: 100%; height: 10px; clear: both;">
 					</div>
 				</div>
 			</div>

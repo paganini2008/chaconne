@@ -2,10 +2,11 @@
 <#macro page page display>
 <style style="text/css">
 	#pageULBox{
-		width: 100%;
+		width: calc(100% - 20px);
+		margin: 0px auto;
 		height: 60px;
 		clear: both;
-		background-color: #fff;
+		background-color: #600000;
 	}
 
 	.pageUL {
@@ -27,6 +28,7 @@
 		text-align: center;
 		margin: 0px 3px;
 		font-weight: 800;
+		color: #fff;
 	}
 	
 	.pageAction {

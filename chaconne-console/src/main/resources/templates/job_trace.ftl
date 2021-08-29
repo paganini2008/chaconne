@@ -35,7 +35,7 @@
 		<table border="0" cellspacing="0" cellpadding="0" class="tblCom" width="100%">
 			<thead>
 				<tr>
-					<td width="3%" class="tdRight5">
+					<td width="5%" class="tdRight5">
 						#
 					</td>
 					<td width="12%" class="tdLeft5">
@@ -62,7 +62,7 @@
 				<#if page ?? && page.results?? && page.results? size gt 0>
 					<#list page.results as bean>
 						<tr traceId="${(bean.traceId? string)!}">
-							<td width="3%" class="tdLeft5">
+							<td width="5%" class="tdLeft5">
 							    <a class="showLog" href="javascript:void(0);">${(page.page - 1) * (page.size) + (bean_index + 1)}</a>
 							</td>
 							<td width="12%" class="tdLeft5">

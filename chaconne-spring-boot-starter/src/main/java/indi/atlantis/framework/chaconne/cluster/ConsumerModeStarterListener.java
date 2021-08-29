@@ -67,7 +67,7 @@ public class ConsumerModeStarterListener extends RestClientRetryable implements 
 
 	@Autowired
 	private JobListenerContainer jobListenerContainer;
-	
+
 	@Autowired
 	private RetryableTimer retryableTimer;
 
@@ -109,6 +109,11 @@ public class ConsumerModeStarterListener extends RestClientRetryable implements 
 				}
 			}
 		}
+	}
+
+	@Override
+	public int getOrder() {
+		return 100;
 	}
 
 }

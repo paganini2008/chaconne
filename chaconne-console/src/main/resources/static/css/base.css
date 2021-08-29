@@ -12,8 +12,8 @@ body {
 	background-color: #fff;
 	font-style: normal;
 	font-size: 14px;
-	font-family: 'Roboto',sans-serif;
-	color: #000;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #fff;
 }
 
 #top {
@@ -43,43 +43,52 @@ body {
 }
 
 #container {
-	width: calc(100% - 10px);
+	width: 100%;
 	height: auto;
 	overflow: hidden;
 	top: 80px;
 	bottom: 50px;
 	left: 0px;
-	right: 10px;
+	right: 0px;
 	position: absolute;
 	z-index: 0;
 	clear: both;
 }
 
 #left {
-	width: 18%;
+	width: 15%;
 	height: 100%;
-	background-color: #A5A552;
+	background-color: #600000;
 	float: left;
 	position: relative;
 	overflow: hidden;
 }
 
 #right {
-	width: 82%;
+	width: 85%;
 	height: 100%;
-	background-color: #fff;
+	background-color: #600000;
 	float: left;
 	position: relative;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
-#tabBox, #jobDetail, #searchBox, #stackTraceBox{
-	background-color: #fff;
-	width: 100%;
+#tabBox, #jobDetail, #searchBox, #stackTraceBox {
+	background-color: #600000;
+	width: calc(100% - 20px);
+	margin: 0px auto;
+	clear: both;
+}
+
+#searchBox {
+	height: 60px;
 	clear: both;
 }
 
 #tabBox {
 	min-height: 360px;
+	height: auto;
 }
 
 #currentClusterName {
@@ -94,27 +103,40 @@ body {
 }
 
 #tabContent {
-	width: calc(100% - 20px);
-	margin: 0px auto;
+	width: 100%;
 	clear: both;
+}
+
+.division {
+	clear: both;
+	height: 10px;
+	width: 100%;
 }
 
 #logBox {
+	min-height: 320px;
 	width: calc(100% - 20px);
 	margin: 0px auto;
 	clear: both;
+	background-color: #3C3C3C;
+	border: 2px solid #000;
+	overflow-x: auto;
 }
 
 .logItem {
-	width: 100%;
+	width: calc(100% - 10px);
+	margin-top: 5px;
+	margin-left: 5px;
 	text-align: left;
+	white-space: nowrap;
 }
 
 #stackTraceBox {
 	clear: both;
-	overflow-y: scroll;
-	height: 100%;
-	width: 100%;
+	height: auto;
+	min-height: 350px;
+	background-color: #3C3C3C;
+	border: 2px solid #000;
 }
 
 .traceItem {
@@ -129,7 +151,7 @@ body {
 }
 
 input, select, textarea {
-	font: 14px Arial,Helvetica,sans-serif;
+	font: 14px Arial, Helvetica, sans-serif;
 }
 
 img {
@@ -174,10 +196,10 @@ img {
 	color: #fff;
 }
 
-#navBox li em{
+#navBox li em {
 	display: inline-block;
 	float: right;
-	margin-right: 30px;
+	margin-right: 10px;
 	font-weight: 800;
 	font-style: normal;
 }
@@ -287,6 +309,7 @@ img {
 	border-left: 1px solid #BEBEBE;
 	border-bottom: 1px solid #BEBEBE;
 	text-indent: 5px;
+	color: #fff;
 }
 
 .tblCom tbody tr td:nth-child(1) {
@@ -378,23 +401,30 @@ img {
 
 a:link {
 	text-decoration: none;
+	font-weight: 800;
+	color: #0000C6;
 }
 
 a:visited {
 	text-decoration: none;
+	font-weight: 800;
+	color: #0000C6;
 }
 
 a:hover {
 	text-decoration: none;
+	color: #FF0000;
 }
 
 a:active {
 	text-decoration: none;
+	font-weight: 800;
+	color: #0000C6;
 }
 
 .tabNoData {
 	display: table;
 	width: 100%;
-	height: 600px;
-	line-height: 600px;
+	min-height: 450px;
+	line-height: 450px;
 }

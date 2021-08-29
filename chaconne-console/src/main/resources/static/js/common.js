@@ -7,7 +7,7 @@ $(function() {
 
 var TableUtils = {
 	rowColour : function() {
-		$('.tblCom tbody tr:odd').css('background-color', '#F0F0F0');
+		$('.tblCom tbody tr:odd').css({'background-color':'#3C3C3C'});
 	},
 
 	initialize : function(line) {
@@ -25,7 +25,7 @@ var TableUtils = {
 			for ( var i = 1; i <= line - len; i++) {
 				$(ht).appendTo($('.tblCom tbody'));
 			}
-			$('.tblCom tbody tr:odd').css('background-color', '#F0F0F0');
+			$('.tblCom tbody tr:odd').css('background-color', '#3C3C3C');
 		}
 	},
 	
