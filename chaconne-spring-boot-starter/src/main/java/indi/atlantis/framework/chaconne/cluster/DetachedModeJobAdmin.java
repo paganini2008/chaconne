@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 
 import indi.atlantis.framework.chaconne.ExceptionUtils;
 import indi.atlantis.framework.chaconne.Job;
@@ -52,6 +54,7 @@ public class DetachedModeJobAdmin implements JobAdmin {
 	private ClusterRestTemplate restTemplate;
 
 	@Override
+	@Retryable(value = JobServiceAccessException.class, maxAttempts = 5, backoff = @Backoff(delay = 5000, multiplier = 1, maxDelay = 10000))
 	public JobState triggerJob(JobKey jobKey, Object attachment) throws Exception {
 		ResponseEntity<Result<JobState>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/admin/triggerJob",
 				HttpMethod.POST, new JobParameter(jobKey, attachment, 0), new ParameterizedTypeReference<Result<JobState>>() {
@@ -60,6 +63,7 @@ public class DetachedModeJobAdmin implements JobAdmin {
 	}
 
 	@Override
+	@Retryable(value = JobServiceAccessException.class, maxAttempts = 5, backoff = @Backoff(delay = 5000, multiplier = 1, maxDelay = 10000))
 	public void publicLifeCycleEvent(JobKey jobKey, JobLifeCycle lifeCycle) {
 		ResponseEntity<Result<String>> responseEntity = restTemplate.perform(jobKey.getClusterName(), "/job/admin/publicLifeCycleEvent",
 				HttpMethod.POST, new JobLifeCycleParameter(jobKey, lifeCycle), new ParameterizedTypeReference<Result<String>>() {

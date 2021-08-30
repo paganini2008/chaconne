@@ -31,7 +31,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.github.paganini2008.devtools.ArrayUtils;
-import com.github.paganini2008.devtools.multithreads.AtomicLongSequence;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -64,11 +63,16 @@ public abstract class ClusterRestTemplate extends RestTemplate {
 		defaultHeaders.set(headerName, headerValue);
 	}
 
-	private final AtomicLongSequence counter = new AtomicLongSequence();
-	private int hostNameSize = 1;
+	private boolean loadBalanceEnabled = true;
 
-	public void setHostNameSize(int hostNameSize) {
-		this.hostNameSize = hostNameSize;
+	public void setLoadBalanceEnabled(boolean loadBalanceEnabled) {
+		this.loadBalanceEnabled = loadBalanceEnabled;
+	}
+
+	private ContextPathSelector contextPathSelector = new DefaultContextPathAccessor();
+
+	public void setContextPathSelector(ContextPathSelector contextPathSelector) {
+		this.contextPathSelector = contextPathSelector;
 	}
 
 	public <R> ResponseEntity<R> perform(String clusterName, String path, HttpMethod method, Object body,
@@ -78,11 +82,11 @@ public abstract class ClusterRestTemplate extends RestTemplate {
 			throw new UnavailableJobServiceException(clusterName);
 		}
 		RestClientException reason = null;
-		if (contextPaths.length > hostNameSize) {
+		if (loadBalanceEnabled) {
 			String[] copy = contextPaths.clone();
 			String contextPath = null, url = null;
 			while (copy.length > 0) {
-				contextPath = selectContextPath(clusterName, copy);
+				contextPath = contextPathSelector.selectContextPath(clusterName, copy);
 				if (!canAccessContextPath(contextPath)) {
 					copy = ArrayUtils.remove(copy, contextPath);
 					continue;
@@ -129,10 +133,6 @@ public abstract class ClusterRestTemplate extends RestTemplate {
 	}
 
 	protected void invalidateContextPath(String contextPath) {
-	}
-
-	protected String selectContextPath(String clusterName, String[] contextPaths) {
-		return contextPaths[(int) (counter.getAndIncrement() % contextPaths.length)];
 	}
 
 	protected HttpHeaders getHttpHeaders() {

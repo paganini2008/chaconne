@@ -100,7 +100,7 @@ public class DetachedModeJobBeanProxy implements Job {
 				log.warn("Job: " + jobKey.toString() + " has no available resource to execute now.");
 			}
 			resetJobState();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
 		return JobState.NONE;

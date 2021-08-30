@@ -37,7 +37,7 @@ import indi.atlantis.framework.tridenter.utils.BeanLifeCycle;
  */
 public class ContextPathAccessor implements Executable, BeanLifeCycle {
 
-	private static final long DEFAULT_CHECK_WINDOW_TIME = DateUtils.convertToMillis(5, TimeUnit.MINUTES);
+	private static final long DEFAULT_CHECK_WINDOW_TIME = DateUtils.convertToMillis(1, TimeUnit.MINUTES);
 	private final Map<String, Long> contextPaths = new ConcurrentHashMap<String, Long>();
 	private Timer timer;
 	private long checkWindowTime = DEFAULT_CHECK_WINDOW_TIME;

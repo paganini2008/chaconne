@@ -131,12 +131,6 @@
 						<label>End Date:</label>
 						<span id="triggerEndDate">${(jobDetail.jobTriggerDetail.endDate?string('yyyy-MM-dd HH:mm:ss'))!'-'}</span>
 					</div>
-					<div class="triggerDescription jobAttr" style="height: auto;">
-						<label>Trigger Description:</label>
-						<span id="triggerDescription">
-							<pre>${(jobDetail.jobTriggerDetail.triggerDescription?html)!'-'}</pre>
-						</span>
-					</div>
 					<div class="jobRuntime jobAttr">
 						<label>Job State:</label>
 						<span id="jobState">${(jobDetail.jobRuntime.jobState.repr)!}</span>
@@ -149,6 +143,13 @@
 						<label>Last Completion Time:</label>
 						<span id="lastCompletionTime">${(jobDetail.jobRuntime.lastCompletionTime?string('yyyy-MM-dd HH:mm:ss'))!}</span>
 					</div>
+					<div class="triggerDescription jobAttr" style="height: auto;">
+						<label>Trigger Description:</label>
+						<span id="triggerDescription">
+							<pre>${(jobDetail.jobTriggerDetail.triggerDescription?html)!'-'}</pre>
+						</span>
+					</div>
+
 				</div>
 				<div id="searchBox">
 					<form class="pageForm" id="searchForm" method="post" action="${contextPath}/job/trace">

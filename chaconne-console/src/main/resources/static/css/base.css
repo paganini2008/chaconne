@@ -114,7 +114,7 @@ body {
 }
 
 #logBox {
-	min-height: 320px;
+	min-height: 340px;
 	width: calc(100% - 20px);
 	margin: 0px auto;
 	clear: both;
@@ -133,8 +133,8 @@ body {
 
 #stackTraceBox {
 	clear: both;
-	height: auto;
-	min-height: 350px;
+	min-height: 340px;
+	overflow-x: auto;
 	background-color: #3C3C3C;
 	border: 2px solid #000;
 }
@@ -143,6 +143,8 @@ body {
 	width: 100%;
 	text-align: left;
 	font-size: 12px;
+	margin-top: 5px;
+	margin-left: 5px;
 }
 
 .traceItem pre {
@@ -172,6 +174,7 @@ img {
 #subLogoText {
 	font-style: italic;
 	font-size: 14px;
+	font-weight: bold;
 	float: left;
 	display: inline-block;
 	height: 28px;

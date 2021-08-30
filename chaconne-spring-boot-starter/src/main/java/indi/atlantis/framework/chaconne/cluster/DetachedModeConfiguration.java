@@ -37,6 +37,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.util.ErrorHandler;
@@ -167,6 +168,7 @@ public class DetachedModeConfiguration {
 	@Configuration(proxyBeanMethods = false)
 	@Import({ ChaconneMetadataConfiguration.class, JobServerRegistryController.class, JobManagerController.class,
 			JobAdminController.class })
+	@EnableRetry
 	@DaoScan(basePackages = "indi.atlantis.framework.chaconne")
 	@ConditionalOnDetachedMode(DetachedMode.PRODUCER)
 	public static class ProducerModeConfig {
