@@ -2,21 +2,6 @@
 <#include "head.ftl">
 <style type="text/css">
 	
-	#saveBtn {
-		width: calc(100% - 20px);
-		height: 36px;
-		line-height: 36px;
-		padding: 5px auto;
-		cursor: pointer;
-		text-align: center;
-		font-weight: 800;
-		float: left;
-		display: inline-block;
-		margin: 10px 10px;
-		background-color: #0000C6;
-		color: #fff;
-	}
-	
 	#jsonBox {
 		width: calc(100% - 20px);
 		height: calc(100% - 80px);
@@ -44,7 +29,7 @@
 	}
 	
 	#editBtn {
-		background-color: #0000C6;
+		background-color: #0066CC;
 		color: #fff;
 		display: inline-block;
 		float: left;

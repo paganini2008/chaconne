@@ -13,8 +13,8 @@
 </style>
 <ul id="navBox">
 	<li><a href="${contextPath}/index/1">Overview</a><em>&gt;</em></li>
-	<li><a href="${contextPath}/index/2">Job Management</a><em>&gt;</em></li>
-	<li><a href="${contextPath}/index/3">Job Statistics</a><em>&gt;</em></li>
-	<li><a href="${contextPath}/index/4">Cron Editor</a><em>&gt;</em></li>
-	<li><a href="${contextPath}/index/5">Quick Start</a><em>&gt;</em></li>
+	<li><a href="${contextPath}/index/2">Management</a><em>&gt;</em></li>
+	<li><a href="${contextPath}/index/3">Statistics</a><em>&gt;</em></li>
+	<li><a href="${contextPath}/index/4">Documentation</a><em>&gt;</em></li>
+	<li><a href="${contextPath}/index/5">Tool</a><em>&gt;</em></li>
 </ul>

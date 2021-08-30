@@ -169,6 +169,18 @@ img {
 	cursor: pointer;
 }
 
+#subLogoText {
+	font-style: italic;
+	font-size: 14px;
+	float: left;
+	display: inline-block;
+	height: 28px;
+	line-height: 28px;
+	color: #fff;
+	margin-left: 20px;
+	margin-top: 34px;
+}
+
 #navBox {
 	width: 100%;
 	display: block;
@@ -202,6 +214,31 @@ img {
 	margin-right: 10px;
 	font-weight: 800;
 	font-style: normal;
+}
+
+#saveBtn {
+	width: calc(100% - 10px);
+	height: 36px;
+	line-height: 36px;
+	padding: 5px auto;
+	cursor: pointer;
+	text-align: center;
+	font-weight: 800;
+	float: left;
+	display: inline-block;
+	margin: 10px 5px;
+	background-color: #0066CC;
+	color: #fff;
+}
+
+#saveBtn:hover {
+	color: #000;
+	background-color: #46A3FF;
+}
+
+#editBtn:hover {
+	color: #000;
+	background-color: #46A3FF;
 }
 
 #sec-nav {
@@ -402,13 +439,13 @@ img {
 a:link {
 	text-decoration: none;
 	font-weight: 800;
-	color: #0000C6;
+	color: #0066CC;
 }
 
 a:visited {
 	text-decoration: none;
 	font-weight: 800;
-	color: #0000C6;
+	color: #0066CC;
 }
 
 a:hover {
@@ -419,7 +456,7 @@ a:hover {
 a:active {
 	text-decoration: none;
 	font-weight: 800;
-	color: #0000C6;
+	color: #0066CC;
 }
 
 .tabNoData {

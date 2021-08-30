@@ -9,21 +9,6 @@
 	#tabContent{
 		height: auto;
 	}
-	
-	#saveBtn{
-		width: calc(100% - 20px);
-		height: 36px;
-		line-height: 36px;
-		padding: 5px auto;
-		cursor: pointer;
-		text-align: center;
-		font-weight: 800;
-		float: left;
-		display: inline-block;
-		margin: 10px auto;
-		background-color: #0000C6;
-		color: #fff;
-	}
 	    
 </style>
 <script type="text/javascript" src="${contextPath}/static/js/common.js"></script>

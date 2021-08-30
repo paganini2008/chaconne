@@ -3,7 +3,7 @@
 <style type="text/css">
 
 	#tabBox {
-		height: calc(100%-60px);
+		height: calc(100% - 60px);
 	}
 	
 	#tabContent{
@@ -41,6 +41,10 @@
 			});
 			return false;
 		});
+		
+		$('#saveBtn').click(function(){
+			window.location.href= "${contextPath}/job/edit";
+		});
 	
 		onLoad();
 	});
@@ -62,6 +66,7 @@
 				<div id="searchBox">
 					<form class="pageForm" id="searchForm" method="post">
 						<input type="hidden" value="${(page.page)!1}" name="page" id="pageNo"/>
+						<input type="button" value="Create Your Job" id="saveBtn"></input>
 					</form>
 				</div>
 				<div id="tabBox">

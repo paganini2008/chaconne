@@ -69,9 +69,15 @@ public class IndexController {
 			return "redirect:/job";
 		case 3:
 			return "redirect:/job/stat";
+		case 4:
+			return "redirect:/doc";
 		default:
 			return "redirect:/index/99";
 		}
 	}
 
+	@GetMapping("/doc")
+	public String quickstart() {
+		return "doc";
+	}
 }

@@ -81,7 +81,7 @@
 	       		<input type="text" value="${page.page}" id="pageNoValue" style="width:40px;padding-left: 3px;"/>
 	       </li>
 	       <li class="pageGo">
-	       		<input onclick="javascript:goToPage(-1)" type="button" value="Go" style="width: 60px; padding: 2px 10px; cursor: pointer;font-weight: 800; background-color: #97CBFF;"/>
+	       		<input onclick="javascript:goToPage(-1)" type="button" value="Go" style="width: 60px; padding: 2px 10px; cursor: pointer;font-weight: 800; background-color: #0066CC;"/>
 	       </li>
 	       <#if display == 1>
 	       		<li class="pageShow"> <a <#if page.size == 10>class="hoverLink" </#if> href="javascript:void(0);" onclick="javascript:setPageSize(20);"><span>20 Rows</span></a></li>

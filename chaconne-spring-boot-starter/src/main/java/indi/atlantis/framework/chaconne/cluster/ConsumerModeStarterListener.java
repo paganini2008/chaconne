@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
+import org.springframework.core.Ordered;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -51,7 +52,8 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2.0.1
  */
 @Slf4j
-public class ConsumerModeStarterListener extends RestClientRetryable implements ApplicationListener<ApplicationClusterRefreshedEvent> {
+public class ConsumerModeStarterListener extends RestClientRetryable
+		implements ApplicationListener<ApplicationClusterRefreshedEvent>, Ordered {
 
 	@Value("${spring.application.cluster.name}")
 	private String clusterName;
@@ -113,7 +115,7 @@ public class ConsumerModeStarterListener extends RestClientRetryable implements 
 
 	@Override
 	public int getOrder() {
-		return 100;
+		return LOWEST_PRECEDENCE - 200;
 	}
 
 }
