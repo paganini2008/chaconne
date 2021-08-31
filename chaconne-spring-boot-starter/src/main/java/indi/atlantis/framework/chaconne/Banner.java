@@ -17,6 +17,7 @@ package indi.atlantis.framework.chaconne;
 
 import org.slf4j.Logger;
 
+import com.github.paganini2008.devtools.SystemPropertyUtils;
 import com.github.paganini2008.devtools.TableView;
 
 /**
@@ -31,9 +32,9 @@ public abstract class Banner {
 
 	public static final String PRODUCT_NAME = "Chaconne";
 
-	public static final String PRODUCT_VERSION = "1.0";
+	public static final String PRODUCT_VERSION = SystemPropertyUtils.getString("chaconne.version", "1.0.0");
 
-	public static final String PRODUCT_DESCRIPTION = "A light job schedule framework and workflow tools writen in Java";
+	public static final String PRODUCT_DESCRIPTION = "To Build High Available Distributed Job Scheduling System";
 
 	public static void printBanner(String deployMode, Logger logger) {
 		TableView tableView = new TableView(6, 2);

@@ -30,7 +30,7 @@ public abstract class JobUtils {
 	public static Job getJobBean(String jobName, Class<?> jobClass) {
 		Job job = (Job) ApplicationContextUtils.getBean(jobName, jobClass);
 		if (job == null) {
-			job = (Job) ApplicationContextUtils.getBean(jobClass, bean -> {
+			job = (Job) ApplicationContextUtils.findBeanOfType(jobClass, bean -> {
 				return ((Job) bean).getJobName().equals(jobName);
 			});
 		}
