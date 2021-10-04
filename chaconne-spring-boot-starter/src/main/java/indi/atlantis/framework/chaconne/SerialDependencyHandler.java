@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import com.github.paganini2008.springdessert.reditools.messager.RedisMessageHandler;
 
 import indi.atlantis.framework.chaconne.model.JobParameter;
-import indi.atlantis.framework.tridenter.Constants;
+import indi.atlantis.framework.tridenter.ClusterConstants;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -45,7 +45,7 @@ public class SerialDependencyHandler implements RedisMessageHandler {
 
 	@Override
 	public String getChannel() {
-		return Constants.APPLICATION_CLUSTER_NAMESPACE + clusterName + ":scheduler:job:dependency:*";
+		return ClusterConstants.APPLICATION_CLUSTER_NAMESPACE + clusterName + ":scheduler:job:dependency:*";
 	}
 
 	@Override

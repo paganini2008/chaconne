@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import indi.atlantis.framework.chaconne.model.JobParameter;
 import indi.atlantis.framework.tridenter.ApplicationInfo;
-import indi.atlantis.framework.tridenter.Constants;
+import indi.atlantis.framework.tridenter.ClusterConstants;
 import indi.atlantis.framework.tridenter.multicast.ApplicationMessageListener;
 
 /**
@@ -58,7 +58,7 @@ public class LoadBalancedJobBeanProcessor implements ApplicationMessageListener 
 
 	@Override
 	public String getTopic() {
-		return Constants.APPLICATION_CLUSTER_NAMESPACE + clusterName + ":scheduler:loadbalance";
+		return ClusterConstants.APPLICATION_CLUSTER_NAMESPACE + clusterName + ":scheduler:loadbalance";
 	}
 
 }

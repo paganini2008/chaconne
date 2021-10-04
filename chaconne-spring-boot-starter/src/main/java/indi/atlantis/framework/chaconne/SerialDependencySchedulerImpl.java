@@ -30,7 +30,7 @@ import com.github.paganini2008.springdessert.reditools.messager.RedisMessageSend
 
 import indi.atlantis.framework.chaconne.model.JobParameter;
 import indi.atlantis.framework.chaconne.model.JobResult;
-import indi.atlantis.framework.tridenter.Constants;
+import indi.atlantis.framework.tridenter.ClusterConstants;
 import indi.atlantis.framework.tridenter.utils.ApplicationContextUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -121,7 +121,7 @@ public class SerialDependencySchedulerImpl extends Observable implements SerialD
 
 	@Override
 	public void notifyDependants(JobKey jobKey, Object attachment) {
-		final String channel = Constants.APPLICATION_CLUSTER_NAMESPACE + clusterName + ":scheduler:job:dependency:"
+		final String channel = ClusterConstants.APPLICATION_CLUSTER_NAMESPACE + clusterName + ":scheduler:job:dependency:"
 				+ jobKey.getIdentifier();
 		JobParameter jobParam = new JobParameter(jobKey, attachment, 0);
 		redisMessageSender.sendMessage(channel, jobParam);

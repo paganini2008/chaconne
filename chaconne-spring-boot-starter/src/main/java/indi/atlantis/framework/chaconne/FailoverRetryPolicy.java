@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import indi.atlantis.framework.chaconne.model.JobParameter;
-import indi.atlantis.framework.tridenter.Constants;
+import indi.atlantis.framework.tridenter.ClusterConstants;
 import indi.atlantis.framework.tridenter.multicast.ApplicationMulticastGroup;
 
 /**
@@ -45,7 +45,7 @@ public class FailoverRetryPolicy implements RetryPolicy {
 	@Override
 	public Object retryIfNecessary(JobKey jobKey, Job job, Object attachment, Throwable reason, int retries, Logger log) throws Throwable {
 		if (applicationMulticastGroup.countOfCandidate(jobKey.getGroupName()) > 0) {
-			final String topic = Constants.APPLICATION_CLUSTER_NAMESPACE + clusterName + ":scheduler:loadbalance";
+			final String topic = ClusterConstants.APPLICATION_CLUSTER_NAMESPACE + clusterName + ":scheduler:loadbalance";
 			applicationMulticastGroup.unicast(jobKey.getGroupName(), topic, new JobParameter(jobKey, attachment, retries));
 		} else {
 			try {
