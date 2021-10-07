@@ -37,7 +37,7 @@ import io.atlantisframework.chaconne.cluster.EnableChaconneDetachedMode;
  */
 @EnableChaconneDetachedMode(DetachedMode.PRODUCER)
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
-public class ChaconneAdminApplication {
+public class ChaconneManagerApplication {
 
 	static {
 		System.setProperty("spring.devtools.restart.enabled", "false");
@@ -49,7 +49,7 @@ public class ChaconneAdminApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(ChaconneAdminApplication.class, args);
+		SpringApplication.run(ChaconneManagerApplication.class, args);
 		System.out.println(Env.getPid());
 	}
 }
