@@ -31,7 +31,7 @@ import org.springframework.scheduling.support.PeriodicTrigger;
 import org.springframework.scheduling.support.SimpleTriggerContext;
 
 import com.github.paganini2008.devtools.Observable;
-import com.github.paganini2008.devtools.date.DateUtils;
+import com.github.paganini2008.devtools.time.DateUtils;
 
 import lombok.extern.slf4j.Slf4j;
 

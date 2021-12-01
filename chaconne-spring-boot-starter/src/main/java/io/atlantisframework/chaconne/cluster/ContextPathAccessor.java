@@ -21,9 +21,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import com.github.paganini2008.devtools.StringUtils;
-import com.github.paganini2008.devtools.date.DateUtils;
 import com.github.paganini2008.devtools.multithreads.Executable;
 import com.github.paganini2008.devtools.multithreads.ThreadUtils;
+import com.github.paganini2008.devtools.time.DateUtils;
 
 import io.atlantisframework.tridenter.utils.BeanLifeCycle;
 

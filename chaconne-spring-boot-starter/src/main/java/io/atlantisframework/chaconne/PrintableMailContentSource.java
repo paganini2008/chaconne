@@ -20,7 +20,7 @@ import java.util.Date;
 import com.github.paganini2008.devtools.ExceptionUtils;
 import com.github.paganini2008.devtools.ObjectUtils;
 import com.github.paganini2008.devtools.TableView;
-import com.github.paganini2008.devtools.date.DateUtils;
+import com.github.paganini2008.devtools.time.DateUtils;
 
 /**
  * 

@@ -26,9 +26,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import com.github.paganini2008.devtools.ArrayUtils;
 import com.github.paganini2008.devtools.NumberUtils;
 import com.github.paganini2008.devtools.StringUtils;
-import com.github.paganini2008.devtools.date.Duration;
 import com.github.paganini2008.devtools.proxy.Aspect;
 import com.github.paganini2008.devtools.reflection.MethodUtils;
+import com.github.paganini2008.devtools.time.Duration;
 import com.github.paganini2008.springdessert.reditools.RedisComponentNames;
 import com.github.paganini2008.springdessert.reditools.common.RedisCountDownLatch;
 

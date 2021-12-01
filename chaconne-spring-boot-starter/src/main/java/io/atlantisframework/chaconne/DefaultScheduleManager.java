@@ -20,7 +20,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.github.paganini2008.devtools.Observable;
-import com.github.paganini2008.devtools.date.DateUtils;
+import com.github.paganini2008.devtools.time.DateUtils;
 
 import io.atlantisframework.chaconne.model.JobDetail;
 import io.atlantisframework.chaconne.model.JobTriggerDetail;

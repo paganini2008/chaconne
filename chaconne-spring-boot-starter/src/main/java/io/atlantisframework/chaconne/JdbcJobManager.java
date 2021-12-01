@@ -35,10 +35,10 @@ import com.github.paganini2008.devtools.ArrayUtils;
 import com.github.paganini2008.devtools.StringUtils;
 import com.github.paganini2008.devtools.beans.PropertyUtils;
 import com.github.paganini2008.devtools.collection.CollectionUtils;
-import com.github.paganini2008.devtools.date.DateUtils;
 import com.github.paganini2008.devtools.jdbc.PageRequest;
 import com.github.paganini2008.devtools.jdbc.PageResponse;
 import com.github.paganini2008.devtools.jdbc.ResultSetSlice;
+import com.github.paganini2008.devtools.time.DateUtils;
 
 import io.atlantisframework.chaconne.model.JobDetail;
 import io.atlantisframework.chaconne.model.JobKeyQuery;
@@ -534,7 +534,7 @@ public class JdbcJobManager implements JobManager {
 	public void selectJobTrace(JobTracePageQuery<JobTrace> pageQuery) throws Exception {
 		Date startDate = pageQuery.getStartDate();
 		if (startDate == null) {
-			startDate = DateUtils.addDays(new Date(), -30);
+			startDate = DateUtils.addDayOfMonth(new Date(), -30);
 			startDate = DateUtils.setTime(startDate, 0, 0, 0);
 		}
 		Date endDate = pageQuery.getEndDate();
@@ -594,8 +594,8 @@ public class JdbcJobManager implements JobManager {
 	public JobStatDetail[] selectJobStatByMonth(JobStatQuery query) throws Exception {
 		Map<String, JobStatDetail> results = new LinkedHashMap<String, JobStatDetail>();
 		Date startDate = DateUtils.addMonths(new Date(), -2);
-		startDate = DateUtils.setTime(DateUtils.setDay(startDate, 1), 0, 0, 0);
-		Date endDate = DateUtils.setTime(DateUtils.setDay(new Date(), 1), 0, 0, 0);
+		startDate = DateUtils.setTime(DateUtils.setDayOfMonth(startDate, 1), 0, 0, 0);
+		Date endDate = DateUtils.setTime(DateUtils.setDayOfMonth(new Date(), 1), 0, 0, 0);
 		Calendar startCal = Calendar.getInstance();
 		startCal.setTime(startDate);
 		while (startCal.getTime().compareTo(endDate) <= 0) {
@@ -632,7 +632,7 @@ public class JdbcJobManager implements JobManager {
 	@Override
 	public JobStatDetail[] selectJobStatByDay(JobStatQuery query) throws Exception {
 		Map<String, JobStatDetail> results = new LinkedHashMap<String, JobStatDetail>();
-		Date startDate = DateUtils.setTime(DateUtils.addDays(new Date(), -1 * query.getLastDays()), 0, 0, 0);
+		Date startDate = DateUtils.setTime(DateUtils.addDayOfMonth(new Date(), -1 * query.getLastDays()), 0, 0, 0);
 		Date endDate = DateUtils.setTime(new Date(), 0, 0, 0);
 		Calendar startCal = Calendar.getInstance();
 		startCal.setTime(startDate);
