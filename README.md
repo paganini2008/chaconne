@@ -352,54 +352,52 @@ public class DagTaskController {
 }
 ```
 
-### Chaconne Deployment Description
-In addition to relying on the <code>springboot</code> framework, chaconne uses <code>MySQL</code> to store task information by default (currently only supports <code>MySQL</code>), and <code>Redis</code>  to save cluster metadata and message broadcast
-So no matter which deployment method is used, you need to set <code>DataSource</code> and <code>RedisConnectionFactory</code>  in your application
 
-###### 1. Decentralized Deployment of Chaconne
-Add the <code>@EnableChaconneEmbeddedMode</code> annotation to the main function of your spring application and start it
-**Example:**
+#### How to deploy chaconne cluster with decentralized  mode?
+
+**Example 1**
+
 ``` java
 @EnableChaconneEmbeddedMode
 @SpringBootApplication
 @ComponentScan
-public class YourApplicationMain {
+public class YourApplication {
 
 	public static void main(String[] args) {
 		final int port = 8088;
 		System.setProperty("server.port", String.valueOf(port));
-		SpringApplication.run(YourApplicationMain.class, args);
+		SpringApplication.run(YourApplication.class, args);
 	}
 
 }
 ```
-###### 2. Centralized Deployment of Chaconne
-**2.1** Start the dispatch center, which requires you to create a new <code>springboot</code> project, add the annotation of <code>@EnableChaconneDetachedMode</code> on the main function, and specify it as the production end
-**Example:**
+
+
+####  How to deploy chaconne cluster with centralized mode?
+
+**Example 1**
 
 ``` java
 @EnableChaconneDetachedMode(DetachedMode.PRODUCER)
 @SpringBootApplication
-public class ChaconneManagementMain {
+public class ChaconneManagementApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ChaconneManagementMain.class, args);
+		SpringApplication.run(ChaconneManagementApplication.class, args);
 	}
 }
 ```
-*Don't forget to configure <code>DataSource</code> and <code>RedisConnectionFactory</code>*
 
-**2.2** Add the <code>@EnableChaconneDetachedMode</code> annotation to the main function of your spring application (the default is the consumer side), and then start it
+**Example 2**
+
 ``` java
-@EnableChaconneDetachedMode
+@EnableChaconneDetachedMode(DetachedMode.CONSUMER)
 @SpringBootApplication
 @ComponentScan
-public class YourApplicationMain {
+public class YourApplication {
 
 	public static void main(String[] args) {
-		final int port = 8088;
-		System.setProperty("server.port", String.valueOf(port));
-		SpringApplication.run(YourApplicationMain.class, args);
+		SpringApplication.run(YourApplication.class, args);
 	}
 
 }
