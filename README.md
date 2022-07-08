@@ -1,7 +1,7 @@
 # Chaconne Framework
 ### a lightweight distributed task scheduling framework
 
-Chaconne is a lightweight distributed task scheduling framework based on <code>SpringBoot</code>  framework. It not only has high availability and scalability but also is easy to customize  business application by API provided.
+**Chaconne** is a lightweight distributed task scheduling framework based on <code>SpringBoot</code>  framework. It not only has high availability and scalability but also is easy to customize your business application by API provided.
 
 ## Features
 
@@ -55,13 +55,8 @@ Differentiating the applications in the chaconne cluster as fixed scheduler and 
 
 ## Quick Start
 
-### How to define a task?
-1. Use annotation <code>@ChacJob</code>
-2. Inherit <code>Managedjob</code> or implement <code>Job</code>  interface
-3. Implement <code>NotManagedJob</code> interface
-
-### Run Examples
-**By using annotation <code>@ChacJob</code>** 
+#### How to define a task ?
+**Example 1**
 
 ``` java
 @ChacJob
@@ -87,11 +82,13 @@ public class DemoCronJob {
 }
 ```
 
-**By inheriting <code>ManagedJob</code>**
+
+
+**Example 2**
 
 ``` java
 @Component
-public class HealthCheckJob extends ManagedJob {
+public class MemoryCheckJob extends ManagedJob {
 
 	@Override
 	public Object execute(JobKey jobKey, Object arg, Logger log) {
@@ -117,7 +114,9 @@ public class HealthCheckJob extends ManagedJob {
 
 }
 ```
-**By implementing <code>NotManagedJob</code> interface**
+
+
+**Example 3**
 
 ``` java
 public class EtlJob implements NotManagedJob {
@@ -130,16 +129,45 @@ public class EtlJob implements NotManagedJob {
 
 }
 ```
-### Task Dependency
+
+#### Task Dependency and DAG
+
 **Task dependency** is one of the important features of chaconne. Dependency patterns are divided into serial dependency and parallel dependency,
 The so-called serial dependency means that task a is finished and then Task B is executed, that is, Task B depends on task A. Parallel dependency means that there are three tasks, namely task A, Task B and task C. task C can only be executed after task A and Task B are finished, which is similar to a business scenario of countersign
 Based on the combination of serial dependency and parallel dependency, chaconne provides a simple DAG function to simulate business scenarios similar to workflow, which enriches the usage scenarios of task dependency
+
+
+
+``` flow
+st=>start: 接收请求
+op1=>operation: 获取请求体参数
+op2=>end: 调用开发平台API
+cond1=>condition: 包含appId,sign,timestamp
+cond2=>condition: 查库appId与appSecret是否匹配
+cond3=>condition: now()-timestamp是否在有效时间内
+cond4=>condition: 根据请求体入参验证签名
+e1=>end: 返回错误信息
+st->op1->cond1
+cond1(no)->e1
+cond1(yes)->cond2
+cond2(no)->e1
+cond2(yes)->cond3
+cond3(no)->e1
+cond3(yes)->cond4
+cond4(no)->e1
+cond4(yes)->op2
+
+```
+
+
+
+
 
 ##### Serial dependency Example
 ``` java
 @ChacJob
 @ChacTrigger(triggerType = TriggerType.DEPENDENT)
-@ChacDependency({ @ChacJobKey(className = "com.chinapex.test.chaconne.job.DemoSchedJob", name = "demoSchedJob") })
+@ChacDependency({ @ChacJobKey(className = "com.test.chaconne.job.DemoSchedJob", name = "demoSchedJob") })
 public class DemoDependentJob {
 
 	@Run
@@ -165,6 +193,7 @@ There are three tasks, <code>DemoTask, DemoTaskOne and DemoTaskTwo</code>
 Let <code>DemoTaskOne</code> and <code>DemoTaskTwo</code> finish before executing <code>DemoTask</code>, and <code>DemoTask</code> can obtain the values of <code>DemoTaskOne</code> and <code>DemoTaskTwo</code> after execution
 
 **<code>DemoTaskOne</code>**
+
 ``` java
 @ChacJob
 @ChacTrigger(triggerType = TriggerType.SIMPLE)
