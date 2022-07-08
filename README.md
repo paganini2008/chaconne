@@ -130,13 +130,9 @@ public class CommonJob implements NotManagedJob {
 }
 ```
 
-#### Task Dependency and DAG
+#### How to define DAG?
 
-**Task dependency** is one of the important features of chaconne. Dependency patterns are divided into serial dependency and parallel dependency,
-The so-called serial dependency means that task a is finished and then Task B is executed, that is, Task B depends on task A. Parallel dependency means that there are three tasks, namely task A, Task B and task C. task C can only be executed after task A and Task B are finished, which is similar to a business scenario of countersign
-Based on the combination of serial dependency and parallel dependency, chaconne provides a simple DAG function to simulate business scenarios similar to workflow, which enriches the usage scenarios of task dependency
-
-
+**Example 1**
 
 ``` mermaid
 flowchart TD;
@@ -145,16 +141,10 @@ flowchart TD;
 
 ```
 
-
-
-
-
-##### Serial dependency Example
-
 TaskA.java
 
 ``` java
-package com.test.chaconne
+package com.test.chaconne;
 
 @ChacJob(name = "taskA")
 @ChacTrigger(cron = "0 */1 * * * ?")
@@ -162,8 +152,7 @@ public class TaskA {
 
 	@Run
 	public Object execute(JobKey jobKey, Object attachment, Logger log) throws Exception {
-		log.info("TaskA is running at: {}", DateUtils.format(System.currentTimeMillis()));
-		return "TaskA";
+		return "TaskA Finished";
 	}
 
 }
@@ -174,6 +163,8 @@ public class TaskA {
 TaskB.java
 
 ``` java
+package com.test.chaconne;
+
 @ChacJob(name = "taskB")
 @ChacTrigger(triggerType = TriggerType.DEPENDENT)
 @ChacDependency({ @ChacJobKey(className = "com.test.chaconne.TaskA", name = "taskA") })
@@ -181,18 +172,8 @@ public class TaskB {
 
 	@Run
 	public Object execute(JobKey jobKey, Object attachment, Logger log) throws Exception {
-		log.info("TaskB is running at: {}", DateUtils.format(System.currentTimeMillis()));
-		return "TaskB";
-	}
-
-	@OnSuccess
-	public void onSuccess(JobKey jobKey, Object result, Logger log) {
-		log.info("TaskB's return value is: {}", result);
-	}
-
-	@OnFailure
-	public void onFailure(JobKey jobKey, Throwable e, Logger log) {
-		log.error("TaskB is failed by cause: {}", e.getMessage(), e);
+		System.out.println("TaskA's state: " + attachment); // Print 'TaskA Finished'
+		return "TaskB Finished";
 	}
 
 }
@@ -200,106 +181,150 @@ public class TaskB {
 
 
 
-
-
-
-
-
-##### Parallel dependency Example
-
-There are three tasks, <code>DemoTask, DemoTaskOne and DemoTaskTwo</code>
-Let <code>DemoTaskOne</code> and <code>DemoTaskTwo</code> finish before executing <code>DemoTask</code>, and <code>DemoTask</code> can obtain the values of <code>DemoTaskOne</code> and <code>DemoTaskTwo</code> after execution
-
-**<code>DemoTaskOne</code>**
+TaskC.java
 
 ``` java
-@ChacJob
-@ChacTrigger(triggerType = TriggerType.SIMPLE)
-public class DemoTaskOne {
+package com.test.chaconne;
+
+@ChacJob(name = "taskC")
+@ChacTrigger(triggerType = TriggerType.DEPENDENT)
+@ChacDependency({ @ChacJobKey(className = "com.test.chaconne.TaskB", name = "taskB") })
+public class TaskC {
 
 	@Run
 	public Object execute(JobKey jobKey, Object attachment, Logger log) throws Exception {
-		log.info("DemoTaskOne is running at: {}", DateUtils.format(System.currentTimeMillis()));
-		return RandomUtils.randomLong(1000000L, 1000000000L);
+        System.out.println("TaskB's state: " + attachment); // Print 'TaskB Finished'
+		return "TaskC Finished";
 	}
 
 	@OnSuccess
 	public void onSuccess(JobKey jobKey, Object result, Logger log) {
-		log.info("DemoTaskOne return value is: {}", result);
+        System.out.println("TaskC's state: " + attachment); // Print 'TaskC Finished'
 	}
 
 	@OnFailure
 	public void onFailure(JobKey jobKey, Throwable e, Logger log) {
-		log.error("DemoTaskOne is failed by cause: {}", e.getMessage(), e);
+        // Do something
 	}
 
 }
 ```
-**<code>DemoTaskTwo</code>**
+
+
+
+Run result:
+
+``` log
+TaskA's state: TaskA Finished
+TaskB's state: TaskB Finished
+TaskC's state: TaskC Finished
+```
+
+**Example 2**
+
+``` mermaid
+flowchart TD;
+     Task-A-->Task-C;
+     Task-B-->Task-C;
+
+```
+
+TaskA.java
+
 ``` java
-@ChacJob
+package com.test.chaconne;
+
+@ChacJob(name = "taskA")
 @ChacTrigger(triggerType = TriggerType.SIMPLE)
-public class DemoTaskTwo {
+public class TaskA {
 
 	@Run
 	public Object execute(JobKey jobKey, Object attachment, Logger log) throws Exception {
-		log.info("DemoTaskTwo is running at: {}", DateUtils.format(System.currentTimeMillis()));
-		return RandomUtils.randomLong(1000000L, 1000000000L);
+		return "TaskA Finished";
 	}
 
-	@OnSuccess
-	public void onSuccess(JobKey jobKey, Object result, Logger log) {
-		log.info("DemoTaskTwo return value is: {}", result);
-	}
+}
+```
 
-	@OnFailure
-	public void onFailure(JobKey jobKey, Throwable e, Logger log) {
-		log.error("DemoTaskTwo is failed by cause: {}", e.getMessage(), e);
+
+TaskB.java
+
+``` java
+package com.test.chaconne;
+
+@ChacJob(name = "taskB")
+@ChacTrigger(triggerType = TriggerType.SIMPLE)
+public class TaskB {
+
+	@Run
+	public Object execute(JobKey jobKey, Object attachment, Logger log) throws Exception {
+		return "TaskB Finished";
 	}
 	
 }
 
 ```
-**<code>DemoTask</code>**
+
+
+TaskC.java
 
 ``` java
 @ChacJob
 @ChacTrigger(cron = "0 0/1 * * * ?", triggerType = TriggerType.CRON)
-@ChacFork({ @ChacJobKey(className = "com.chinapex.test.chaconne.job.DemoTaskOne", name = "demoTaskOne"),
-		@ChacJobKey(className = "com.chinapex.test.chaconne.job.DemoTaskTwo", name = "demoTaskTwo") })
-public class DemoTask {
+@ChacFork({
+            @ChacJobKey(className = "com.test.chaconne.TaskA", name = "taskA"),
+		    @ChacJobKey(className = "com.test.chaconne.TaskB", name = "taskB") })
+public class TaskC {
 
 	@Run
 	public Object execute(JobKey jobKey, Object attachment, Logger log) throws Exception {
-		log.info("DemoTask is running at: {}", DateUtils.format(System.currentTimeMillis()));
-		TaskJoinResult joinResult = (TaskJoinResult) attachment;
-		TaskForkResult[] forkResults = joinResult.getTaskForkResults();
-		long max = 0;
-		for (TaskForkResult forkResult : forkResults) {
-			max = Long.max(max, (Long) forkResult.getResult());
+		JobResult result = (JobResult) attachment;
+		JobResult[] forkResults = result.getForkJobResults();
+		for (JobResult forkResult : forkResults) {
+            // Print TaskA and TaskB's state
+			System.out.println(forkResult.getJobKey().getName() + "'s state: " + forkResult.getResult());
 		}
-		return max;
+		return "TaskC Finished";
 	}
 
 	@OnSuccess
 	public void onSuccess(JobKey jobKey, Object result, Logger log) {
-		log.info("DemoTask return max value is: {}", result);
+        System.out.println("TaskC's state: " + attachment); // Print 'TaskC Finished'
 	}
 
 	@OnFailure
 	public void onFailure(JobKey jobKey, Throwable e, Logger log) {
-		log.error("DemoTask is failed by cause: {}", e.getMessage(), e);
+        // Do something
 	}
 
 }
 ```
 
-### Dag Task Example
-**Dag Tasks currently only support API creation**
+Run result
+
+``` log
+TaskA's state: TaskA Finished
+TaskB's state: TaskB Finished
+TaskC's state: TaskC Finished
+```
+
+
+**Example 3**
+
+``` mermaid
+flowchart TD;
+     Task-A-->Task-B;
+     Task-A-->Task-C;
+     Task-B-->Task-D;
+     Task-C-->Task-D;
+```
+
+Using API create Dag Task
+
 ``` java
 @RequestMapping("/dag")
 @RestController
-public class DagJobController {
+public class DagTaskController {
 
 	@Value("${spring.application.cluster.name}")
 	private String clusterName;
@@ -311,14 +336,15 @@ public class DagJobController {
 	private JobManager jobManager;
 
 	@GetMapping("/create")
-	public Map<String, Object> createTask() throws Exception {
+	public Map<String, Object> createDagTask() throws Exception {
 		Dag dag = new Dag(clusterName, applicationName, "testDag");
 		dag.setTrigger(new CronTrigger("0 0/1 * * * ?"));
 		dag.setDescription("This is only a demo of dag job");
-		DagFlow first = dag.startWith(clusterName, applicationName, "demoDagStart", DemoDagStart.class.getName());
-		DagFlow second = first.flow(clusterName, applicationName, "demoDag", DemoDag.class.getName());
-		second.fork(clusterName, applicationName, "demoDagOne", DemoDagOne.class.getName());
-		second.fork(clusterName, applicationName, "demoDagTwo", DemoDagTwo.class.getName());
+		
+		DagFlow taskA = dag.startWith(clusterName, applicationName, "taskA", TaskA.class.getName());
+		DagFlow taskD = taskA.flow(clusterName, applicationName, "taskD", TaskD.class.getName());
+		taskD.fork(clusterName, applicationName, "taskB", TaskB.class.getName());
+		taskD.fork(clusterName, applicationName, "taskC", TaskC.class.getName());
 		jobManager.persistJob(dag, "123");
 		return Collections.singletonMap("ok", 1);
 	}
