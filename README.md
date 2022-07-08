@@ -1,37 +1,43 @@
-# Chaconne Project
+# Chaconne Framework
 ### a lightweight distributed task scheduling framework
-Chaconne is a lightweight distributed task scheduling framework written in Java based on springboot framework. Reference chaconne components to your system can help you build a distributed task cluster very quickly.
 
-### Two cluster deployment modes of chaconne
-1. Decentralized deployment mode
-There is no fixed scheduling center node, any node in the cluster can participate in the scheduling task
-2. Centralized deployment mode
-It is divided into scheduling center and task execution node, both of which support cluster
+Chaconne is a lightweight distributed task scheduling framework based on <code>SpringBoot</code>  framework. It not only has high availability and scalability but also is easy to customize  business application by API provided.
 
-### Chaconne  consists of two parts
-1. chaconne-spring-boot-starter
-The core jar package contains all the core functions of chaconne
-2. chaconne-console
-Chaconne web management interface for task management and viewing task running status
+## Features
 
-### Implementation principle of chaconne
-Chaconne relies on [tridenter](https://github.com/paganini2008/tridenter-spring-boot-starter.git) framework to realize task cluster. It uses message unicast mechanism to realize task distribution and load balancing, slice processing and other advanced features. It retains tridenter's definition of cluster and supports task calling between clusters
+* Perfectly supporting for <code>SpringBoot</code> framework (2.2.x or later)
+* Supporting master-slave cluster mode and load-balance cluster mode for scheduling tasks
+* Providing rich APIs for defining a task
+* Exposing plenty of  external user interfaces to get information about cluster, task and task state
+* Supporting dynamically saving, pausing and deleting tasks
+* Supporting retry after task failure and failure transferring
+* Supporting task logs saving and tracking
+* Supporting task segmentation and  recombination of execution results
+* Providing APIs to build DAG to describe dependency relationship between tasks
+* Supporting to customize task termination policy
+* Supporting to freeze and reset a task if has run a long time
+* Supporting email alarm if task running encounters exceptions
 
-### Chaconne feature list
-1. Perfect support for spring boot framework (2.2.0 +)
-2. Support <code>cron</code> expression timing task, parameter setting timing task and delay task
-3. Support dynamic saving and deleting tasks
-4. Support annotation saving task
-5. Built in multiple load balancing algorithms and support custom load balancing algorithms
-6. Support failed retrial and failed transfer
-7. Support log tracking
-8. Support task fragmentation
-9. Support task dependency and Simple DAG
-10. Support task custom termination strategy
-11. Support task timeout cooling and reset
-12. Support email alarm
+## Modules
 
-### Install:
+* chaconne-spring-boot-starter
+The core class library of chaconne framework, providing implementations of most of core function and a series of external user API, including cluster management, task management and task runtime management.
+
+* chaconne-manager
+If being deployed with decentralized mode, chaconne framework provides an example application to act scheduler role  to call task executors. 
+
+* chaconne-console
+Chaconne framework provides a  web application to display task info, running data and statistical data.
+
+## Deploy
+
+* Decentralized Deployment Mode
+No fixed and specific scheduler role, any application in the chaconne cluster can play the scheduler or executor role during the period of task scheduling.
+
+* Centralized Deployment Mode
+Differentiating the applications in the chaconne cluster as fixed scheduler and executor role during the period of task scheduling.
+
+## Install
 ``` xml
 <dependency>
     <artifactId>chaconne-spring-boot-starter</artifactId>
@@ -39,12 +45,15 @@ Chaconne relies on [tridenter](https://github.com/paganini2008/tridenter-spring-
     <version>1.0-RC1</version>
 </dependency>
 ```
-### Compatibility
 
-1. jdk1.8 (or later)
-2. Spring Boot Framework 2.2.x (or later)
-3. <code>Redis 4.x </code>(or later)
-4. <code>MySQL 5.x</code> (or later)
+## Compatibility
+
+* Jdk1.8 (or later)
+* <code>Spring Boot</code> Framework 2.2.x (or later)
+* <code>Redis 4.x </code> (or later)
+* <code>MySQL 5.x</code> (or later)
+
+## Quick Start
 
 ### How to define a task?
 1. Use annotation <code>@ChacJob</code>
