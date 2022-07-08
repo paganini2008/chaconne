@@ -61,7 +61,7 @@ Differentiating the applications in the chaconne cluster as fixed scheduler and 
 ``` java
 @ChacJob
 @ChacTrigger(cron = "*/5 * * * * ?")
-public class DemoCronJob {
+public class CronJob {
 
 	@Run
 	public Object execute(JobKey jobKey, Object attachment, Logger log) throws Exception {
@@ -119,7 +119,7 @@ public class MemoryCheckJob extends ManagedJob {
 **Example 3**
 
 ``` java
-public class EtlJob implements NotManagedJob {
+public class CommonJob implements NotManagedJob {
 
 	@Override
 	public Object execute(JobKey jobKey, Object attachment, Logger log) {
@@ -138,24 +138,10 @@ Based on the combination of serial dependency and parallel dependency, chaconne 
 
 
 
-``` flow
-st=>start: 接收请求
-op1=>operation: 获取请求体参数
-op2=>end: 调用开发平台API
-cond1=>condition: 包含appId,sign,timestamp
-cond2=>condition: 查库appId与appSecret是否匹配
-cond3=>condition: now()-timestamp是否在有效时间内
-cond4=>condition: 根据请求体入参验证签名
-e1=>end: 返回错误信息
-st->op1->cond1
-cond1(no)->e1
-cond1(yes)->cond2
-cond2(no)->e1
-cond2(yes)->cond3
-cond3(no)->e1
-cond3(yes)->cond4
-cond4(no)->e1
-cond4(yes)->op2
+``` mermaid
+flowchart TD;
+     Task-A-->Task-B;
+     Task-B-->Task-C;
 
 ```
 
@@ -164,31 +150,63 @@ cond4(yes)->op2
 
 
 ##### Serial dependency Example
+
+TaskA.java
+
 ``` java
-@ChacJob
-@ChacTrigger(triggerType = TriggerType.DEPENDENT)
-@ChacDependency({ @ChacJobKey(className = "com.test.chaconne.job.DemoSchedJob", name = "demoSchedJob") })
-public class DemoDependentJob {
+package com.test.chaconne
+
+@ChacJob(name = "taskA")
+@ChacTrigger(cron = "0 */1 * * * ?")
+public class TaskA {
 
 	@Run
 	public Object execute(JobKey jobKey, Object attachment, Logger log) throws Exception {
-		log.info("DemoDependentJob is running at: {}", DateUtils.format(System.currentTimeMillis()));
-		return RandomUtils.randomLong(1000000L, 1000000000L);
-	}
-
-	@OnSuccess
-	public void onSuccess(JobKey jobKey, Object result, Logger log) {
-		log.info("DemoDependentJob's return value is: {}", result);
-	}
-
-	@OnFailure
-	public void onFailure(JobKey jobKey, Throwable e, Logger log) {
-		log.error("DemoDependentJob is failed by cause: {}", e.getMessage(), e);
+		log.info("TaskA is running at: {}", DateUtils.format(System.currentTimeMillis()));
+		return "TaskA";
 	}
 
 }
 ```
+
+
+
+TaskB.java
+
+``` java
+@ChacJob(name = "taskB")
+@ChacTrigger(triggerType = TriggerType.DEPENDENT)
+@ChacDependency({ @ChacJobKey(className = "com.test.chaconne.TaskA", name = "taskA") })
+public class TaskB {
+
+	@Run
+	public Object execute(JobKey jobKey, Object attachment, Logger log) throws Exception {
+		log.info("TaskB is running at: {}", DateUtils.format(System.currentTimeMillis()));
+		return "TaskB";
+	}
+
+	@OnSuccess
+	public void onSuccess(JobKey jobKey, Object result, Logger log) {
+		log.info("TaskB's return value is: {}", result);
+	}
+
+	@OnFailure
+	public void onFailure(JobKey jobKey, Throwable e, Logger log) {
+		log.error("TaskB is failed by cause: {}", e.getMessage(), e);
+	}
+
+}
+```
+
+
+
+
+
+
+
+
 ##### Parallel dependency Example
+
 There are three tasks, <code>DemoTask, DemoTaskOne and DemoTaskTwo</code>
 Let <code>DemoTaskOne</code> and <code>DemoTaskTwo</code> finish before executing <code>DemoTask</code>, and <code>DemoTask</code> can obtain the values of <code>DemoTaskOne</code> and <code>DemoTaskTwo</code> after execution
 
