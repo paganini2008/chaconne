@@ -33,6 +33,8 @@ public @interface Task {
 
     int maxRetryCount() default -1;
 
-    boolean updated() default true;
+    String initialParameter() default "";
+
+    UpdatePolicy updatePolicy() default UpdatePolicy.MERGE;
 
 }

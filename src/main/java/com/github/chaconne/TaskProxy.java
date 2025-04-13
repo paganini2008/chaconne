@@ -3,6 +3,7 @@ package com.github.chaconne;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
@@ -20,20 +21,21 @@ import com.github.cronsmith.scheduler.ErrorHandler;
 public class TaskProxy implements InvocationHandler {
 
     private Method callbackMethod;
+    private final LocalDateTime datetime;
     private final TaskDetail taskDetail;
     private final Object proxyObject;
     private final ExecutorService executorService;
     private final List<TaskListener> taskListeners;
     private final ErrorHandler errorHandler;
 
-    TaskProxy(TaskDetail taskDetail, ExecutorService executorService,
+    TaskProxy(LocalDateTime datetime, TaskDetail taskDetail, ExecutorService executorService,
             List<TaskListener> taskListeners, ErrorHandler errorHandler) {
+        this.datetime = datetime;
         this.taskDetail = taskDetail;
         try {
             this.callbackMethod = taskDetail.getTask().getClass().getDeclaredMethod("handleResult",
                     Object.class, Throwable.class);
         } catch (Exception e) {
-            this.callbackMethod = null;
         }
         this.proxyObject = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
                 new Class<?>[] {Task.class}, this);
@@ -49,7 +51,7 @@ public class TaskProxy implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if ("execute".equals(method.getName())) {
+        if (Task.DEFAULT_METHOD_NAME.equals(method.getName())) {
             taskListeners.forEach(l -> {
                 l.onTaskBegin(taskDetail);
             });
@@ -67,7 +69,7 @@ public class TaskProxy implements InvocationHandler {
                 }
             } catch (Throwable e) {
                 thrown = e;
-                errorHandler.onHandleTask(e);
+                errorHandler.onHandleTask(datetime, e);
                 throw e;
             } finally {
                 handleReturnValue(returnValue, thrown);
@@ -84,7 +86,7 @@ public class TaskProxy implements InvocationHandler {
                     callbackMethod.invoke(taskDetail.getTask(), returnValue, thrown);
                 }
             } catch (Throwable e) {
-                errorHandler.onHandleResult(e);
+                errorHandler.onHandleTaskResult(datetime, e);
             } finally {
                 taskListeners.forEach(l -> {
                     l.onTaskEnd(taskDetail, thrown);

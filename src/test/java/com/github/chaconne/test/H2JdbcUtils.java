@@ -12,18 +12,19 @@ import org.h2.tools.RunScript;
 
 /**
  * 
- * @Description: JdbcUtils
+ * @Description: H2JdbcUtils
  * @Author: Fred Feng
- * @Date: 09/04/2025
+ * @Date: 14/04/2025
  * @Version 1.0.0
  */
-public abstract class JdbcUtils {
+public abstract class H2JdbcUtils {
 
     public static DataSource initializeDB() throws SQLException {
         TestDataSource dataSource = new TestDataSource();
         dataSource.setDriverClassName("org.h2.Driver");
         dataSource.setJdbcUrl("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1");
         dataSource.setUser("sa");
+        dataSource.setAutoCommit(true);
         try (Connection connection = dataSource.getConnection();
                 Statement sm = connection.createStatement()) {
             System.out.println(connection);

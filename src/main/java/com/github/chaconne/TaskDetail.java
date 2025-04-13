@@ -21,6 +21,8 @@ public interface TaskDetail {
 
     LocalDateTime getPreviousFiredDateTime();
 
+    LocalDateTime getLastModified();
+
     default boolean isUnavailable() {
         return getTaskStatus() == TaskStatus.FINISHED || getTaskStatus() == TaskStatus.CANCELED
                 || getTaskStatus() == TaskStatus.PAUSED;

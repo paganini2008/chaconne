@@ -11,6 +11,8 @@ import com.github.cronsmith.cron.CronExpression;
  */
 public interface Task {
 
+    String DEFAULT_METHOD_NAME = "execute";
+
     default TaskId getTaskId() {
         return TaskId.of(getClass().getSimpleName());
     }
@@ -26,7 +28,7 @@ public interface Task {
     }
 
     default int getMaxRetryCount() {
-        return -1;
+        return 0;
     }
 
     Object execute(String initialParameter);

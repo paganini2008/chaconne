@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import com.github.chaconne.utils.MapUtils;
 
 /**
  * 
@@ -17,27 +18,23 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class InMemoryTaskQueue implements UpcomingTaskQueue {
 
-    private final Map<LocalDateTime, Set<TaskId>> taskIds = new ConcurrentHashMap<>();
+    private final Map<LocalDateTime, Set<TaskId>> queue = new ConcurrentHashMap<>();
 
     @Override
     public boolean addTask(LocalDateTime ldt, TaskId taskId) {
-        Set<TaskId> ids = taskIds.get(ldt);
-        if (ids == null) {
-            taskIds.putIfAbsent(ldt, new CopyOnWriteArraySet<TaskId>());
-            ids = taskIds.get(ldt);
-        }
+        Set<TaskId> ids = MapUtils.getOrCreate(queue, ldt, () -> new CopyOnWriteArraySet<>());
         return ids.add(taskId);
     }
 
     @Override
     public Collection<TaskId> matchTaskIds(LocalDateTime ldt) {
-        Set<TaskId> set = taskIds.remove(ldt);
+        Set<TaskId> set = queue.remove(ldt);
         return set != null ? Collections.unmodifiableCollection(set) : Collections.emptyList();
     }
 
     @Override
     public int length() {
-        return taskIds.size();
+        return queue.size();
     }
 
 }

@@ -1,5 +1,7 @@
 package com.github.chaconne;
 
+import java.io.Serializable;
+
 /**
  * 
  * @Description: DefaultTaskId
@@ -7,7 +9,9 @@ package com.github.chaconne;
  * @Date: 30/03/2025
  * @Version 1.0.0
  */
-public class DefaultTaskId implements TaskId {
+public class DefaultTaskId implements TaskId, Serializable {
+
+    private static final long serialVersionUID = -2920712254124421978L;
 
     private final String group;
     private final String name;

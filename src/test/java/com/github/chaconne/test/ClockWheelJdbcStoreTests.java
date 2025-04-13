@@ -2,12 +2,12 @@ package com.github.chaconne.test;
 
 import java.util.List;
 import javax.sql.DataSource;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import com.github.chaconne.ClockWheelScheduler;
 import com.github.chaconne.JdbcTaskManager;
-import com.github.chaconne.TaskInfoVo;
+import com.github.chaconne.TaskDetailVo;
 
 /**
  * 
@@ -18,12 +18,12 @@ import com.github.chaconne.TaskInfoVo;
  */
 public class ClockWheelJdbcStoreTests {
 
-    private DataSource dataSource;
+    private static DataSource dataSource;
 
-    @Before
-    public void start() throws Exception {
-        dataSource = JdbcUtils.initializeDB();
-        JdbcUtils.createTables(dataSource);
+    @BeforeClass
+    public static void start() throws Exception {
+        dataSource = H2JdbcUtils.initializeDB();
+        H2JdbcUtils.createTables(dataSource);
     }
 
     @Test
@@ -43,15 +43,16 @@ public class ClockWheelJdbcStoreTests {
     @Test
     public void testB() {
         JdbcTaskManager jdbcTaskManager = new JdbcTaskManager(dataSource);
-        List<TaskInfoVo> taskInfos = jdbcTaskManager.findTaskInfos("default", null, 10, 0);
-        for (TaskInfoVo vo : taskInfos) {
-            System.out.println(vo.getTaskName() + "\t" + vo.getTaskGroup() + "\t" + vo.getCron());
+        List<TaskDetailVo> taskInfos = jdbcTaskManager.findTaskDetails("default", null, 10, 0);
+        for (TaskDetailVo vo : taskInfos) {
+            System.out.println(vo.toString());
         }
     }
 
-    @After
-    public void end() throws Exception {
-        JdbcUtils.dropTables(dataSource);
+    @AfterClass
+    public static void end() throws Exception {
+        Thread.sleep(3000L);
+        H2JdbcUtils.dropTables(dataSource);
     }
 
 }

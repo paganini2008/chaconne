@@ -40,7 +40,7 @@ public class ClockWheelScheduler {
     private UpcomingTaskQueue taskQueue = new InMemoryTaskQueue();
     private ZoneId zoneId = ZoneId.of("UTC");
     private List<TaskListener> taskListeners = new ArrayList<>();
-    private ErrorHandler errorHandler;
+    private ErrorHandler errorHandler = new LoggingErrorHandler();
     private final AtomicBoolean started = new AtomicBoolean();
     private OneOffTimer consumer;
 
@@ -158,7 +158,8 @@ public class ClockWheelScheduler {
 
         @Override
         public boolean execute() {
-            Collection<TaskId> taskIds = taskQueue.matchTaskIds(getNow());
+            final LocalDateTime firedDateTime = getNow();
+            Collection<TaskId> taskIds = taskQueue.matchTaskIds(firedDateTime);
             if (taskIds != null && taskIds.size() > 0) {
                 taskIds.forEach(taskId -> {
 
@@ -166,10 +167,10 @@ public class ClockWheelScheduler {
                     TaskDetail taskDetail = taskManager.getTaskDetail(taskId);
                     if (taskDetail != null && !taskDetail.isUnavailable()) {
                         taskManager.setTaskStatus(taskId, TaskStatus.RUNNING);
-                        TaskProxy taskProxy = new TaskProxy(taskDetail, workerThreads,
-                                taskListeners, errorHandler);
+                        TaskProxy taskProxy = new TaskProxy(firedDateTime, taskDetail,
+                                workerThreads, taskListeners, errorHandler);
                         Throwable reason = null;
-                        int n = 0;
+                        int retryCount = 0;
                         do {
                             try {
                                 taskProxy.getProxyObject()
@@ -178,14 +179,19 @@ public class ClockWheelScheduler {
                             } catch (Throwable e) {
                                 reason = e;
                             }
-                        } while (n++ < taskDetail.getTask().getMaxRetryCount() && reason != null);
+                        } while (retryCount++ < taskDetail.getTask().getMaxRetryCount()
+                                && reason != null);
                         taskManager.setTaskStatus(taskId, TaskStatus.STANDBY);
                     }
                 });
             }
             return started.get();
         }
+
+        @Override
+        public boolean onError(Throwable e) {
+            errorHandler.onHandleScheduler(e);
+            return true;
+        }
     }
-
-
 }

@@ -1,5 +1,6 @@
 package com.github.chaconne;
 
+import static com.github.chaconne.Settings.DEFAULT_ZONE_ID;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,14 +8,11 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.sql.DataSource;
 import com.github.cronsmith.cron.CronExpression;
-import com.github.cronsmith.scheduler.CamelCasedHashMap;
 import com.github.cronsmith.scheduler.CronTaskException;
 import com.github.cronsmith.scheduler.StringUtils;
 
@@ -27,12 +25,12 @@ import com.github.cronsmith.scheduler.StringUtils;
  */
 public class JdbcTaskManager implements TaskManager {
 
-    private static final ZoneId defaultZoneId = ZoneId.of("UTC");
-
     private static final String SQL_INSERT_STATEMENT =
-            "insert into cron_task_detail(task_name,task_group,task_class,description,cron_expression,cron,next_fired_datetime,max_retry_count,timeout,task_status,initial_parameter) values (?,?,?,?,?,?,?,?,?,?,?)";
+            "insert into cron_task_detail(task_name,task_group,task_class,task_method,description,cron_expression,cron,next_fired_datetime,max_retry_count,timeout,task_status,initial_parameter,last_modified) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String SQL_UPDATE_STATEMENT =
+            "update cron_task_detail set task_class=?,task_method=?,description=?,cron_expression=?,cron=?,max_retry_count=?,timeout=?,initial_parameter=?,last_modified=? where task_name=? and task_group=?";
     private static final String SELECT_COLUMNS =
-            "task_name,task_group,task_class,description,cron_expression,next_fired_datetime,prev_fired_datetime,max_retry_count,timeout,task_status,initial_parameter,last_modified";
+            "task_name,task_group,task_class,task_method,description,cron,next_fired_datetime,prev_fired_datetime,max_retry_count,timeout,task_status,initial_parameter,last_modified";
     private static final String SQL_SELECT_ONE_STATEMENT = String.format(
             "select %s from cron_task_detail where task_name=? and task_group=?", SELECT_COLUMNS);
     private static final String SQL_CHECK_EXISTENCE_STATEMENT =
@@ -44,39 +42,21 @@ public class JdbcTaskManager implements TaskManager {
     private static final String SQL_SET_TASK_STATUS_STATEMENT =
             "update cron_task_detail set task_status=?, last_modified=? where task_name=? and task_group=?";
     private static final String SQL_SET_TASK_NEXT_FIRED_STATEMENT =
-            "update cron_task_detail set next_fired_datetime=?, prev_fired_datetime=?, last_modified=? where task_name=? and task_group=?";
+            "update cron_task_detail set next_fired_datetime=?, prev_fired_datetime=?, cron_expression=?, last_modified=? where task_name=? and task_group=?";
     private static final String SQL_COUNT_ALL_STATEMENT =
             "select count(*) from cron_task_detail where 1=1";
     private static final String SQL_SELECT_ALL_STATEMENT =
             String.format("select %s from cron_task_detail where 1=1", SELECT_COLUMNS);
 
     private final DataSource dataSource;
-    private final Map<TaskId, Task> taskObjectCache = new ConcurrentHashMap<>();
+    private TaskInvocation taskInvocation = new DefaultTaskInvocation();
 
     public JdbcTaskManager(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    protected Task retrieveTaskObject(TaskId taskId, Map<String, Object> info) {
-        Task task = taskObjectCache.get(taskId);
-        if (task == null) {
-            taskObjectCache.putIfAbsent(taskId, createTaskObject(info));
-            task = taskObjectCache.get(taskId);
-        }
-        return task;
-    }
-
-    protected Task createTaskObject(Map<String, Object> info) {
-        final String taskClassName = (String) info.get("taskClass");
-        Class<?> taskClass;
-        try {
-            taskClass = Class.forName(taskClassName, false,
-                    Thread.currentThread().getContextClassLoader());
-            return taskClass.isAssignableFrom(CustomTask.class) ? new CustomTask(info)
-                    : (Task) taskClass.newInstance();
-        } catch (Exception e) {
-            throw new CronTaskException(e.getMessage(), e);
-        }
+    public void setTaskInvocation(TaskInvocation taskInvocation) {
+        this.taskInvocation = taskInvocation;
     }
 
     private class JdbcTaskDetail implements TaskDetail {
@@ -89,9 +69,8 @@ public class JdbcTaskManager implements TaskManager {
 
         @Override
         public Task getTask() {
-            String taskName = (String) info.get("taskName");
-            String taskGroup = (String) info.get("taskGroup");
-            return retrieveTaskObject(TaskId.of(taskGroup, taskName), info);
+            String taskClassName = (String) info.get("taskClass");
+            return taskInvocation.retrieveTaskObject(taskClassName, info);
         }
 
         @Override
@@ -114,9 +93,9 @@ public class JdbcTaskManager implements TaskManager {
             return (LocalDateTime) info.get("prevFiredDateTime");
         }
 
-        public CronExpression getCronExpression() {
-            byte[] bytes = (byte[]) info.get("cronExpression");
-            return CronExpression.deserialize(bytes);
+        @Override
+        public LocalDateTime getLastModified() {
+            return (LocalDateTime) info.get("lastModified");
         }
 
     }
@@ -124,27 +103,57 @@ public class JdbcTaskManager implements TaskManager {
     @Override
     public TaskDetail saveTask(Task task, String initialParameter) throws CronTaskException {
         if (hasTask(task.getTaskId())) {
-            return getTaskDetail(task.getTaskId());
+            updateTask(task, initialParameter);
+        } else {
+            try (Connection connection = dataSource.getConnection();
+                    PreparedStatement psm = connection.prepareStatement(SQL_INSERT_STATEMENT)) {
+                LocalDateTime nextFired = task.getCronExpression().sync().getNextFiredDateTime();
+                psm.setObject(1, task.getTaskId().getName());
+                psm.setObject(2, task.getTaskId().getGroup());
+                psm.setObject(3, task instanceof CustomTask ? ((CustomTask) task).getTaskClassName()
+                        : task.getClass().getName());
+                psm.setObject(4,
+                        task instanceof CustomTask ? ((CustomTask) task).getTaskMethodName()
+                                : Task.DEFAULT_METHOD_NAME);
+                psm.setObject(5, task.getDescription());
+                psm.setBytes(6, task.getCronExpression().serialize());
+                psm.setObject(7, task.getCronExpression().toString());
+                psm.setObject(8, nextFired);
+                psm.setObject(9, task.getMaxRetryCount());
+                psm.setObject(10, task.getTimeout());
+                psm.setObject(11, TaskStatus.STANDBY.name().toLowerCase());
+                psm.setObject(12, initialParameter);
+                psm.setObject(13, LocalDateTime.now(DEFAULT_ZONE_ID));
+                psm.executeUpdate();
+                connection.commit();
+            } catch (SQLException e) {
+                throw new CronTaskException(e.getMessage(), e);
+            }
         }
+        return getTaskDetail(task.getTaskId());
+    }
+
+    private void updateTask(Task task, String initialParameter) {
         try (Connection connection = dataSource.getConnection();
-                PreparedStatement psm = connection.prepareStatement(SQL_INSERT_STATEMENT)) {
-            LocalDateTime nextFired = task.getCronExpression().sync().getNextFiredDateTime();
-            psm.setObject(1, task.getTaskId().getName());
-            psm.setObject(2, task.getTaskId().getGroup());
-            psm.setObject(3, task.getClass().getName());
-            psm.setObject(4, task.getDescription());
-            psm.setObject(5, task.getCronExpression().serialize());
-            psm.setObject(6, task.getCronExpression().toString());
-            psm.setObject(7, nextFired);
-            psm.setObject(8, task.getMaxRetryCount());
-            psm.setObject(9, task.getTimeout());
-            psm.setObject(10, TaskStatus.STANDBY.name().toLowerCase());
-            psm.setObject(11, initialParameter);
+                PreparedStatement psm = connection.prepareStatement(SQL_UPDATE_STATEMENT)) {
+            psm.setObject(1, task instanceof CustomTask ? ((CustomTask) task).getTaskClassName()
+                    : task.getClass().getName());
+            psm.setObject(2, task instanceof CustomTask ? ((CustomTask) task).getTaskMethodName()
+                    : Task.DEFAULT_METHOD_NAME);
+            psm.setObject(3, task.getDescription());
+            psm.setBytes(4, task.getCronExpression().serialize());
+            psm.setObject(5, task.getCronExpression().toString());
+            psm.setObject(6, task.getMaxRetryCount());
+            psm.setObject(7, task.getTimeout());
+            psm.setObject(8, initialParameter);
+            psm.setObject(9, LocalDateTime.now(DEFAULT_ZONE_ID));
+            psm.setObject(10, task.getTaskId().getName());
+            psm.setObject(11, task.getTaskId().getGroup());
             psm.executeUpdate();
+            connection.commit();
         } catch (SQLException e) {
             throw new CronTaskException(e.getMessage(), e);
         }
-        return getTaskDetail(task.getTaskId());
     }
 
     @Override
@@ -156,6 +165,7 @@ public class JdbcTaskManager implements TaskManager {
                 psm.setObject(1, taskId.getName());
                 psm.setObject(2, taskId.getGroup());
                 psm.executeUpdate();
+                connection.commit();
             } catch (SQLException e) {
                 throw new CronTaskException(e.getMessage(), e);
             }
@@ -165,27 +175,31 @@ public class JdbcTaskManager implements TaskManager {
 
     @Override
     public TaskDetail getTaskDetail(TaskId taskId) throws CronTaskException {
+        Map<String, Object> record = getTaskDetailRecord(taskId);
+        return new JdbcTaskDetail(record);
+    }
+
+    private Map<String, Object> getTaskDetailRecord(TaskId taskId) {
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement psm = connection.prepareStatement(SQL_SELECT_ONE_STATEMENT)) {
             psm.setObject(1, taskId.getName());
             psm.setObject(2, taskId.getGroup());
             try (ResultSet rs = psm.executeQuery()) {
                 if (rs.next()) {
-                    Map<String, Object> info = toMap(rs);
-                    return new JdbcTaskDetail(info);
+                    return toMap(rs);
                 }
             }
         } catch (SQLException e) {
             throw new CronTaskException(e.getMessage(), e);
         }
-        return null;
+        throw new CronTaskException("No task detail by: " + taskId.toString());
     }
 
     private static Map<String, Object> toMap(ResultSet rs) throws CronTaskException {
         try {
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnCount = rsmd.getColumnCount();
-            CamelCasedHashMap info = new CamelCasedHashMap(columnCount);
+            CamelCasedLinkedHashMap info = new CamelCasedLinkedHashMap(columnCount);
             for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
                 String columnLabel = rsmd.getColumnLabel(columnIndex);
                 int columnType = rsmd.getColumnType(columnIndex);
@@ -250,7 +264,7 @@ public class JdbcTaskManager implements TaskManager {
 
 
     @Override
-    public List<TaskInfoVo> findTaskInfos(String group, String name, int limit, int offset)
+    public List<TaskDetailVo> findTaskDetails(String group, String name, int limit, int offset)
             throws CronTaskException {
         StringBuilder sql = new StringBuilder(SQL_SELECT_ALL_STATEMENT);
         List<Object> args = new ArrayList<Object>();
@@ -262,6 +276,7 @@ public class JdbcTaskManager implements TaskManager {
             sql.append(" and task_name like ?");
             args.add("%" + name + "%");
         }
+        sql.append(" order by last_modified desc");
         if (limit > 0) {
             sql.append(" limit ?");
             args.add(limit);
@@ -270,7 +285,7 @@ public class JdbcTaskManager implements TaskManager {
             sql.append(" offset ?");
             args.add(offset);
         }
-        List<TaskInfoVo> voList = new ArrayList<>();
+        List<TaskDetailVo> voList = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement psm = connection.prepareStatement(sql.toString())) {
             for (int i = 0; i < args.size(); i++) {
@@ -279,8 +294,7 @@ public class JdbcTaskManager implements TaskManager {
             }
             try (ResultSet rs = psm.executeQuery()) {
                 while (rs.next()) {
-                    TaskInfoVo vo = new TaskInfoVo();
-                    BeanUtils.populateBean(vo, toMap(rs));
+                    TaskDetailVo vo = new TaskDetailVo(toMap(rs));
                     voList.add(vo);
                 }
             }
@@ -293,8 +307,9 @@ public class JdbcTaskManager implements TaskManager {
     @Override
     public List<LocalDateTime> findNextFiredDateTimes(TaskId taskId, LocalDateTime startDateTime,
             LocalDateTime endDateTime) throws CronTaskException {
-        TaskDetail taskDetail = getTaskDetail(taskId);
-        CronExpression cronExpression = ((JdbcTaskDetail) taskDetail).getCronExpression();
+        Map<String, Object> record = getTaskDetailRecord(taskId);
+        CronExpression cronExpression =
+                CronExpression.deserialize((byte[]) record.get("cronExpression"));
         List<LocalDateTime> results = cronExpression.list(startDateTime, endDateTime);
         return results;
     }
@@ -324,19 +339,22 @@ public class JdbcTaskManager implements TaskManager {
     @Override
     public LocalDateTime computeNextFiredDateTime(TaskId taskId,
             LocalDateTime previousFiredDateTime) throws CronTaskException {
-        TaskDetail taskDetail = getTaskDetail(taskId);
-        LocalDateTime prevFiredDateTime = taskDetail.getPreviousFiredDateTime();
-        LocalDateTime nextFiredDateTime = ((JdbcTaskDetail) taskDetail).getCronExpression()
-                .getNextFiredDateTime(taskDetail.getNextFiredDateTime());
+        Map<String, Object> record = getTaskDetailRecord(taskId);
+        LocalDateTime prevFiredDateTime = (LocalDateTime) record.get("nextFiredDateTime");
+        CronExpression cronExpression =
+                CronExpression.deserialize((byte[]) record.get("cronExpression"));
+        LocalDateTime nextFiredDateTime = cronExpression.getNextFiredDateTime(prevFiredDateTime);
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement psm =
                         connection.prepareStatement(SQL_SET_TASK_NEXT_FIRED_STATEMENT)) {
             psm.setObject(1, nextFiredDateTime);
             psm.setObject(2, prevFiredDateTime);
-            psm.setObject(3, LocalDateTime.now(defaultZoneId));
-            psm.setObject(4, taskId.getName());
-            psm.setObject(5, taskId.getGroup());
+            psm.setBytes(3, cronExpression.serialize());
+            psm.setObject(4, LocalDateTime.now(DEFAULT_ZONE_ID));
+            psm.setObject(5, taskId.getName());
+            psm.setObject(6, taskId.getGroup());
             psm.executeUpdate();
+            connection.commit();
         } catch (SQLException e) {
             throw new CronTaskException(e.getMessage(), e);
         }
@@ -348,11 +366,12 @@ public class JdbcTaskManager implements TaskManager {
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement psm =
                         connection.prepareStatement(SQL_SET_TASK_STATUS_STATEMENT)) {
-            psm.setObject(1, status.name().toLowerCase());
-            psm.setObject(2, LocalDateTime.now(defaultZoneId));
+            psm.setObject(1, status.name().toUpperCase());
+            psm.setObject(2, LocalDateTime.now(DEFAULT_ZONE_ID));
             psm.setObject(3, taskId.getName());
             psm.setObject(4, taskId.getGroup());
             psm.executeUpdate();
+            connection.commit();
         } catch (SQLException e) {
             throw new CronTaskException(e.getMessage(), e);
         }

@@ -1,31 +1,28 @@
-package com.github.chaconne;
+package com.github.chaconne.client;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * 
- * @Description: TaskInfoVo
+ * @Description: CreateTaskRequest
  * @Author: Fred Feng
- * @Date: 08/04/2025
+ * @Date: 11/04/2025
  * @Version 1.0.0
  */
-public class TaskInfoVo implements Serializable {
+public class CreateTaskRequest implements TaskIdRequest, Serializable {
 
-    private static final long serialVersionUID = 4048937770243324032L;
+    private static final long serialVersionUID = 1976938346500751980L;
+
     private String taskName;
     private String taskGroup;
     private String taskClass;
+    private String taskMethod;
     private String description;
     private String cron;
-    private LocalDateTime prevFiredDateTime;
-    private LocalDateTime nextFiredDateTime;
-    private LocalDateTime lastModified;
     private int maxRetryCount;
     private long timeout;
-    private TaskStatus taskStatus;
-
-    public TaskInfoVo() {}
+    private String initialParameter;
+    private UpdatePolicy updatePolicy = UpdatePolicy.CREATE;
 
     public String getTaskName() {
         return taskName;
@@ -51,6 +48,14 @@ public class TaskInfoVo implements Serializable {
         this.taskClass = taskClass;
     }
 
+    public String getTaskMethod() {
+        return taskMethod;
+    }
+
+    public void setTaskMethod(String taskMethod) {
+        this.taskMethod = taskMethod;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -65,30 +70,6 @@ public class TaskInfoVo implements Serializable {
 
     public void setCron(String cron) {
         this.cron = cron;
-    }
-
-    public LocalDateTime getPrevFiredDateTime() {
-        return prevFiredDateTime;
-    }
-
-    public void setPrevFiredDateTime(LocalDateTime prevFiredDateTime) {
-        this.prevFiredDateTime = prevFiredDateTime;
-    }
-
-    public LocalDateTime getNextFiredDateTime() {
-        return nextFiredDateTime;
-    }
-
-    public void setNextFiredDateTime(LocalDateTime nextFiredDateTime) {
-        this.nextFiredDateTime = nextFiredDateTime;
-    }
-
-    public LocalDateTime getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(LocalDateTime lastModified) {
-        this.lastModified = lastModified;
     }
 
     public int getMaxRetryCount() {
@@ -107,12 +88,20 @@ public class TaskInfoVo implements Serializable {
         this.timeout = timeout;
     }
 
-    public TaskStatus getTaskStatus() {
-        return taskStatus;
+    public String getInitialParameter() {
+        return initialParameter;
     }
 
-    public void setTaskStatus(String taskStatus) {
-        this.taskStatus = TaskStatus.valueOf(taskStatus);
+    public void setInitialParameter(String initialParameter) {
+        this.initialParameter = initialParameter;
+    }
+
+    public UpdatePolicy getUpdatePolicy() {
+        return updatePolicy;
+    }
+
+    public void setUpdatePolicy(UpdatePolicy updatePolicy) {
+        this.updatePolicy = updatePolicy;
     }
 
 }

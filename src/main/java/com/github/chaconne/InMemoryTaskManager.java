@@ -1,5 +1,6 @@
 package com.github.chaconne;
 
+import static com.github.chaconne.Settings.DEFAULT_ZONE_ID;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +34,7 @@ public class InMemoryTaskManager implements TaskManager {
             this.task = task;
             this.initialParameter = initialParameter;
             this.taskStatus = taskStatus;
-            this.lastModified = LocalDateTime.now();
+            this.lastModified = LocalDateTime.now(DEFAULT_ZONE_ID);
         }
 
         public Task getTask() {
@@ -50,12 +51,11 @@ public class InMemoryTaskManager implements TaskManager {
 
         public void setTaskStatus(TaskStatus taskStatus) {
             this.taskStatus = taskStatus;
-            this.lastModified = LocalDateTime.now();
+            this.lastModified = LocalDateTime.now(DEFAULT_ZONE_ID);
         }
 
         public void setPreviousFiredDateTime(LocalDateTime previousFiredDateTime) {
             this.previousFiredDateTime = previousFiredDateTime;
-            this.lastModified = LocalDateTime.now();
         }
 
         public LocalDateTime getNextFiredDateTime() {
@@ -64,7 +64,6 @@ public class InMemoryTaskManager implements TaskManager {
 
         public void setNextFiredDateTime(LocalDateTime nextFiredDateTime) {
             this.nextFiredDateTime = nextFiredDateTime;
-            this.lastModified = LocalDateTime.now();
         }
 
         public LocalDateTime getPreviousFiredDateTime() {
@@ -125,31 +124,15 @@ public class InMemoryTaskManager implements TaskManager {
         return (int) taskStore.keySet().stream()
                 .filter(tid -> StringUtils.isBlank(group) || tid.getGroup().equals(group))
                 .filter(tid -> StringUtils.isBlank(name) || tid.getName().equals(name)).count();
-
     }
 
     @Override
-    public List<TaskInfoVo> findTaskInfos(String group, String name, int limit, int offset) {
+    public List<TaskDetailVo> findTaskDetails(String group, String name, int limit, int offset) {
         return taskStore.entrySet().stream()
                 .filter(e -> StringUtils.isBlank(group) || e.getKey().getGroup().equals(group))
                 .filter(e -> StringUtils.isBlank(name) || e.getKey().getName().equals(name))
-                .skip(offset).limit(limit).map(e -> convert2Vo(e.getValue()))
+                .skip(offset).limit(limit).map(e -> new TaskDetailVo(e.getValue()))
                 .collect(Collectors.toList());
-    }
-
-    private TaskInfoVo convert2Vo(TaskDetail taskDetail) {
-        TaskInfoVo vo = new TaskInfoVo();
-        vo.setTaskGroup(taskDetail.getTask().getTaskId().getGroup());
-        vo.setTaskName(taskDetail.getTask().getTaskId().getName());
-        vo.setTaskClass(taskDetail.getTask().getClass().getName());
-        vo.setDescription(taskDetail.getTask().getDescription());
-        vo.setCron(taskDetail.getTask().getCronExpression().toString());
-        vo.setTimeout(taskDetail.getTask().getTimeout());
-        vo.setMaxRetryCount(taskDetail.getTask().getMaxRetryCount());
-        vo.setNextFiredDateTime(taskDetail.getNextFiredDateTime());
-        vo.setPrevFiredDateTime(taskDetail.getPreviousFiredDateTime());
-        vo.setTaskStatus(taskDetail.getTaskStatus().name());
-        return vo;
     }
 
     @Override
@@ -161,6 +144,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void setTaskStatus(TaskId taskId, TaskStatus status) {
         if (taskStore.containsKey(taskId)) {
             taskStore.get(taskId).setTaskStatus(status);
+            taskStore.get(taskId).setLastModified(LocalDateTime.now(DEFAULT_ZONE_ID));
         }
     }
 

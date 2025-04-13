@@ -33,7 +33,7 @@ public interface TaskManager {
 
     int getTaskCount(String group, String name) throws CronTaskException;
 
-    List<TaskInfoVo> findTaskInfos(String group, String name, int limit, int offset)
+    List<TaskDetailVo> findTaskDetails(String group, String name, int limit, int offset)
             throws CronTaskException;
 
     List<LocalDateTime> findNextFiredDateTimes(TaskId taskId, LocalDateTime startDateTime,
@@ -46,6 +46,5 @@ public interface TaskManager {
             throws CronTaskException;
 
     void setTaskStatus(TaskId taskId, TaskStatus status) throws CronTaskException;
-
 
 }

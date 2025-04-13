@@ -2,12 +2,14 @@ package com.github.chaconne;
 
 /**
  * 
- * @Description: TaskMethodInvocation
+ * @Description: TaskInvocation
  * @Author: Fred Feng
- * @Date: 10/04/2025
+ * @Date: 13/04/2025
  * @Version 1.0.0
  */
-public interface TaskMethodInvocation {
+public interface TaskInvocation {
+
+    Task retrieveTaskObject(String taskClassName, Object taskDetail);
 
     Object invokeTaskMethod(TaskId taskId, String taskClassName, String taskMethodName,
             String initialParameter);
