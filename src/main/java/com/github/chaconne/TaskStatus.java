@@ -2,6 +2,7 @@ package com.github.chaconne;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.github.chaconne.utils.EnumConstant;
 
 /**
  * 

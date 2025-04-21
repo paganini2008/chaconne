@@ -10,6 +10,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.github.cronsmith.scheduler.DefaultExecutorServiceFactory;
 import com.github.cronsmith.scheduler.ErrorHandler;
 import com.github.cronsmith.scheduler.ExecutorServiceFactory;
@@ -22,6 +24,8 @@ import com.github.cronsmith.scheduler.ExecutorServiceFactory;
  * @Version 1.0.0
  */
 public class ClockWheelScheduler {
+
+    private static final Logger log = LoggerFactory.getLogger(ClockWheelScheduler.class);
 
     public ClockWheelScheduler() {
         this(new DefaultExecutorServiceFactory());
@@ -103,6 +107,10 @@ public class ClockWheelScheduler {
         }
     }
 
+    public boolean isStarted() {
+        return started.get();
+    }
+
     private boolean preloadUpcomingTasks(TaskId taskId) {
         boolean preloaded = false;
         LocalDateTime now = getNow();
@@ -135,19 +143,28 @@ public class ClockWheelScheduler {
     }
 
     public void start() {
-        started.set(true);
-        consumer = new OneOffTimer(1, 1, TimeUnit.SECONDS, new TaskQueueLoop());
-        consumer.start(false, true);
+        if (consumer == null && !started.get()) {
+            started.set(true);
+            consumer = new OneOffTimer(1, 1, TimeUnit.SECONDS, new TaskQueueLoop());
+            consumer.start(false, true);
+            log.info("ClockWheelScheduler is started.");
+        }
     }
 
     public void close() {
+        if (!started.get()) {
+            return;
+        }
         if (consumer != null) {
             consumer.close();
+            consumer = null;
         }
         if (executorServiceFactory.isAutoClosed()) {
             executorServiceFactory.shutdown(workerThreads);
             executorServiceFactory.shutdown(schedulerThreads);
         }
+        started.set(false);
+        log.info("ClockWheelScheduler is closed.");
     }
 
     private LocalDateTime getNow() {

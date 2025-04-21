@@ -2,7 +2,6 @@ package com.github.chaconne.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.github.chaconne.EnumConstant;
 
 /**
  * 

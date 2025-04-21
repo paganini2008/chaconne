@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.springframework.util.ClassUtils;
+import com.github.chaconne.cluster.TaskInvocation;
+import com.github.chaconne.cluster.TaskInvocationException;
 import com.github.chaconne.utils.BeanUtils;
 import com.github.chaconne.utils.MapUtils;
 

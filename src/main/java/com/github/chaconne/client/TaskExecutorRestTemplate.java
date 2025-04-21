@@ -10,8 +10,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestFactory;
-import com.github.chaconne.LoadBalancedManager;
-import com.github.chaconne.RetryableRestTemplate;
+import com.github.chaconne.cluster.LoadBalancedManager;
+import com.github.chaconne.cluster.RetryableRestTemplate;
 
 /**
  * 

@@ -1,0 +1,21 @@
+package com.github.chaconne.cluster;
+
+import java.util.List;
+import java.util.Queue;
+
+/**
+ * 
+ * @Description: TaskMemberManager
+ * @Author: Fred Feng
+ * @Date: 15/04/2025
+ * @Version 1.0.0
+ */
+public interface TaskMemberManager {
+
+    void addTaskExecutor(TaskMember taskMember);
+
+    Queue<TaskMember> getSchedulers();
+
+    List<TaskMember> getExecutors();
+
+}

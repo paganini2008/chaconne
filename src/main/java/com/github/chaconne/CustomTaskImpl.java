@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.github.chaconne.cluster.TaskInvocation;
 import com.github.cronsmith.CRON;
 import com.github.cronsmith.cron.CronExpression;
 
@@ -20,7 +21,7 @@ public class CustomTaskImpl implements CustomTask {
 
     private static final Logger log = LoggerFactory.getLogger(CustomTaskImpl.class);
 
-    CustomTaskImpl(Map<String, Object> info, TaskInvocation taskInvocation) {
+    public CustomTaskImpl(Map<String, Object> info, TaskInvocation taskInvocation) {
         this.info = info;
         this.taskInvocation = taskInvocation;
     }
@@ -30,7 +31,7 @@ public class CustomTaskImpl implements CustomTask {
 
     @Override
     public TaskId getTaskId() {
-        return TaskId.of((String) info.getOrDefault("taskGroup", "default"),
+        return TaskId.of((String) info.getOrDefault("taskGroup", TaskId.DEFAULT_GROUP),
                 (String) info.get("taskName"));
     }
 

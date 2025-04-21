@@ -16,9 +16,9 @@ import org.jooq.SelectConditionStep;
 import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
 import org.jooq.tools.LoggerListener;
+import com.github.chaconne.cluster.TaskInvocation;
 import com.github.chaconne.jooq.tables.records.CronTaskDetailRecord;
 import com.github.cronsmith.cron.CronExpression;
-import com.github.cronsmith.scheduler.CronTaskException;
 
 /**
  * 
@@ -91,7 +91,7 @@ public class JooqTaskManager implements TaskManager {
     }
 
     @Override
-    public TaskDetail saveTask(Task task, String initialParameter) throws CronTaskException {
+    public TaskDetail saveTask(Task task, String initialParameter) throws ChaconneException {
         String taskClassName = task.getClass().getName();
         String taskMethodName = Task.DEFAULT_METHOD_NAME;
         if (task instanceof CustomTask) {
@@ -130,7 +130,7 @@ public class JooqTaskManager implements TaskManager {
     }
 
     @Override
-    public TaskDetail removeTask(TaskId taskId) throws CronTaskException {
+    public TaskDetail removeTask(TaskId taskId) throws ChaconneException {
         TaskDetail taskDetail = getTaskDetail(taskId);
         if (taskDetail != null) {
             dsl.deleteFrom(CRON_TASK_DETAIL).where(CRON_TASK_DETAIL.TASK_NAME.eq(taskId.getName())
@@ -140,7 +140,7 @@ public class JooqTaskManager implements TaskManager {
     }
 
     @Override
-    public TaskDetail getTaskDetail(TaskId taskId) throws CronTaskException {
+    public TaskDetail getTaskDetail(TaskId taskId) throws ChaconneException {
         CronTaskDetailRecord data = dsl.selectFrom(CRON_TASK_DETAIL)
                 .where(CRON_TASK_DETAIL.TASK_NAME.eq(taskId.getName())
                         .and(CRON_TASK_DETAIL.TASK_GROUP.eq(taskId.getGroup())))
@@ -149,7 +149,7 @@ public class JooqTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean hasTask(TaskId taskId) throws CronTaskException {
+    public boolean hasTask(TaskId taskId) throws ChaconneException {
         Integer result = dsl.selectCount().from(CRON_TASK_DETAIL)
                 .where(CRON_TASK_DETAIL.TASK_NAME.eq(taskId.getName())
                         .and(CRON_TASK_DETAIL.TASK_GROUP.eq(taskId.getGroup())))
@@ -158,7 +158,7 @@ public class JooqTaskManager implements TaskManager {
     }
 
     @Override
-    public int getTaskCount(String group, String name) throws CronTaskException {
+    public int getTaskCount(String group, String name) throws ChaconneException {
         SelectConditionStep<Record1<Integer>> conditionStep =
                 dsl.selectCount().from(CRON_TASK_DETAIL).where(DSL.trueCondition());
         if (StringUtils.isNotBlank(group)) {
@@ -173,7 +173,7 @@ public class JooqTaskManager implements TaskManager {
 
     @Override
     public List<TaskDetailVo> findTaskDetails(String group, String name, int limit, int offset)
-            throws CronTaskException {
+            throws ChaconneException {
         SelectConditionStep<CronTaskDetailRecord> conditionStep =
                 dsl.selectFrom(CRON_TASK_DETAIL).where(DSL.trueCondition());
         if (StringUtils.isNotBlank(group)) {
@@ -192,7 +192,7 @@ public class JooqTaskManager implements TaskManager {
 
     @Override
     public List<LocalDateTime> findNextFiredDateTimes(TaskId taskId, LocalDateTime startDateTime,
-            LocalDateTime endDateTime) throws CronTaskException {
+            LocalDateTime endDateTime) throws ChaconneException {
         CronTaskDetailRecord data = dsl.selectFrom(CRON_TASK_DETAIL)
                 .where(CRON_TASK_DETAIL.TASK_NAME.eq(taskId.getName())
                         .and(CRON_TASK_DETAIL.TASK_GROUP.eq(taskId.getGroup())))
@@ -203,7 +203,7 @@ public class JooqTaskManager implements TaskManager {
 
     @Override
     public List<TaskId> findUpcomingTasksBetween(LocalDateTime startDateTime,
-            LocalDateTime endDateTime) throws CronTaskException {
+            LocalDateTime endDateTime) throws ChaconneException {
         Result<Record2<String, String>> records = dsl
                 .select(CRON_TASK_DETAIL.TASK_GROUP, CRON_TASK_DETAIL.TASK_NAME)
                 .from(CRON_TASK_DETAIL)
@@ -217,7 +217,7 @@ public class JooqTaskManager implements TaskManager {
 
     @Override
     public LocalDateTime computeNextFiredDateTime(TaskId taskId,
-            LocalDateTime previousFiredDateTime) throws CronTaskException {
+            LocalDateTime previousFiredDateTime) throws ChaconneException {
         CronTaskDetailRecord data = dsl.selectFrom(CRON_TASK_DETAIL)
                 .where(CRON_TASK_DETAIL.TASK_NAME.eq(taskId.getName())
                         .and(CRON_TASK_DETAIL.TASK_GROUP.eq(taskId.getGroup())))
@@ -241,7 +241,7 @@ public class JooqTaskManager implements TaskManager {
     }
 
     @Override
-    public void setTaskStatus(TaskId taskId, TaskStatus status) throws CronTaskException {
+    public void setTaskStatus(TaskId taskId, TaskStatus status) throws ChaconneException {
         dsl.update(CRON_TASK_DETAIL).set(CRON_TASK_DETAIL.TASK_STATUS, (String) status.getValue())
                 .set(CRON_TASK_DETAIL.LAST_MODIFIED, LocalDateTime.now(DEFAULT_ZONE_ID))
                 .where(CRON_TASK_DETAIL.TASK_NAME.eq(taskId.getName())

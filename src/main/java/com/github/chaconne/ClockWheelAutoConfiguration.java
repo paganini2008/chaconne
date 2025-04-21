@@ -4,6 +4,7 @@ import org.jooq.DSLContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.github.chaconne.cluster.TaskInvocation;
 import com.github.cronsmith.scheduler.DefaultExecutorServiceFactory;
 import com.github.cronsmith.scheduler.ErrorHandler;
 import com.github.cronsmith.scheduler.ExecutorServiceFactory;
@@ -19,9 +20,11 @@ import com.github.cronsmith.scheduler.ExecutorServiceFactory;
 public class ClockWheelAutoConfiguration {
 
     @Bean
-    public ClockWheelScheduler clockWheelScheduler(TaskManager taskManager) {
+    public ClockWheelScheduler clockWheelScheduler(TaskManager taskManager,
+            UpcomingTaskQueue taskQueue) {
         ClockWheelScheduler clockWheelScheduler = new ClockWheelScheduler(executorServiceFactory());
         clockWheelScheduler.setTaskManager(taskManager);
+        clockWheelScheduler.setTaskQueue(taskQueue);
         clockWheelScheduler.setErrorHandler(errorHandler());
         return clockWheelScheduler;
     }

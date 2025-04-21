@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import com.github.chaconne.LoadBalancedManager;
-import com.github.chaconne.TaskMemberRegistration;
-import com.github.chaconne.UriLoadBalancedManager;
+import com.github.chaconne.cluster.LoadBalancedManager;
+import com.github.chaconne.cluster.TaskMemberRegistration;
+import com.github.chaconne.cluster.UriLoadBalancedManager;
 import com.github.chaconne.utils.ApplicationContextUtils;
 
 /**

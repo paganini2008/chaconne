@@ -12,8 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
+import com.github.chaconne.cluster.TaskInvocation;
+import com.github.chaconne.utils.CamelCasedLinkedHashMap;
 import com.github.cronsmith.cron.CronExpression;
-import com.github.cronsmith.scheduler.CronTaskException;
 import com.github.cronsmith.scheduler.StringUtils;
 
 /**
@@ -101,7 +102,7 @@ public class JdbcTaskManager implements TaskManager {
     }
 
     @Override
-    public TaskDetail saveTask(Task task, String initialParameter) throws CronTaskException {
+    public TaskDetail saveTask(Task task, String initialParameter) throws ChaconneException {
         if (hasTask(task.getTaskId())) {
             updateTask(task, initialParameter);
         } else {
@@ -127,7 +128,7 @@ public class JdbcTaskManager implements TaskManager {
                 psm.executeUpdate();
                 connection.commit();
             } catch (SQLException e) {
-                throw new CronTaskException(e.getMessage(), e);
+                throw new ChaconneException(e.getMessage(), e);
             }
         }
         return getTaskDetail(task.getTaskId());
@@ -152,12 +153,12 @@ public class JdbcTaskManager implements TaskManager {
             psm.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
-            throw new CronTaskException(e.getMessage(), e);
+            throw new ChaconneException(e.getMessage(), e);
         }
     }
 
     @Override
-    public TaskDetail removeTask(TaskId taskId) throws CronTaskException {
+    public TaskDetail removeTask(TaskId taskId) throws ChaconneException {
         TaskDetail taskDetail = getTaskDetail(taskId);
         if (taskDetail != null) {
             try (Connection connection = dataSource.getConnection();
@@ -167,14 +168,14 @@ public class JdbcTaskManager implements TaskManager {
                 psm.executeUpdate();
                 connection.commit();
             } catch (SQLException e) {
-                throw new CronTaskException(e.getMessage(), e);
+                throw new ChaconneException(e.getMessage(), e);
             }
         }
         return taskDetail;
     }
 
     @Override
-    public TaskDetail getTaskDetail(TaskId taskId) throws CronTaskException {
+    public TaskDetail getTaskDetail(TaskId taskId) throws ChaconneException {
         Map<String, Object> record = getTaskDetailRecord(taskId);
         return new JdbcTaskDetail(record);
     }
@@ -190,12 +191,12 @@ public class JdbcTaskManager implements TaskManager {
                 }
             }
         } catch (SQLException e) {
-            throw new CronTaskException(e.getMessage(), e);
+            throw new ChaconneException(e.getMessage(), e);
         }
-        throw new CronTaskException("No task detail by: " + taskId.toString());
+        throw new ChaconneException("No task detail by: " + taskId.toString());
     }
 
-    private static Map<String, Object> toMap(ResultSet rs) throws CronTaskException {
+    private static Map<String, Object> toMap(ResultSet rs) throws ChaconneException {
         try {
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnCount = rsmd.getColumnCount();
@@ -209,12 +210,12 @@ public class JdbcTaskManager implements TaskManager {
             }
             return info;
         } catch (SQLException e) {
-            throw new CronTaskException(e.getMessage(), e);
+            throw new ChaconneException(e.getMessage(), e);
         }
     }
 
     @Override
-    public boolean hasTask(TaskId taskId) throws CronTaskException {
+    public boolean hasTask(TaskId taskId) throws ChaconneException {
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement psm =
                         connection.prepareStatement(SQL_CHECK_EXISTENCE_STATEMENT)) {
@@ -227,13 +228,13 @@ public class JdbcTaskManager implements TaskManager {
                 }
             }
         } catch (SQLException e) {
-            throw new CronTaskException(e.getMessage(), e);
+            throw new ChaconneException(e.getMessage(), e);
         }
         return false;
     }
 
     @Override
-    public int getTaskCount(String group, String name) throws CronTaskException {
+    public int getTaskCount(String group, String name) throws ChaconneException {
         StringBuilder sql = new StringBuilder(SQL_COUNT_ALL_STATEMENT);
         List<Object> args = new ArrayList<Object>();
         if (StringUtils.isNotBlank(group)) {
@@ -257,7 +258,7 @@ public class JdbcTaskManager implements TaskManager {
                 }
             }
         } catch (SQLException e) {
-            throw new CronTaskException(e.getMessage(), e);
+            throw new ChaconneException(e.getMessage(), e);
         }
         return 0;
     }
@@ -265,7 +266,7 @@ public class JdbcTaskManager implements TaskManager {
 
     @Override
     public List<TaskDetailVo> findTaskDetails(String group, String name, int limit, int offset)
-            throws CronTaskException {
+            throws ChaconneException {
         StringBuilder sql = new StringBuilder(SQL_SELECT_ALL_STATEMENT);
         List<Object> args = new ArrayList<Object>();
         if (StringUtils.isNotBlank(group)) {
@@ -299,14 +300,14 @@ public class JdbcTaskManager implements TaskManager {
                 }
             }
         } catch (SQLException e) {
-            throw new CronTaskException(e.getMessage(), e);
+            throw new ChaconneException(e.getMessage(), e);
         }
         return voList;
     }
 
     @Override
     public List<LocalDateTime> findNextFiredDateTimes(TaskId taskId, LocalDateTime startDateTime,
-            LocalDateTime endDateTime) throws CronTaskException {
+            LocalDateTime endDateTime) throws ChaconneException {
         Map<String, Object> record = getTaskDetailRecord(taskId);
         CronExpression cronExpression =
                 CronExpression.deserialize((byte[]) record.get("cronExpression"));
@@ -316,7 +317,7 @@ public class JdbcTaskManager implements TaskManager {
 
     @Override
     public List<TaskId> findUpcomingTasksBetween(LocalDateTime startDateTime,
-            LocalDateTime endDateTime) throws CronTaskException {
+            LocalDateTime endDateTime) throws ChaconneException {
         List<TaskId> list = new ArrayList<TaskId>();
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement psm =
@@ -331,14 +332,14 @@ public class JdbcTaskManager implements TaskManager {
                 }
             }
         } catch (SQLException e) {
-            throw new CronTaskException(e.getMessage(), e);
+            throw new ChaconneException(e.getMessage(), e);
         }
         return list;
     }
 
     @Override
     public LocalDateTime computeNextFiredDateTime(TaskId taskId,
-            LocalDateTime previousFiredDateTime) throws CronTaskException {
+            LocalDateTime previousFiredDateTime) throws ChaconneException {
         Map<String, Object> record = getTaskDetailRecord(taskId);
         LocalDateTime prevFiredDateTime = (LocalDateTime) record.get("nextFiredDateTime");
         CronExpression cronExpression =
@@ -356,13 +357,13 @@ public class JdbcTaskManager implements TaskManager {
             psm.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
-            throw new CronTaskException(e.getMessage(), e);
+            throw new ChaconneException(e.getMessage(), e);
         }
         return nextFiredDateTime;
     }
 
     @Override
-    public void setTaskStatus(TaskId taskId, TaskStatus status) throws CronTaskException {
+    public void setTaskStatus(TaskId taskId, TaskStatus status) throws ChaconneException {
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement psm =
                         connection.prepareStatement(SQL_SET_TASK_STATUS_STATEMENT)) {
@@ -373,7 +374,7 @@ public class JdbcTaskManager implements TaskManager {
             psm.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
-            throw new CronTaskException(e.getMessage(), e);
+            throw new ChaconneException(e.getMessage(), e);
         }
     }
 

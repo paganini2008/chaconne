@@ -1,26 +1,21 @@
-package com.github.chaconne.client;
+package com.github.chaconne.cluster;
 
 import java.util.UUID;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
-import com.github.chaconne.cluster.TaskMember;
-import com.github.chaconne.cluster.TaskMemberInstance;
-import com.github.chaconne.cluster.TaskMemberRegistration;
 import com.github.chaconne.utils.NetUtils;
 
 /**
  * 
- * @Description: RemoteTaskExecutorRegistration
+ * @Description: TaskSchedulerRegistration
  * @Author: Fred Feng
- * @Date: 14/04/2025
+ * @Date: 12/04/2025
  * @Version 1.0.0
  */
-public class RemoteTaskExecutorRegistration implements FactoryBean<TaskMember>, InitializingBean,
-        EnvironmentAware, ApplicationListener<ApplicationReadyEvent>, TaskMemberRegistration {
+public class TaskSchedulerRegistration implements FactoryBean<TaskMember>, InitializingBean,
+        EnvironmentAware, TaskMemberRegistration {
 
     protected Environment environment;
     protected TaskMember taskMember;
@@ -52,19 +47,6 @@ public class RemoteTaskExecutorRegistration implements FactoryBean<TaskMember>, 
     @Override
     public Class<?> getObjectType() {
         return TaskMemberInstance.class;
-    }
-
-    @Override
-    public void onApplicationEvent(ApplicationReadyEvent event) {
-        TaskExecutorRestTemplate taskRestTemplate =
-                event.getApplicationContext().getBean(TaskExecutorRestTemplate.class);
-        TaskMemberRequest taskMemberRequest = new TaskMemberRequest();
-        taskMemberRequest.setMemberId(taskMember.getMemberId());
-        taskMemberRequest.setGroup(taskMember.getGroup());
-        taskMemberRequest.setHost(taskMember.getHost());
-        taskMemberRequest.setPort(taskMember.getPort());
-        taskMemberRequest.setContextPath(taskMember.getContextPath());
-        taskRestTemplate.registerTaskMember(taskMemberRequest);
     }
 
 }

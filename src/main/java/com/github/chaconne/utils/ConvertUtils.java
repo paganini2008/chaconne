@@ -15,7 +15,6 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.core.convert.support.DefaultConversionService;
-import com.github.chaconne.EnumConstant;
 import com.github.chaconne.TaskStatus;
 
 /**
