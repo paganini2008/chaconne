@@ -103,7 +103,7 @@ public class DefaultLoadBalancedManager<T>
         }
         for (T c : candidates) {
             try {
-                if (ping.isAlive(c)) {
+                if (ping.isAlive(c) && shouldIgnored(c)) {
                     activeCandidates.add(c);
                 } else {
                     activeCandidates.remove(c);
@@ -115,6 +115,10 @@ public class DefaultLoadBalancedManager<T>
                 activeCandidates.remove(c);
             }
         }
+    }
+
+    protected boolean shouldIgnored(T c) {
+        return true;
     }
 
     @Override

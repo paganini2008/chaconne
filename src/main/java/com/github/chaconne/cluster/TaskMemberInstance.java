@@ -100,10 +100,10 @@ public class TaskMemberInstance implements TaskMember, Serializable, Comparable<
     public int compareTo(TaskMember other) {
         long result = getUptime() - other.getUptime();
         if (result > 0) {
-            return -1;
+            return 1;
         }
         if (result < 0) {
-            return 1;
+            return -1;
         }
         return 0;
     }

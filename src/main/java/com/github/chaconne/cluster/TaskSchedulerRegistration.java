@@ -3,8 +3,7 @@ package com.github.chaconne.cluster;
 import java.util.UUID;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.EnvironmentAware;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Value;
 import com.github.chaconne.utils.NetUtils;
 
 /**
@@ -14,16 +13,22 @@ import com.github.chaconne.utils.NetUtils;
  * @Date: 12/04/2025
  * @Version 1.0.0
  */
-public class TaskSchedulerRegistration implements FactoryBean<TaskMember>, InitializingBean,
-        EnvironmentAware, TaskMemberRegistration {
+public class TaskSchedulerRegistration
+        implements FactoryBean<TaskMember>, InitializingBean, TaskMemberRegistration {
 
-    protected Environment environment;
-    protected TaskMember taskMember;
+    @Value("${spring.application.name}")
+    private String applicationName;
 
-    @Override
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
+    @Value("${server.port}")
+    private int serverPort;
+
+    @Value("${server.servlet.context-path:}")
+    private String servletContextPath;
+
+    @Value("${spring.mvc.servlet.path:}")
+    private String mvcContextPath;
+
+    private TaskMember taskMember;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -38,9 +43,11 @@ public class TaskSchedulerRegistration implements FactoryBean<TaskMember>, Initi
     protected TaskMember createTaskMember() {
         TaskMemberInstance taskMemberInstance = new TaskMemberInstance();
         taskMemberInstance.setMemberId(UUID.randomUUID().toString());
-        taskMemberInstance.setGroup(environment.getProperty("spring.application.name", "default"));
+        taskMemberInstance.setGroup(applicationName);
         taskMemberInstance.setHost(NetUtils.getLocalAddress().getHostAddress());
-        taskMemberInstance.setPort(environment.getRequiredProperty("server.port", int.class));
+        taskMemberInstance.setPort(serverPort);
+        taskMemberInstance.setContextPath(servletContextPath + mvcContextPath);
+        taskMemberInstance.setUptime(System.currentTimeMillis());
         return taskMemberInstance;
     }
 

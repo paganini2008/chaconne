@@ -20,7 +20,7 @@ public class LocalTaskMemberManager implements TaskMemberManager, SmartApplicati
 
     private static final Logger log = LoggerFactory.getLogger(RemoteTaskMemberManager.class);
 
-    private final Queue<TaskMember> schedulers = new PriorityBlockingQueue<TaskMember>();
+    private final Queue<TaskMember> schedulers = new PriorityBlockingQueue<>();
     private final List<TaskMember> executors = new CopyOnWriteArrayList<>();
 
     @Override

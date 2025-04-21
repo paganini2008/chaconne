@@ -1,13 +1,8 @@
 package com.github.chaconne.cluster;
 
-import java.net.URI;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.SmartApplicationListener;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import com.github.chaconne.DefaultLoadBalancedManager;
-import com.github.chaconne.client.ApiResponse;
 
 /**
  * 
@@ -19,8 +14,15 @@ import com.github.chaconne.client.ApiResponse;
 public class TaskMemberLoadBalancedManager extends DefaultLoadBalancedManager<TaskMember>
         implements SmartApplicationListener {
 
-    public TaskMemberLoadBalancedManager() {
-        setPing(new ApiPing());
+    private TaskMember currentTaskMember;
+
+    public void setCurrentTaskMember(TaskMember currentTaskMember) {
+        this.currentTaskMember = currentTaskMember;
+    }
+
+    @Override
+    protected boolean shouldIgnored(TaskMember taskMember) {
+        return currentTaskMember != null && currentTaskMember.equals(taskMember);
     }
 
     @Override
@@ -28,7 +30,7 @@ public class TaskMemberLoadBalancedManager extends DefaultLoadBalancedManager<Ta
         if (event instanceof TaskMemberAddedEvent) {
             addCandidate(((TaskMemberAddedEvent) event).getTaskMember());
         } else if (event instanceof TaskMemberRemovedEvent) {
-            removeCandidate(((TaskMemberAddedEvent) event).getTaskMember());
+            removeCandidate(((TaskMemberRemovedEvent) event).getTaskMember());
         }
     }
 
@@ -36,21 +38,6 @@ public class TaskMemberLoadBalancedManager extends DefaultLoadBalancedManager<Ta
     public boolean supportsEventType(Class<? extends ApplicationEvent> eventType) {
         return eventType.equals(TaskMemberAddedEvent.class)
                 || eventType.equals(TaskMemberRemovedEvent.class);
-    }
-
-    private static class ApiPing implements Ping<TaskMember> {
-
-        private final RetryableRestTemplate restTemplate = new RetryableRestTemplate();
-
-        @Override
-        public boolean isAlive(TaskMember tm) throws Exception {
-            ResponseEntity<ApiResponse<String>> responseEntity = restTemplate.exchange(
-                    URI.create(String.format("%s/%s", tm.getUrl(), tm.getPingUrl())),
-                    HttpMethod.GET, null, new ParameterizedTypeReference<ApiResponse<String>>() {});
-            return responseEntity.getStatusCode().is2xxSuccessful()
-                    && "pong".equalsIgnoreCase(responseEntity.getBody().getData());
-        }
-
     }
 
 }

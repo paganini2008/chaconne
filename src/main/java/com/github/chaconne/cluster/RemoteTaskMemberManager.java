@@ -1,8 +1,8 @@
 package com.github.chaconne.cluster;
 
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.concurrent.PriorityBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
@@ -25,7 +25,7 @@ public class RemoteTaskMemberManager implements TaskMemberManager, SmartApplicat
         this.executors = hazelcastInstance.getList("REMOTE_TASK_EXECUTOR");
     }
 
-    private final Queue<TaskMember> schedulers = new PriorityQueue<>();
+    private final Queue<TaskMember> schedulers = new PriorityBlockingQueue<>();
     private final IList<TaskMember> executors;
 
     public void addTaskExecutor(TaskMember taskMember) {

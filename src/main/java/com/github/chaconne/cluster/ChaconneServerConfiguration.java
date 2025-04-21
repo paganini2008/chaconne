@@ -1,11 +1,11 @@
 package com.github.chaconne.cluster;
 
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -35,18 +35,9 @@ public class ChaconneServerConfiguration {
     @Value("${spring.application.name}")
     private String applicationName;
 
-    @Value("${server.port}")
-    private int serverPort;
-
-    @Value("${server.servlet.context-path:}")
-    private String servletContextPath;
-
-    @Value("${spring.mvc.servlet.path:}")
-    private String mvcContextPath;
-
     @ConditionalOnMissingBean
     @Bean
-    public Config hazelcastConfig() {
+    public Config hazelcastConfig(ClusterInfo clusterInfo) {
         Config config = new Config();
         config.setInstanceName(applicationName);
         NetworkConfig networkConfig = config.getNetworkConfig();
@@ -54,39 +45,46 @@ public class ChaconneServerConfiguration {
         networkConfig.setPortAutoIncrement(true);
         InterfacesConfig interfaceConfig = networkConfig.getInterfaces();
         interfaceConfig.setEnabled(true).addInterface(NetUtils.getLocalAddress().getHostAddress());
-        config.getMemberAttributeConfig().setAttributes(clusterInfo());
+        config.getMemberAttributeConfig().setAttributes(clusterInfo);
         return config;
     }
 
     @ConditionalOnMissingBean
     @Bean
-    public ClusterInfo clusterInfo() {
+    public ClusterInfo clusterInfo(TaskMember taskMember) {
         ClusterInfo clusterInfo = new ClusterInfo();
-        clusterInfo.setGroup(applicationName);
-        clusterInfo.setMemberId(UUID.randomUUID().toString());
-        clusterInfo.setHost(NetUtils.getLocalAddress().getHostAddress());
-        clusterInfo.setPort(serverPort);
-        clusterInfo.setContextPath(servletContextPath + mvcContextPath);
+        BeanUtils.copyProperties(taskMember, clusterInfo);
         return clusterInfo;
     }
 
+    @ConditionalOnMissingBean
     @Bean
-    public HazelcastInstance hazelcastInstance() {
-        HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(hazelcastConfig());
+    public HazelcastInstance hazelcastInstance(Config hazelcastConfig) {
+        HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(hazelcastConfig);
         return hazelcastInstance;
     }
 
     @Bean
-    public TaskMemberRegistration taskMemberRegistration() {
-        return new TaskSchedulerRegistration();
+    public TaskMembershipEventPublisher taskMembershipEventPublisher(
+            HazelcastInstance hazelcastInstance) {
+        return new TaskMembershipEventPublisher(hazelcastInstance);
     }
 
-
+    @Bean
+    public TaskSchedulerRegistration taskMemberRegistration() {
+        return new TaskSchedulerRegistration();
+    }
 
     @Bean
     public TaskMemberManager taskMemberManager(HazelcastInstance hazelcastInstance) {
         RemoteTaskMemberManager taskMemberManager = new RemoteTaskMemberManager(hazelcastInstance);
         return taskMemberManager;
+    }
+
+    @Bean
+    public TaskMemberLock taskMemberLock(TaskMemberManager taskMemberManager,
+            TaskMember taskMember) {
+        return new TaskMemberLock(taskMemberManager, taskMember);
     }
 
     @ConditionalOnMissingBean

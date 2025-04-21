@@ -19,6 +19,6 @@ public class TaskMemberLock {
 
     public boolean tryLock() {
         TaskMember firstMember = taskMemberManager.getSchedulers().peek();
-        return firstMember.equals(currentTaskMember);
+        return firstMember != null && firstMember.equals(currentTaskMember);
     }
 }
