@@ -6,8 +6,12 @@ import java.util.concurrent.PriorityBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.event.SmartApplicationListener;
 import com.hazelcast.collection.IList;
+import com.hazelcast.collection.ItemEvent;
+import com.hazelcast.collection.ItemListener;
 import com.hazelcast.core.HazelcastInstance;
 
 /**
@@ -17,7 +21,8 @@ import com.hazelcast.core.HazelcastInstance;
  * @Date: 12/04/2025
  * @Version 1.0.0
  */
-public class RemoteTaskMemberManager implements TaskMemberManager, SmartApplicationListener {
+public class RemoteTaskMemberManager implements TaskMemberManager, SmartApplicationListener,
+        ItemListener<TaskMember>, ApplicationEventPublisherAware {
 
     private static final Logger log = LoggerFactory.getLogger(RemoteTaskMemberManager.class);
 
@@ -28,10 +33,11 @@ public class RemoteTaskMemberManager implements TaskMemberManager, SmartApplicat
     private final Queue<TaskMember> schedulers = new PriorityBlockingQueue<>();
     private final IList<TaskMember> executors;
 
-    public void addTaskExecutor(TaskMember taskMember) {
-        if (taskMember != null && !executors.contains(taskMember)) {
-            executors.add(taskMember);
-        }
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
@@ -47,13 +53,19 @@ public class RemoteTaskMemberManager implements TaskMemberManager, SmartApplicat
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof TaskMemberAddedEvent) {
-            TaskMember taskMember = ((TaskMemberAddedEvent) event).getTaskMember();
-            if (!schedulers.contains(taskMember)) {
-                schedulers.add(taskMember);
+            TaskMemberAddedEvent addedEvent = (TaskMemberAddedEvent) event;
+            if (addedEvent.getClusterMode() == ClusterMode.LOCAL) {
+                TaskMember taskMember = addedEvent.getTaskMember();
+                if (!schedulers.contains(taskMember)) {
+                    schedulers.add(taskMember);
+                }
             }
         } else if (event instanceof TaskMemberRemovedEvent) {
-            TaskMember taskMember = ((TaskMemberRemovedEvent) event).getTaskMember();
-            schedulers.remove(taskMember);
+            TaskMemberRemovedEvent removedEvent = (TaskMemberRemovedEvent) event;
+            if (removedEvent.getClusterMode() == ClusterMode.LOCAL) {
+                TaskMember taskMember = removedEvent.getTaskMember();
+                schedulers.remove(taskMember);
+            }
         }
         if (log.isInfoEnabled()) {
             log.info("Task schedulers: {}", schedulers.toString());
@@ -66,6 +78,23 @@ public class RemoteTaskMemberManager implements TaskMemberManager, SmartApplicat
                 || eventType.equals(TaskMemberRemovedEvent.class);
     }
 
+    @Override
+    public void addExecutor(TaskMember taskMember) {
+        if (taskMember != null && !executors.contains(taskMember)) {
+            executors.add(taskMember);
+        }
+    }
 
+    @Override
+    public void itemAdded(ItemEvent<TaskMember> item) {
+        applicationEventPublisher
+                .publishEvent(new TaskMemberAddedEvent(this, item.getItem(), ClusterMode.REMOTE));
+    }
+
+    @Override
+    public void itemRemoved(ItemEvent<TaskMember> item) {
+        applicationEventPublisher
+                .publishEvent(new TaskMemberRemovedEvent(this, item.getItem(), ClusterMode.REMOTE));
+    }
 
 }

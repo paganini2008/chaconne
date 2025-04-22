@@ -1,5 +1,7 @@
 package com.github.chaconne.cluster;
 
+import java.util.Collection;
+
 /**
  * 
  * @Description: LoadBalancedManager
@@ -22,6 +24,10 @@ public interface LoadBalancedManager<T> {
     T getCurrentCandidate();
 
     T getNextCandidate(Object attachment);
+
+    Collection<T> getActiveCandidates();
+
+    Collection<T> getInactiveCandidates();
 
     void setPing(Ping<T> ping);
 

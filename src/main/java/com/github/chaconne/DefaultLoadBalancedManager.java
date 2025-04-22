@@ -1,6 +1,7 @@
 package com.github.chaconne;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -91,6 +92,12 @@ public class DefaultLoadBalancedManager<T>
         return chosenCandidate;
     }
 
+    @Override
+    public Collection<T> getActiveCandidates() {
+        return Collections.unmodifiableCollection(activeCandidates);
+    }
+
+    @Override
     public Collection<T> getInactiveCandidates() {
         return candidates.stream().filter(c -> !activeCandidates.contains(c))
                 .collect(Collectors.toSet());

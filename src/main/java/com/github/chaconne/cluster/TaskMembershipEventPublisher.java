@@ -45,8 +45,8 @@ public class TaskMembershipEventPublisher implements InitializingBean, Membershi
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         hazelcastInstance.getCluster().getMembers().forEach(member -> {
-            applicationEventPublisher
-                    .publishEvent(new TaskMemberAddedEvent(this, getTaskMember(member)));
+            applicationEventPublisher.publishEvent(
+                    new TaskMemberAddedEvent(this, getTaskMember(member), ClusterMode.LOCAL));
         });
     }
 
@@ -57,14 +57,16 @@ public class TaskMembershipEventPublisher implements InitializingBean, Membershi
     @Override
     public void memberAdded(MembershipEvent membershipEvent) {
         TaskMember taskMember = getTaskMember(membershipEvent.getMember());
-        log.info("New task member added: " + taskMember);
-        applicationEventPublisher.publishEvent(new TaskMemberAddedEvent(this, taskMember));
+        log.info("Task member added: " + taskMember);
+        applicationEventPublisher
+                .publishEvent(new TaskMemberAddedEvent(this, taskMember, ClusterMode.LOCAL));
     }
 
     @Override
     public void memberRemoved(MembershipEvent membershipEvent) {
         TaskMember taskMember = getTaskMember(membershipEvent.getMember());
-        log.info("New task member removed: " + taskMember);
-        applicationEventPublisher.publishEvent(new TaskMemberAddedEvent(this, taskMember));
+        log.info("Task member removed: " + taskMember);
+        applicationEventPublisher
+                .publishEvent(new TaskMemberRemovedEvent(this, taskMember, ClusterMode.LOCAL));
     }
 }

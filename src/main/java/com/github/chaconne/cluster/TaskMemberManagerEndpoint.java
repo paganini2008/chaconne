@@ -26,7 +26,7 @@ public class TaskMemberManagerEndpoint {
     public void register(@RequestBody TaskMemberRequest taskMemberRequest) {
         TaskMemberInstance taskMemberInstance = new TaskMemberInstance();
         BeanUtils.copyProperties(taskMemberRequest, taskMemberInstance);
-        taskMemberManager.addTaskExecutor(taskMemberInstance);
+        taskMemberManager.addExecutor(taskMemberInstance);
     }
 
 }

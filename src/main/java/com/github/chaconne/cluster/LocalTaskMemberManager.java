@@ -24,7 +24,7 @@ public class LocalTaskMemberManager implements TaskMemberManager, SmartApplicati
     private final List<TaskMember> executors = new CopyOnWriteArrayList<>();
 
     @Override
-    public void addTaskExecutor(TaskMember taskMember) {
+    public void addExecutor(TaskMember taskMember) {
         if (taskMember != null && !executors.contains(taskMember)) {
             executors.add(taskMember);
         }

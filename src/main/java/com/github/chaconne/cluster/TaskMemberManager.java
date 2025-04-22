@@ -12,7 +12,7 @@ import java.util.Queue;
  */
 public interface TaskMemberManager {
 
-    void addTaskExecutor(TaskMember taskMember);
+    void addExecutor(TaskMember taskMember);
 
     Queue<TaskMember> getSchedulers();
 

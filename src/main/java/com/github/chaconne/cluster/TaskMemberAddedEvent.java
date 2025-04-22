@@ -13,15 +13,21 @@ public class TaskMemberAddedEvent extends ApplicationEvent {
 
     private static final long serialVersionUID = 7195863982389715213L;
 
-    public TaskMemberAddedEvent(Object source, TaskMember taskMember) {
+    public TaskMemberAddedEvent(Object source, TaskMember taskMember, ClusterMode clusterMode) {
         super(source);
         this.taskMember = taskMember;
+        this.clusterMode = clusterMode;
     }
 
     private final TaskMember taskMember;
+    private final ClusterMode clusterMode;
 
     public TaskMember getTaskMember() {
         return taskMember;
+    }
+
+    public ClusterMode getClusterMode() {
+        return clusterMode;
     }
 
 }

@@ -28,9 +28,15 @@ public class TaskMemberLoadBalancedManager extends DefaultLoadBalancedManager<Ta
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof TaskMemberAddedEvent) {
-            addCandidate(((TaskMemberAddedEvent) event).getTaskMember());
+            TaskMemberAddedEvent addedEvent = (TaskMemberAddedEvent) event;
+            if (addedEvent.getClusterMode() == ClusterMode.REMOTE) {
+                addCandidate(addedEvent.getTaskMember());
+            }
         } else if (event instanceof TaskMemberRemovedEvent) {
-            removeCandidate(((TaskMemberRemovedEvent) event).getTaskMember());
+            TaskMemberRemovedEvent removedEvent = (TaskMemberRemovedEvent) event;
+            if (removedEvent.getClusterMode() == ClusterMode.REMOTE) {
+                removeCandidate(removedEvent.getTaskMember());
+            }
         }
     }
 
