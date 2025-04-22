@@ -94,4 +94,10 @@ public class CustomTaskImpl implements CustomTask {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "TaskId: " + getTaskId() + ", TaskClass: " + getTaskClassName() + ", TaskMethod: "
+                + getTaskMethodName();
+    }
+
 }

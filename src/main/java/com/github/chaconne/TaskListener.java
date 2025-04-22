@@ -11,9 +11,9 @@ public interface TaskListener {
 
     default void onTaskScheduled(TaskDetail taskDetail) {};
 
-    default void onTaskBegin(TaskDetail taskDetail) {}
+    default void onTaskBegan(TaskDetail taskDetail) {}
 
-    default void onTaskEnd(TaskDetail taskDetail, Throwable e) {}
+    default void onTaskEnded(TaskDetail taskDetail, Throwable e) {}
 
     default void onTaskCanceled(TaskDetail taskDetail) {}
 

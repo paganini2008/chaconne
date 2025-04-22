@@ -82,9 +82,8 @@ public class ChaconneServerConfiguration {
     }
 
     @Bean
-    public TaskMemberLock taskMemberLock(TaskMemberManager taskMemberManager,
-            TaskMember taskMember) {
-        return new TaskMemberLock(taskMemberManager, taskMember);
+    public TaskMemberLock taskMemberLock(HazelcastInstance hazelcastInstance) {
+        return new TaskMemberLock(hazelcastInstance);
     }
 
     @ConditionalOnMissingBean

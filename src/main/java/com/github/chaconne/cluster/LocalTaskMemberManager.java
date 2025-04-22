@@ -18,7 +18,7 @@ import org.springframework.context.event.SmartApplicationListener;
  */
 public class LocalTaskMemberManager implements TaskMemberManager, SmartApplicationListener {
 
-    private static final Logger log = LoggerFactory.getLogger(RemoteTaskMemberManager.class);
+    private static final Logger log = LoggerFactory.getLogger(LocalTaskMemberManager.class);
 
     private final Queue<TaskMember> schedulers = new PriorityBlockingQueue<>();
     private final List<TaskMember> executors = new CopyOnWriteArrayList<>();
@@ -43,17 +43,23 @@ public class LocalTaskMemberManager implements TaskMemberManager, SmartApplicati
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof TaskMemberAddedEvent) {
-            TaskMember taskMember = ((TaskMemberAddedEvent) event).getTaskMember();
-            if (!schedulers.contains(taskMember)) {
-                schedulers.add(taskMember);
-            }
-            if (!executors.contains(taskMember)) {
-                executors.add(taskMember);
+            TaskMemberAddedEvent addedEvent = (TaskMemberAddedEvent) event;
+            if (addedEvent.getClusterMode() == ClusterMode.LOCAL) {
+                TaskMember taskMember = addedEvent.getTaskMember();
+                if (!schedulers.contains(taskMember)) {
+                    schedulers.add(taskMember);
+                }
+                if (!executors.contains(taskMember)) {
+                    executors.add(taskMember);
+                }
             }
         } else if (event instanceof TaskMemberRemovedEvent) {
-            TaskMember taskMember = ((TaskMemberRemovedEvent) event).getTaskMember();
-            schedulers.remove(taskMember);
-            executors.remove(taskMember);
+            TaskMemberRemovedEvent removedEvent = (TaskMemberRemovedEvent) event;
+            if (removedEvent.getClusterMode() == ClusterMode.LOCAL) {
+                TaskMember taskMember = removedEvent.getTaskMember();
+                schedulers.remove(taskMember);
+                executors.remove(taskMember);
+            }
         }
         if (log.isInfoEnabled()) {
             log.info("Task schedulers: {}", schedulers.toString());

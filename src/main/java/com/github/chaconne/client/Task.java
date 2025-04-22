@@ -21,7 +21,7 @@ public @interface Task {
 
     String name() default "";
 
-    String group() default "default";
+    String group() default "";
 
     String description() default "";
 

@@ -88,6 +88,20 @@ public class JooqTaskManager implements TaskManager {
             return cronTaskDetailRecord.getLastModified();
         }
 
+        @Override
+        public String toString() {
+            StringBuilder str = new StringBuilder();
+            str.append("Task Group: ").append(cronTaskDetailRecord.getTaskGroup())
+                    .append(", Task Name").append(cronTaskDetailRecord.getTaskName())
+                    .append(", Task Class").append(cronTaskDetailRecord.getTaskClass())
+                    .append(", Task Method").append(cronTaskDetailRecord.getTaskMethod())
+                    .append(", Task Status: ").append(cronTaskDetailRecord.getTaskStatus())
+                    .append(", Previous Fired: ")
+                    .append(cronTaskDetailRecord.getPrevFiredDatetime()).append(", Next Fired: ")
+                    .append(cronTaskDetailRecord.getNextFiredDatetime());
+            return str.toString();
+        }
+
     }
 
     @Override

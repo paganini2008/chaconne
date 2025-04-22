@@ -4,6 +4,7 @@ import org.jooq.DSLContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.github.chaconne.cluster.LoggingTaskListener;
 import com.github.chaconne.cluster.TaskInvocation;
 import com.github.cronsmith.scheduler.DefaultExecutorServiceFactory;
 import com.github.cronsmith.scheduler.ErrorHandler;
@@ -26,6 +27,7 @@ public class ClockWheelAutoConfiguration {
         clockWheelScheduler.setTaskManager(taskManager);
         clockWheelScheduler.setTaskQueue(taskQueue);
         clockWheelScheduler.setErrorHandler(errorHandler());
+        clockWheelScheduler.getTaskListeners().add(new LoggingTaskListener());
         return clockWheelScheduler;
     }
 

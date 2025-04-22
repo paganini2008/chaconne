@@ -1,14 +1,17 @@
 package com.github.chaconne.cluster;
 
-import java.util.UUID;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.github.chaconne.ManagedTaskInvocation;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import com.github.chaconne.UpcomingTaskQueue;
 import com.github.chaconne.utils.NetUtils;
 import com.hazelcast.config.Config;
+import com.hazelcast.config.InterfacesConfig;
+import com.hazelcast.config.NetworkConfig;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 
@@ -26,45 +29,36 @@ public class ChaconneClusterConfiguration {
     @Value("${spring.application.name}")
     private String applicationName;
 
-    @Value("${server.port}")
-    private int serverPort;
-
-    @Value("${server.servlet.context-path:}")
-    private String servletContextPath;
-
-    @Value("${spring.mvc.servlet.path:}")
-    private String mvcContextPath;
-
     @ConditionalOnMissingBean
     @Bean
-    public Config hazelcastConfig() {
+    public Config hazelcastConfig(ClusterInfo clusterInfo) {
         Config config = new Config();
         config.setInstanceName(applicationName);
-        config.getNetworkConfig().setPortAutoIncrement(true);
-        config.getMemberAttributeConfig().setAttributes(clusterInfo());
+        NetworkConfig networkConfig = config.getNetworkConfig();
+        networkConfig.setPort(15701);
+        networkConfig.setPortAutoIncrement(true);
+        InterfacesConfig interfaceConfig = networkConfig.getInterfaces();
+        interfaceConfig.setEnabled(true).addInterface(NetUtils.getLocalAddress().getHostAddress());
+        config.getMemberAttributeConfig().setAttributes(clusterInfo);
         return config;
     }
 
     @ConditionalOnMissingBean
     @Bean
-    public ClusterInfo clusterInfo() {
+    public ClusterInfo clusterInfo(TaskMember taskMember) {
         ClusterInfo clusterInfo = new ClusterInfo();
-        clusterInfo.setGroup(applicationName);
-        clusterInfo.setMemberId(UUID.randomUUID().toString());
-        clusterInfo.setHost(NetUtils.getLocalAddress().getHostAddress());
-        clusterInfo.setPort(serverPort);
-        clusterInfo.setContextPath(servletContextPath + mvcContextPath);
+        BeanUtils.copyProperties(taskMember, clusterInfo);
         return clusterInfo;
     }
 
     @Bean
-    public HazelcastInstance hazelcastInstance() {
-        HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(hazelcastConfig());
+    public HazelcastInstance hazelcastInstance(Config hazelcastConfig) {
+        HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(hazelcastConfig);
         return hazelcastInstance;
     }
 
     @Bean
-    public TaskMemberRegistration taskMemberRegistration() {
+    public TaskSchedulerRegistration taskMemberRegistration() {
         return new TaskSchedulerRegistration();
     }
 
@@ -72,12 +66,6 @@ public class ChaconneClusterConfiguration {
     public TaskMemberManager taskMemberManager(HazelcastInstance hazelcastInstance) {
         LocalTaskMemberManager taskMemberManager = new LocalTaskMemberManager();
         return taskMemberManager;
-    }
-
-    @ConditionalOnMissingBean(LoadBalancedManager.class)
-    @Bean
-    public TaskMemberLoadBalancedManager loadBalancedManager() {
-        return new TaskMemberLoadBalancedManager();
     }
 
     @ConditionalOnMissingBean
@@ -88,8 +76,29 @@ public class ChaconneClusterConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public TaskInvocation taskInvocation() {
-        return new ManagedTaskInvocation();
+    public TaskInvocation taskInvocation(HazelcastInstance hazelcastInstance) {
+        return new LocalTaskInvocation(hazelcastInstance);
+    }
+
+    @Bean
+    public TaskConsumer taskConsumer(HazelcastInstance hazelcastInstance) {
+        return new TaskConsumer(applicationName, hazelcastInstance);
+    }
+
+    @Bean
+    public TaskMemberLock taskMemberLock(HazelcastInstance hazelcastInstance) {
+        return new TaskMemberLock(hazelcastInstance);
+    }
+
+    @Bean
+    public ClockWheelSchedulerStarter clockWheelSchedulerStarter() {
+        return new ClockWheelSchedulerStarter();
+    }
+
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    @Bean
+    public TaskAnnotationBeanPropcessor taskAnnotationBeanPropcessor() {
+        return new TaskAnnotationBeanPropcessor();
     }
 
 }
