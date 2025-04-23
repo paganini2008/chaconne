@@ -1,9 +1,8 @@
-package com.github.chaconne.utils;
+package com.github.chaconne.cluster.utils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,10 +116,6 @@ public abstract class BeanUtils {
             } catch (Exception ingored) {
             }
         }
-    }
-
-    public static void main(String[] args) {
-        System.out.println(URI.create("lb://wwwbao/1"));
     }
 
 }

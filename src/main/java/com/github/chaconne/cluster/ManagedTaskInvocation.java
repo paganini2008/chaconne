@@ -1,6 +1,7 @@
-package com.github.chaconne;
+package com.github.chaconne.cluster;
 
-import com.github.chaconne.utils.ApplicationContextUtils;
+import com.github.chaconne.DefaultTaskInvocation;
+import com.github.chaconne.cluster.utils.ApplicationContextUtils;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package com.github.chaconne.utils;
+package com.github.chaconne.cluster.utils;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -16,6 +16,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import com.github.chaconne.utils.MapUtils;
 
 /**
  * 

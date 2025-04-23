@@ -13,7 +13,7 @@ import org.springframework.core.annotation.Order;
 import com.github.chaconne.cluster.LoadBalancedManager;
 import com.github.chaconne.cluster.TaskMemberRegistration;
 import com.github.chaconne.cluster.UriLoadBalancedManager;
-import com.github.chaconne.utils.ApplicationContextUtils;
+import com.github.chaconne.cluster.utils.ApplicationContextUtils;
 
 /**
  * 

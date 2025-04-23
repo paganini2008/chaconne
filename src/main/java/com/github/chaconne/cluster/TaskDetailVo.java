@@ -1,11 +1,15 @@
-package com.github.chaconne;
+package com.github.chaconne.cluster;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.github.chaconne.utils.BeanUtils;
+import com.github.chaconne.CustomTask;
+import com.github.chaconne.Task;
+import com.github.chaconne.TaskDetail;
+import com.github.chaconne.TaskStatus;
+import com.github.chaconne.cluster.utils.BeanUtils;
 import com.github.chaconne.utils.CamelCasedLinkedHashMap;
 
 /**

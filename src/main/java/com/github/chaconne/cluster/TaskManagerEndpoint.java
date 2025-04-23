@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.github.chaconne.CustomTaskImpl;
 import com.github.chaconne.TaskDetail;
-import com.github.chaconne.TaskDetailVo;
 import com.github.chaconne.TaskId;
+import com.github.chaconne.TaskInvocation;
 import com.github.chaconne.TaskManager;
 import com.github.chaconne.client.ApiResponse;
 import com.github.chaconne.client.CreateTaskRequest;
 import com.github.chaconne.client.TaskIdRequest;
-import com.github.chaconne.utils.BeanUtils;
+import com.github.chaconne.cluster.utils.BeanUtils;
 
 /**
  * 

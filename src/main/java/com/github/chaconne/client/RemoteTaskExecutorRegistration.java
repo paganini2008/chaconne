@@ -10,7 +10,7 @@ import org.springframework.core.env.Environment;
 import com.github.chaconne.cluster.TaskMember;
 import com.github.chaconne.cluster.TaskMemberInstance;
 import com.github.chaconne.cluster.TaskMemberRegistration;
-import com.github.chaconne.utils.NetUtils;
+import com.github.chaconne.cluster.utils.NetUtils;
 
 /**
  * 

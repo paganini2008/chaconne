@@ -2,6 +2,7 @@ package com.github.chaconne.cluster;
 
 import com.github.chaconne.DefaultTaskInvocation;
 import com.github.chaconne.TaskId;
+import com.github.chaconne.TaskInvocationException;
 import com.github.chaconne.client.RunTaskRequest;
 import com.hazelcast.collection.IQueue;
 import com.hazelcast.core.HazelcastInstance;

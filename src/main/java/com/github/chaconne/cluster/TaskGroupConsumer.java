@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import com.github.chaconne.ManagedTaskInvocation;
 import com.github.chaconne.TaskId;
 import com.github.chaconne.client.RunTaskRequest;
 import com.hazelcast.collection.IQueue;

@@ -6,7 +6,7 @@ import com.github.chaconne.Task;
 import com.github.cronsmith.cron.CronBuilder;
 import com.github.cronsmith.cron.CronExpression;
 
-public class TestTask implements Task {
+public class TestClusterTask implements Task {
 
     @Override
     public CronExpression getCronExpression() {

@@ -1,4 +1,4 @@
-package com.github.chaconne.utils;
+package com.github.chaconne.cluster.utils;
 
 import java.security.KeyStore;
 import java.security.SecureRandom;

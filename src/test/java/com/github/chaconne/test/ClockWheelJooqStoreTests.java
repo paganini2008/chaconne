@@ -8,9 +8,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import com.github.chaconne.ClockWheelScheduler;
-import com.github.chaconne.JooqTaskManager;
-import com.github.chaconne.TaskDetailVo;
+import com.github.chaconne.TaskDetail;
 import com.github.chaconne.TaskManager;
+import com.github.chaconne.cluster.JooqTaskManager;
 
 /**
  * 
@@ -42,7 +42,7 @@ public class ClockWheelJooqStoreTests {
     public void testA() {
         ClockWheelScheduler clockWheel = new ClockWheelScheduler();
         clockWheel.setTaskManager(taskManager);
-        clockWheel.schedule(new TestTask(), "Tomcat");
+        clockWheel.schedule(new TestClusterTask(), "Tomcat");
         clockWheel.start();
         try {
             Thread.sleep(30000L);
@@ -54,9 +54,9 @@ public class ClockWheelJooqStoreTests {
 
     @Test
     public void testB() {
-        List<TaskDetailVo> taskInfos = taskManager.findTaskDetails("default", null, 10, 0);
-        for (TaskDetailVo vo : taskInfos) {
-            System.out.println(vo.toString());
+        List<TaskDetail> taskDetails = taskManager.findTaskDetails("default", null, 10, 0);
+        for (TaskDetail taskDetail : taskDetails) {
+            System.out.println(taskDetail.toString());
         }
     }
 

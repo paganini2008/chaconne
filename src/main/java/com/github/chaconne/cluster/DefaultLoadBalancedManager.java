@@ -1,4 +1,4 @@
-package com.github.chaconne;
+package com.github.chaconne.cluster;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -14,11 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import com.github.chaconne.cluster.LoadBalancedManager;
-import com.github.chaconne.cluster.LoadBalancer;
-import com.github.chaconne.cluster.NoAvailableCandidateException;
-import com.github.chaconne.cluster.Ping;
-import com.github.chaconne.cluster.RoundRobinLb;
 import com.github.cronsmith.scheduler.ExecutorUtils;
 
 /**

@@ -1,8 +1,9 @@
-package com.github.chaconne;
+package com.github.chaconne.cluster;
 
 import static com.github.chaconne.Settings.DEFAULT_ZONE_ID;
 import static com.github.chaconne.jooq.tables.CronTaskDetail.CRON_TASK_DETAIL;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.sql.DataSource;
@@ -16,7 +17,15 @@ import org.jooq.SelectConditionStep;
 import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
 import org.jooq.tools.LoggerListener;
-import com.github.chaconne.cluster.TaskInvocation;
+import com.github.chaconne.ChaconneException;
+import com.github.chaconne.CustomTask;
+import com.github.chaconne.DefaultTaskInvocation;
+import com.github.chaconne.Task;
+import com.github.chaconne.TaskDetail;
+import com.github.chaconne.TaskId;
+import com.github.chaconne.TaskInvocation;
+import com.github.chaconne.TaskManager;
+import com.github.chaconne.TaskStatus;
 import com.github.chaconne.jooq.tables.records.CronTaskDetailRecord;
 import com.github.chaconne.utils.CamelCasedLinkedHashMap;
 import com.github.cronsmith.cron.CronExpression;
@@ -188,7 +197,7 @@ public class JooqTaskManager implements TaskManager {
     }
 
     @Override
-    public List<TaskDetailVo> findTaskDetails(String group, String name, int limit, int offset)
+    public List<TaskDetail> findTaskDetails(String group, String name, int limit, int offset)
             throws ChaconneException {
         SelectConditionStep<CronTaskDetailRecord> conditionStep =
                 dsl.selectFrom(CRON_TASK_DETAIL).where(DSL.trueCondition());
@@ -201,7 +210,10 @@ public class JooqTaskManager implements TaskManager {
         Result<CronTaskDetailRecord> records = conditionStep
                 .orderBy(CRON_TASK_DETAIL.LAST_MODIFIED.desc()).limit(limit).offset(offset).fetch();
         if (records != null && records.size() > 0) {
-            return records.stream().map(r -> new TaskDetailVo(r.intoMap())).toList();
+            List<TaskDetail> results = new ArrayList<TaskDetail>();
+            for (CronTaskDetailRecord r : records) {
+                results.add(new JooqTaskDetail(r));
+            }
         }
         return Collections.emptyList();
     }

@@ -1,14 +1,17 @@
-package com.github.chaconne;
+package com.github.chaconne.cluster;
 
 import org.jooq.DSLContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.github.chaconne.cluster.LoggingTaskListener;
-import com.github.chaconne.cluster.TaskInvocation;
-import com.github.cronsmith.scheduler.DefaultExecutorServiceFactory;
+import com.github.chaconne.ClockWheelScheduler;
+import com.github.chaconne.DefaultExecutorServiceFactory;
+import com.github.chaconne.ExecutorServiceFactory;
+import com.github.chaconne.LoggingErrorHandler;
+import com.github.chaconne.TaskInvocation;
+import com.github.chaconne.TaskManager;
+import com.github.chaconne.UpcomingTaskQueue;
 import com.github.cronsmith.scheduler.ErrorHandler;
-import com.github.cronsmith.scheduler.ExecutorServiceFactory;
 
 /**
  * 

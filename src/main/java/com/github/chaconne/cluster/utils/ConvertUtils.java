@@ -1,4 +1,4 @@
-package com.github.chaconne.utils;
+package com.github.chaconne.cluster.utils;
 
 import java.text.ParseException;
 import java.time.Instant;
@@ -15,7 +15,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.core.convert.support.DefaultConversionService;
-import com.github.chaconne.TaskStatus;
+import com.github.chaconne.utils.EnumConstant;
+import com.github.chaconne.utils.EnumUtils;
 
 /**
  * 
@@ -500,11 +501,6 @@ public abstract class ConvertUtils {
             super(message, cause);
         }
 
-    }
-
-    public static void main(String[] args) {
-        TaskStatus taskStatus = ConvertUtils.convert("NONE", TaskStatus.class);
-        System.out.println(taskStatus);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.github.chaconne.utils;
+package com.github.chaconne.cluster.utils;
 
 import java.io.IOException;
 import java.io.PrintWriter;

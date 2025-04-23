@@ -3,7 +3,6 @@ package com.github.chaconne.cluster;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import com.github.chaconne.DefaultLoadBalancedManager;
 
 /**
  * 

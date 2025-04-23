@@ -1,9 +1,9 @@
 package com.github.chaconne.cluster;
 
 import java.util.Set;
+import com.github.cronsmith.IteratorUtils;
 import com.hazelcast.cluster.Member;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.internal.util.IterableUtil;
 
 /**
  * 
@@ -23,7 +23,7 @@ public class TaskMemberLock {
     public boolean tryLock() {
         Member localMember = hazelcastInstance.getCluster().getLocalMember();
         Set<Member> members = hazelcastInstance.getCluster().getMembers();
-        Member firstMember = IterableUtil.getFirst(members, null);
+        Member firstMember = IteratorUtils.getFirst(members, null);
         return firstMember != null && firstMember.equals(localMember);
     }
 }
