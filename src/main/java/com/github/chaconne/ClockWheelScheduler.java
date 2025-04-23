@@ -127,7 +127,11 @@ public class ClockWheelScheduler {
                     taskManager.findNextFiredDateTimes(taskId, now, duration);
             if (firedDateTimes != null && firedDateTimes.size() > 0) {
                 for (LocalDateTime ldt : firedDateTimes) {
-                    taskQueue.addTask(ldt, taskId);
+                    if (taskQueue.addTask(ldt, taskId)) {
+                        if (log.isTraceEnabled()) {
+                            log.trace("TaskId '{}' will be triggered at {}", taskId, ldt);
+                        }
+                    }
                 }
                 taskManager.setTaskStatus(taskId, TaskStatus.SCHEDULED);
                 TaskDetail taskDetail = taskManager.getTaskDetail(taskId);
@@ -177,6 +181,10 @@ public class ClockWheelScheduler {
         public boolean execute() {
             final LocalDateTime firedDateTime = getNow();
             Collection<TaskId> taskIds = taskQueue.matchTaskIds(firedDateTime);
+            if (log.isTraceEnabled()) {
+                log.trace("FiredDateTime: {}, TaskIds' size: {}, TaskQueueLength: {}",
+                        firedDateTime, taskIds.size(), taskQueue.length());
+            }
             if (taskIds != null && taskIds.size() > 0) {
                 taskIds.forEach(taskId -> {
 

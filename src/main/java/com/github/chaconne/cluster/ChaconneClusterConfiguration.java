@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import com.github.chaconne.UpcomingTaskQueue;
+import com.github.chaconne.utils.ApplicationContextUtils;
 import com.github.chaconne.utils.NetUtils;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.InterfacesConfig;
@@ -22,6 +24,7 @@ import com.hazelcast.core.HazelcastInstance;
  * @Date: 20/04/2025
  * @Version 1.0.0
  */
+@Import({ApplicationContextUtils.class})
 @Configuration(proxyBeanMethods = false)
 public class ChaconneClusterConfiguration {
 
@@ -81,8 +84,8 @@ public class ChaconneClusterConfiguration {
     }
 
     @Bean
-    public TaskConsumer taskConsumer(HazelcastInstance hazelcastInstance) {
-        return new TaskConsumer(applicationName, hazelcastInstance);
+    public TaskGroupConsumer taskGroupConsumer(HazelcastInstance hazelcastInstance) {
+        return new TaskGroupConsumer(applicationName, hazelcastInstance);
     }
 
     @Bean

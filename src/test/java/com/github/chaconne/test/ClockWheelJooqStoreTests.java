@@ -38,7 +38,7 @@ public class ClockWheelJooqStoreTests {
         taskManager = new JooqTaskManager(dataSource, SQLDialect.MYSQL);
     }
 
-    // @Test
+    @Test
     public void testA() {
         ClockWheelScheduler clockWheel = new ClockWheelScheduler();
         clockWheel.setTaskManager(taskManager);

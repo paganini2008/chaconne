@@ -13,17 +13,17 @@ import com.hazelcast.core.HazelcastInstance;
 
 /**
  * 
- * @Description: TaskConsumer
+ * @Description: TaskGroupConsumer
  * @Author: Fred Feng
  * @Date: 22/04/2025
  * @Version 1.0.0
  */
-public class TaskConsumer implements Runnable, InitializingBean, DisposableBean {
+public class TaskGroupConsumer implements Runnable, InitializingBean, DisposableBean {
 
-    private final static Logger log = LoggerFactory.getLogger(TaskConsumer.class);
+    private final static Logger log = LoggerFactory.getLogger(TaskGroupConsumer.class);
     private IQueue<RunTaskRequest> queue;
 
-    public TaskConsumer(String group, HazelcastInstance hazelcastInstance) {
+    public TaskGroupConsumer(String group, HazelcastInstance hazelcastInstance) {
         queue = hazelcastInstance.getQueue(group);
     }
 
@@ -32,8 +32,8 @@ public class TaskConsumer implements Runnable, InitializingBean, DisposableBean 
 
     @Override
     public void run() {
-        try {
-            while (running.get()) {
+        while (running.get()) {
+            try {
                 RunTaskRequest runTaskRequest = queue.take();
                 if (runTaskRequest != null) {
                     taskInvocation.invokeTaskMethod(
@@ -41,10 +41,10 @@ public class TaskConsumer implements Runnable, InitializingBean, DisposableBean 
                             runTaskRequest.getTaskClass(), runTaskRequest.getTaskMethod(),
                             runTaskRequest.getInitialParameter());
                 }
-            }
-        } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error(e.getMessage(), e);
+            } catch (Exception e) {
+                if (log.isErrorEnabled()) {
+                    log.error(e.getMessage(), e);
+                }
             }
         }
     }
@@ -52,14 +52,16 @@ public class TaskConsumer implements Runnable, InitializingBean, DisposableBean 
     @Override
     public void afterPropertiesSet() throws Exception {
         Thread thread = new Thread(this);
-        thread.setName("TaskConsumer");
+        thread.setName("TaskConsumerGroup");
         running.set(true);
         thread.start();
+        log.info("TaskGroupConsumer is started.");
     }
 
     @Override
     public void destroy() throws Exception {
         running.set(false);
+        log.info("TaskGroupConsumer is destroyed.");
     }
 
 }

@@ -33,7 +33,7 @@ public class DefaultTaskInvocation implements TaskInvocation {
 
     private Object createTaskObject(String taskClassName, Object taskDetail) {
         Class<?> clz = findClass(taskClassName);
-        if (clz.isAssignableFrom(CustomTask.class)) {
+        if (!clz.isAssignableFrom(Task.class) || clz.isAssignableFrom(CustomTask.class)) {
             return new CustomTaskImpl(
                     taskDetail instanceof Map ? (Map) taskDetail : BeanUtils.bean2Map(taskDetail),
                     this);
@@ -41,18 +41,11 @@ public class DefaultTaskInvocation implements TaskInvocation {
         return createTaskObject(clz);
     }
 
-    protected Object createTaskObject(Class<?> clz) {
-        try {
-            return ConstructorUtils.invokeConstructor(clz);
-        } catch (Exception e) {
-            throw new TaskInvocationException(e.getMessage(), e);
-        }
-    }
-
     @Override
     public Object invokeTaskMethod(TaskId taskId, String taskClassName, String taskMethodName,
             String initialParameter) {
-        Object taskObject = taskObjects.get(taskClassName);
+        Class<?> clz = findClass(taskClassName);
+        Object taskObject = createTaskObject(clz);
         if (taskObject == null) {
             throw new TaskInvocationException(
                     "Task Object is not found, Task class: " + taskClassName);
@@ -79,6 +72,14 @@ public class DefaultTaskInvocation implements TaskInvocation {
         try {
             return ClassUtils.forName(taskClassName, null);
         } catch (ClassNotFoundException e) {
+            throw new TaskInvocationException(e.getMessage(), e);
+        }
+    }
+
+    protected Object createTaskObject(Class<?> clz) {
+        try {
+            return ConstructorUtils.invokeConstructor(clz);
+        } catch (Exception e) {
             throw new TaskInvocationException(e.getMessage(), e);
         }
     }

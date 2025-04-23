@@ -8,7 +8,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.springframework.beans.factory.InitializingBean;
 import com.github.chaconne.TaskId;
 import com.github.chaconne.UpcomingTaskQueue;
-import com.github.chaconne.utils.MapUtils;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 
@@ -38,9 +37,10 @@ public class HazelcastTaskQueue implements UpcomingTaskQueue, InitializingBean {
 
     @Override
     public boolean addTask(LocalDateTime ldt, TaskId taskId) {
-        Set<TaskId> taskIds =
-                MapUtils.getOrCreate(queue, ldt, () -> new CopyOnWriteArraySet<TaskId>());
-        return taskIds.add(taskId);
+        Set<TaskId> taskIds = queue.computeIfAbsent(ldt, k -> new CopyOnWriteArraySet<TaskId>());
+        boolean result = taskIds.add(taskId);
+        queue.put(ldt, taskIds);
+        return result;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class HazelcastTaskQueue implements UpcomingTaskQueue, InitializingBean {
     @Override
     public Collection<TaskId> matchTaskIds(LocalDateTime ldt) {
         Set<TaskId> taskIds = queue.remove(ldt);
-        return taskIds != null ? Collections.unmodifiableCollection(taskIds)
+        return taskIds != null && taskIds.size() > 0 ? Collections.unmodifiableCollection(taskIds)
                 : Collections.emptyList();
     }
 

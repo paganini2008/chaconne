@@ -18,6 +18,7 @@ import org.jooq.impl.DefaultConfiguration;
 import org.jooq.tools.LoggerListener;
 import com.github.chaconne.cluster.TaskInvocation;
 import com.github.chaconne.jooq.tables.records.CronTaskDetailRecord;
+import com.github.chaconne.utils.CamelCasedLinkedHashMap;
 import com.github.cronsmith.cron.CronExpression;
 
 /**
@@ -60,7 +61,8 @@ public class JooqTaskManager implements TaskManager {
         @Override
         public Task getTask() {
             String taskClassName = cronTaskDetailRecord.getTaskClass();
-            return taskInvocation.retrieveTaskObject(taskClassName, cronTaskDetailRecord.intoMap());
+            return taskInvocation.retrieveTaskObject(taskClassName,
+                    new CamelCasedLinkedHashMap(cronTaskDetailRecord.intoMap()));
         }
 
         @Override
@@ -218,6 +220,7 @@ public class JooqTaskManager implements TaskManager {
     @Override
     public List<TaskId> findUpcomingTasksBetween(LocalDateTime startDateTime,
             LocalDateTime endDateTime) throws ChaconneException {
+        System.out.println("findUpcomingTasksBetween: " + startDateTime + ", " + endDateTime);
         Result<Record2<String, String>> records = dsl
                 .select(CRON_TASK_DETAIL.TASK_GROUP, CRON_TASK_DETAIL.TASK_NAME)
                 .from(CRON_TASK_DETAIL)

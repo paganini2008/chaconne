@@ -37,6 +37,11 @@ public class CamelCasedLinkedHashMap extends LinkedHashMap<String, Object> {
     }
 
     @Override
+    public Object getOrDefault(Object key, Object defaultValue) {
+        return super.getOrDefault(key != null ? convertKey(key.toString()) : null, defaultValue);
+    }
+
+    @Override
     public boolean containsKey(Object key) {
         return super.containsKey(key != null ? convertKey(key.toString()) : null);
     }

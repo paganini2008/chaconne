@@ -60,7 +60,8 @@ public class RunTaskRequest implements TaskIdRequest, Serializable {
 
     @Override
     public String toString() {
-        return String.format("[%s#%s] run %s in %s", taskGroup, taskName, taskMethod, taskClass);
+        return String.format("Task '%s#%s' will call %s in %s", taskGroup, taskName, taskMethod,
+                taskClass);
     }
 
 }
