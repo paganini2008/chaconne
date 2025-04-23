@@ -33,7 +33,6 @@ public class LocalTaskInvocation extends DefaultTaskInvocation {
         IQueue<RunTaskRequest> queue = hazelcastInstance.getQueue(taskId.getGroup());
         try {
             queue.put(runTaskRequest);
-            System.out.println("放入Queue: " + runTaskRequest);
         } catch (Exception e) {
             throw new TaskInvocationException(e.getMessage(), e);
         }

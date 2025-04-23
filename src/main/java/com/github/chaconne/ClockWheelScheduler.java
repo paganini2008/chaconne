@@ -122,6 +122,11 @@ public class ClockWheelScheduler {
                 l.onTaskFinished(taskDetail);
             });
         } else {
+            if (taskQueue.addTask(nextFiredDateTime, taskId)) {
+                if (log.isTraceEnabled()) {
+                    log.trace("TaskId '{}' will be triggered at {}", taskId, nextFiredDateTime);
+                }
+            }
             LocalDateTime duration = now.plus(1L, ChronoUnit.MINUTES);
             List<LocalDateTime> firedDateTimes =
                     taskManager.findNextFiredDateTimes(taskId, now, duration);
