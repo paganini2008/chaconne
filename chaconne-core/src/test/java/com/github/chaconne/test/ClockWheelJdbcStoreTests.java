@@ -43,7 +43,8 @@ public class ClockWheelJdbcStoreTests {
     @Test
     public void testB() {
         JdbcTaskManager jdbcTaskManager = new JdbcTaskManager(dataSource);
-        List<TaskDetail> taskDetails = jdbcTaskManager.findTaskDetails("default", null, 10, 0);
+        List<TaskDetail> taskDetails =
+                jdbcTaskManager.findTaskDetails("default", null, null, 10, 0);
         for (TaskDetail vo : taskDetails) {
             System.out.println(vo.toString());
         }

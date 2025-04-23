@@ -183,29 +183,40 @@ public class JooqTaskManager implements TaskManager {
     }
 
     @Override
-    public int getTaskCount(String group, String name) throws ChaconneException {
+    public int getTaskCount(String taskGroup, String taskName, String taskClass)
+            throws ChaconneException {
         SelectConditionStep<Record1<Integer>> conditionStep =
                 dsl.selectCount().from(CRON_TASK_DETAIL).where(DSL.trueCondition());
-        if (StringUtils.isNotBlank(group)) {
-            conditionStep = conditionStep.and(CRON_TASK_DETAIL.TASK_GROUP.eq(group));
+        if (StringUtils.isNotBlank(taskGroup)) {
+            conditionStep = conditionStep.and(CRON_TASK_DETAIL.TASK_GROUP.eq(taskGroup));
         }
-        if (StringUtils.isNotBlank(name)) {
-            conditionStep = conditionStep.and(CRON_TASK_DETAIL.TASK_NAME.like("%" + name + "%"));
+        if (StringUtils.isNotBlank(taskName)) {
+            conditionStep =
+                    conditionStep.and(CRON_TASK_DETAIL.TASK_NAME.like("%" + taskName + "%"));
+        }
+        if (StringUtils.isNotBlank(taskClass)) {
+            conditionStep =
+                    conditionStep.and(CRON_TASK_DETAIL.TASK_CLASS.like("%" + taskClass + "%"));
         }
         Integer result = conditionStep.fetchOne(0, Integer.class);
         return result != null ? result.intValue() : 0;
     }
 
     @Override
-    public List<TaskDetail> findTaskDetails(String group, String name, int limit, int offset)
-            throws ChaconneException {
+    public List<TaskDetail> findTaskDetails(String taskGroup, String taskName, String taskClass,
+            int limit, int offset) throws ChaconneException {
         SelectConditionStep<CronTaskDetailRecord> conditionStep =
                 dsl.selectFrom(CRON_TASK_DETAIL).where(DSL.trueCondition());
-        if (StringUtils.isNotBlank(group)) {
-            conditionStep = conditionStep.and(CRON_TASK_DETAIL.TASK_GROUP.eq(group));
+        if (StringUtils.isNotBlank(taskGroup)) {
+            conditionStep = conditionStep.and(CRON_TASK_DETAIL.TASK_GROUP.eq(taskGroup));
         }
-        if (StringUtils.isNotBlank(name)) {
-            conditionStep = conditionStep.and(CRON_TASK_DETAIL.TASK_NAME.like("%" + name + "%"));
+        if (StringUtils.isNotBlank(taskName)) {
+            conditionStep =
+                    conditionStep.and(CRON_TASK_DETAIL.TASK_NAME.like("%" + taskName + "%"));
+        }
+        if (StringUtils.isNotBlank(taskClass)) {
+            conditionStep =
+                    conditionStep.and(CRON_TASK_DETAIL.TASK_CLASS.like("%" + taskClass + "%"));
         }
         Result<CronTaskDetailRecord> records = conditionStep
                 .orderBy(CRON_TASK_DETAIL.LAST_MODIFIED.desc()).limit(limit).offset(offset).fetch();

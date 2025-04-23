@@ -16,6 +16,9 @@ import com.github.chaconne.client.ApiResponse;
 import com.github.chaconne.client.CreateTaskRequest;
 import com.github.chaconne.client.TaskIdRequest;
 import com.github.chaconne.cluster.utils.BeanUtils;
+import com.github.chaconne.cluster.web.PageRequest;
+import com.github.chaconne.cluster.web.PageResponse;
+import com.github.chaconne.cluster.web.TaskDetailPageReader;
 
 /**
  * 
@@ -82,6 +85,21 @@ public class TaskManagerEndpoint {
                 .removeTask(TaskId.of(requestBody.getTaskGroup(), requestBody.getTaskName()));
         return ApiResponse.ok(new TaskDetailVo(taskDetail));
     }
+
+    @PostMapping("/query-task")
+    public ApiResponse<PageVo<TaskDetailVo>> queryForTask(@RequestBody TaskQueryDto queryDto) {
+        TaskDetailPageReader pageReader = new TaskDetailPageReader(taskManager, queryDto);
+        PageResponse<TaskDetailVo> pageResponse =
+                pageReader.list(PageRequest.of(queryDto.getPageNumber(), queryDto.getPageSize()));
+        PageVo<TaskDetailVo> pageVo = new PageVo<TaskDetailVo>();
+        pageVo.setContent(pageResponse.getContent());
+        pageVo.setPageNumber(pageResponse.getPageNumber());
+        pageVo.setPageSize(pageResponse.getPageSize());
+        pageVo.setTotalRecords(pageResponse.getTotalRecords());
+        pageVo.setNextPage(pageResponse.hasNextPage());
+        return ApiResponse.ok(pageVo);
+    }
+
 
 
 }

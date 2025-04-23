@@ -120,17 +120,27 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public int getTaskCount(String group, String name) {
-        return (int) taskStore.keySet().stream()
-                .filter(tid -> StringUtils.isBlank(group) || tid.getGroup().equals(group))
-                .filter(tid -> StringUtils.isBlank(name) || tid.getName().equals(name)).count();
+    public int getTaskCount(String taskGroup, String taskName, String taskClass) {
+        return (int) taskStore.entrySet().stream()
+                .filter(e -> StringUtils.isBlank(taskGroup)
+                        || e.getKey().getGroup().equals(taskGroup))
+                .filter(e -> StringUtils.isBlank(taskName)
+                        || e.getKey().getName().contains(taskName))
+                .filter(e -> StringUtils.isBlank(taskClass)
+                        || e.getValue().getTask().getClass().getName().contains(taskClass))
+                .count();
     }
 
     @Override
-    public List<TaskDetail> findTaskDetails(String group, String name, int limit, int offset) {
+    public List<TaskDetail> findTaskDetails(String taskGroup, String taskName, String taskClass,
+            int limit, int offset) {
         return taskStore.entrySet().stream()
-                .filter(e -> StringUtils.isBlank(group) || e.getKey().getGroup().equals(group))
-                .filter(e -> StringUtils.isBlank(name) || e.getKey().getName().equals(name))
+                .filter(e -> StringUtils.isBlank(taskGroup)
+                        || e.getKey().getGroup().equals(taskGroup))
+                .filter(e -> StringUtils.isBlank(taskName)
+                        || e.getKey().getName().contains(taskName))
+                .filter(e -> StringUtils.isBlank(taskClass)
+                        || e.getValue().getTask().getClass().getName().contains(taskClass))
                 .skip(offset).limit(limit).map(e -> e.getValue()).collect(Collectors.toList());
     }
 

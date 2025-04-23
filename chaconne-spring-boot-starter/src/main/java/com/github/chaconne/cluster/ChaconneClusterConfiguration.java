@@ -62,6 +62,12 @@ public class ChaconneClusterConfiguration {
     }
 
     @Bean
+    public TaskMembershipEventPublisher taskMembershipEventPublisher(
+            HazelcastInstance hazelcastInstance) {
+        return new TaskMembershipEventPublisher(hazelcastInstance);
+    }
+
+    @Bean
     public TaskSchedulerRegistration taskMemberRegistration() {
         return new TaskSchedulerRegistration();
     }

@@ -35,6 +35,6 @@ public @interface Task {
 
     String initialParameter() default "";
 
-    UpdatePolicy updatePolicy() default UpdatePolicy.MERGE;
+    UpdatePolicy updatePolicy() default UpdatePolicy.CREATE;
 
 }

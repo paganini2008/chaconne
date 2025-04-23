@@ -17,6 +17,7 @@ public class CreateTaskRequest implements TaskIdRequest, Serializable {
     private String taskGroup;
     private String taskClass;
     private String taskMethod;
+    private String url;
     private String description;
     private String cron;
     private int maxRetryCount;
@@ -54,6 +55,14 @@ public class CreateTaskRequest implements TaskIdRequest, Serializable {
 
     public void setTaskMethod(String taskMethod) {
         this.taskMethod = taskMethod;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getDescription() {

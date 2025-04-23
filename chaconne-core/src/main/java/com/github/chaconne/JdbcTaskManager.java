@@ -243,16 +243,21 @@ public class JdbcTaskManager implements TaskManager {
     }
 
     @Override
-    public int getTaskCount(String group, String name) throws ChaconneException {
+    public int getTaskCount(String taskGroup, String taskName, String taskClass)
+            throws ChaconneException {
         StringBuilder sql = new StringBuilder(SQL_COUNT_ALL_STATEMENT);
         List<Object> args = new ArrayList<Object>();
-        if (StringUtils.isNotBlank(group)) {
+        if (StringUtils.isNotBlank(taskGroup)) {
             sql.append(" and task_group=?");
-            args.add(group);
+            args.add(taskGroup);
         }
-        if (StringUtils.isNotBlank(name)) {
+        if (StringUtils.isNotBlank(taskName)) {
             sql.append(" and task_name like ?");
-            args.add("%" + name + "%");
+            args.add("%" + taskName + "%");
+        }
+        if (StringUtils.isNotBlank(taskClass)) {
+            sql.append(" and task_class like ?");
+            args.add("%" + taskClass + "%");
         }
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement psm = connection.prepareStatement(sql.toString())) {
@@ -273,17 +278,21 @@ public class JdbcTaskManager implements TaskManager {
     }
 
     @Override
-    public List<TaskDetail> findTaskDetails(String group, String name, int limit, int offset)
-            throws ChaconneException {
+    public List<TaskDetail> findTaskDetails(String taskGroup, String taskName, String taskClass,
+            int limit, int offset) throws ChaconneException {
         StringBuilder sql = new StringBuilder(SQL_SELECT_ALL_STATEMENT);
         List<Object> args = new ArrayList<Object>();
-        if (StringUtils.isNotBlank(group)) {
+        if (StringUtils.isNotBlank(taskGroup)) {
             sql.append(" and task_group=?");
-            args.add(group);
+            args.add(taskGroup);
         }
-        if (StringUtils.isNotBlank(name)) {
+        if (StringUtils.isNotBlank(taskName)) {
             sql.append(" and task_name like ?");
-            args.add("%" + name + "%");
+            args.add("%" + taskName + "%");
+        }
+        if (StringUtils.isNotBlank(taskClass)) {
+            sql.append(" and task_class like ?");
+            args.add("%" + taskClass + "%");
         }
         sql.append(" order by last_modified desc");
         if (limit > 0) {

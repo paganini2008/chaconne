@@ -30,10 +30,10 @@ public interface TaskManager {
         return taskDetail != null ? taskDetail.getTaskStatus() : null;
     }
 
-    int getTaskCount(String group, String name) throws ChaconneException;
+    int getTaskCount(String taskGroup, String taskName, String taskClass) throws ChaconneException;
 
-    List<TaskDetail> findTaskDetails(String group, String name, int limit, int offset)
-            throws ChaconneException;
+    List<TaskDetail> findTaskDetails(String taskGroup, String taskName, String taskClass, int limit,
+            int offset) throws ChaconneException;
 
     List<LocalDateTime> findNextFiredDateTimes(TaskId taskId, LocalDateTime startDateTime,
             LocalDateTime endDateTime) throws ChaconneException;
