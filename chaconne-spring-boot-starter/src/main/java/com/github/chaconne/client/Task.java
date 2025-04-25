@@ -23,6 +23,8 @@ public @interface Task {
 
     String group() default "";
 
+    String url() default "";
+
     String description() default "";
 
     String cron();
@@ -34,7 +36,5 @@ public @interface Task {
     int maxRetryCount() default -1;
 
     String initialParameter() default "";
-
-    UpdatePolicy updatePolicy() default UpdatePolicy.CREATE;
 
 }

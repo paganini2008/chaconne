@@ -13,4 +13,8 @@ public interface CustomTask extends Task {
 
     String getTaskMethodName();
 
+    default String getUrl() {
+        return "";
+    }
+
 }

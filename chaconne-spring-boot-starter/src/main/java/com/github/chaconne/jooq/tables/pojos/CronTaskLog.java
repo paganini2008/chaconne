@@ -20,12 +20,15 @@ public class CronTaskLog implements Serializable {
     private String taskGroup;
     private String taskClass;
     private String taskMethod;
+    private String host;
+    private String url;
     private String initialParameter;
-    private String taskStatus;
-    private String logLevel;
-    private String message;
+    private LocalDateTime scheduledDatetime;
+    private LocalDateTime firedDatetime;
+    private String returnValue;
+    private Long elapsed;
+    private Integer status;
     private String errorDetail;
-    private LocalDateTime logDatetime;
 
     public CronTaskLog() {}
 
@@ -34,12 +37,15 @@ public class CronTaskLog implements Serializable {
         this.taskGroup = value.taskGroup;
         this.taskClass = value.taskClass;
         this.taskMethod = value.taskMethod;
+        this.host = value.host;
+        this.url = value.url;
         this.initialParameter = value.initialParameter;
-        this.taskStatus = value.taskStatus;
-        this.logLevel = value.logLevel;
-        this.message = value.message;
+        this.scheduledDatetime = value.scheduledDatetime;
+        this.firedDatetime = value.firedDatetime;
+        this.returnValue = value.returnValue;
+        this.elapsed = value.elapsed;
+        this.status = value.status;
         this.errorDetail = value.errorDetail;
-        this.logDatetime = value.logDatetime;
     }
 
     public CronTaskLog(
@@ -47,23 +53,29 @@ public class CronTaskLog implements Serializable {
         String taskGroup,
         String taskClass,
         String taskMethod,
+        String host,
+        String url,
         String initialParameter,
-        String taskStatus,
-        String logLevel,
-        String message,
-        String errorDetail,
-        LocalDateTime logDatetime
+        LocalDateTime scheduledDatetime,
+        LocalDateTime firedDatetime,
+        String returnValue,
+        Long elapsed,
+        Integer status,
+        String errorDetail
     ) {
         this.taskName = taskName;
         this.taskGroup = taskGroup;
         this.taskClass = taskClass;
         this.taskMethod = taskMethod;
+        this.host = host;
+        this.url = url;
         this.initialParameter = initialParameter;
-        this.taskStatus = taskStatus;
-        this.logLevel = logLevel;
-        this.message = message;
+        this.scheduledDatetime = scheduledDatetime;
+        this.firedDatetime = firedDatetime;
+        this.returnValue = returnValue;
+        this.elapsed = elapsed;
+        this.status = status;
         this.errorDetail = errorDetail;
-        this.logDatetime = logDatetime;
     }
 
     /**
@@ -127,6 +139,36 @@ public class CronTaskLog implements Serializable {
     }
 
     /**
+     * Getter for <code>cron_task_log.host</code>.
+     */
+    public String getHost() {
+        return this.host;
+    }
+
+    /**
+     * Setter for <code>cron_task_log.host</code>.
+     */
+    public CronTaskLog setHost(String host) {
+        this.host = host;
+        return this;
+    }
+
+    /**
+     * Getter for <code>cron_task_log.url</code>.
+     */
+    public String getUrl() {
+        return this.url;
+    }
+
+    /**
+     * Setter for <code>cron_task_log.url</code>.
+     */
+    public CronTaskLog setUrl(String url) {
+        this.url = url;
+        return this;
+    }
+
+    /**
      * Getter for <code>cron_task_log.initial_parameter</code>.
      */
     public String getInitialParameter() {
@@ -142,47 +184,77 @@ public class CronTaskLog implements Serializable {
     }
 
     /**
-     * Getter for <code>cron_task_log.task_status</code>.
+     * Getter for <code>cron_task_log.scheduled_datetime</code>.
      */
-    public String getTaskStatus() {
-        return this.taskStatus;
+    public LocalDateTime getScheduledDatetime() {
+        return this.scheduledDatetime;
     }
 
     /**
-     * Setter for <code>cron_task_log.task_status</code>.
+     * Setter for <code>cron_task_log.scheduled_datetime</code>.
      */
-    public CronTaskLog setTaskStatus(String taskStatus) {
-        this.taskStatus = taskStatus;
+    public CronTaskLog setScheduledDatetime(LocalDateTime scheduledDatetime) {
+        this.scheduledDatetime = scheduledDatetime;
         return this;
     }
 
     /**
-     * Getter for <code>cron_task_log.log_level</code>.
+     * Getter for <code>cron_task_log.fired_datetime</code>.
      */
-    public String getLogLevel() {
-        return this.logLevel;
+    public LocalDateTime getFiredDatetime() {
+        return this.firedDatetime;
     }
 
     /**
-     * Setter for <code>cron_task_log.log_level</code>.
+     * Setter for <code>cron_task_log.fired_datetime</code>.
      */
-    public CronTaskLog setLogLevel(String logLevel) {
-        this.logLevel = logLevel;
+    public CronTaskLog setFiredDatetime(LocalDateTime firedDatetime) {
+        this.firedDatetime = firedDatetime;
         return this;
     }
 
     /**
-     * Getter for <code>cron_task_log.message</code>.
+     * Getter for <code>cron_task_log.return_value</code>.
      */
-    public String getMessage() {
-        return this.message;
+    public String getReturnValue() {
+        return this.returnValue;
     }
 
     /**
-     * Setter for <code>cron_task_log.message</code>.
+     * Setter for <code>cron_task_log.return_value</code>.
      */
-    public CronTaskLog setMessage(String message) {
-        this.message = message;
+    public CronTaskLog setReturnValue(String returnValue) {
+        this.returnValue = returnValue;
+        return this;
+    }
+
+    /**
+     * Getter for <code>cron_task_log.elapsed</code>.
+     */
+    public Long getElapsed() {
+        return this.elapsed;
+    }
+
+    /**
+     * Setter for <code>cron_task_log.elapsed</code>.
+     */
+    public CronTaskLog setElapsed(Long elapsed) {
+        this.elapsed = elapsed;
+        return this;
+    }
+
+    /**
+     * Getter for <code>cron_task_log.status</code>.
+     */
+    public Integer getStatus() {
+        return this.status;
+    }
+
+    /**
+     * Setter for <code>cron_task_log.status</code>.
+     */
+    public CronTaskLog setStatus(Integer status) {
+        this.status = status;
         return this;
     }
 
@@ -198,21 +270,6 @@ public class CronTaskLog implements Serializable {
      */
     public CronTaskLog setErrorDetail(String errorDetail) {
         this.errorDetail = errorDetail;
-        return this;
-    }
-
-    /**
-     * Getter for <code>cron_task_log.log_datetime</code>.
-     */
-    public LocalDateTime getLogDatetime() {
-        return this.logDatetime;
-    }
-
-    /**
-     * Setter for <code>cron_task_log.log_datetime</code>.
-     */
-    public CronTaskLog setLogDatetime(LocalDateTime logDatetime) {
-        this.logDatetime = logDatetime;
         return this;
     }
 
@@ -249,41 +306,59 @@ public class CronTaskLog implements Serializable {
         }
         else if (!this.taskMethod.equals(other.taskMethod))
             return false;
+        if (this.host == null) {
+            if (other.host != null)
+                return false;
+        }
+        else if (!this.host.equals(other.host))
+            return false;
+        if (this.url == null) {
+            if (other.url != null)
+                return false;
+        }
+        else if (!this.url.equals(other.url))
+            return false;
         if (this.initialParameter == null) {
             if (other.initialParameter != null)
                 return false;
         }
         else if (!this.initialParameter.equals(other.initialParameter))
             return false;
-        if (this.taskStatus == null) {
-            if (other.taskStatus != null)
+        if (this.scheduledDatetime == null) {
+            if (other.scheduledDatetime != null)
                 return false;
         }
-        else if (!this.taskStatus.equals(other.taskStatus))
+        else if (!this.scheduledDatetime.equals(other.scheduledDatetime))
             return false;
-        if (this.logLevel == null) {
-            if (other.logLevel != null)
+        if (this.firedDatetime == null) {
+            if (other.firedDatetime != null)
                 return false;
         }
-        else if (!this.logLevel.equals(other.logLevel))
+        else if (!this.firedDatetime.equals(other.firedDatetime))
             return false;
-        if (this.message == null) {
-            if (other.message != null)
+        if (this.returnValue == null) {
+            if (other.returnValue != null)
                 return false;
         }
-        else if (!this.message.equals(other.message))
+        else if (!this.returnValue.equals(other.returnValue))
+            return false;
+        if (this.elapsed == null) {
+            if (other.elapsed != null)
+                return false;
+        }
+        else if (!this.elapsed.equals(other.elapsed))
+            return false;
+        if (this.status == null) {
+            if (other.status != null)
+                return false;
+        }
+        else if (!this.status.equals(other.status))
             return false;
         if (this.errorDetail == null) {
             if (other.errorDetail != null)
                 return false;
         }
         else if (!this.errorDetail.equals(other.errorDetail))
-            return false;
-        if (this.logDatetime == null) {
-            if (other.logDatetime != null)
-                return false;
-        }
-        else if (!this.logDatetime.equals(other.logDatetime))
             return false;
         return true;
     }
@@ -296,12 +371,15 @@ public class CronTaskLog implements Serializable {
         result = prime * result + ((this.taskGroup == null) ? 0 : this.taskGroup.hashCode());
         result = prime * result + ((this.taskClass == null) ? 0 : this.taskClass.hashCode());
         result = prime * result + ((this.taskMethod == null) ? 0 : this.taskMethod.hashCode());
+        result = prime * result + ((this.host == null) ? 0 : this.host.hashCode());
+        result = prime * result + ((this.url == null) ? 0 : this.url.hashCode());
         result = prime * result + ((this.initialParameter == null) ? 0 : this.initialParameter.hashCode());
-        result = prime * result + ((this.taskStatus == null) ? 0 : this.taskStatus.hashCode());
-        result = prime * result + ((this.logLevel == null) ? 0 : this.logLevel.hashCode());
-        result = prime * result + ((this.message == null) ? 0 : this.message.hashCode());
+        result = prime * result + ((this.scheduledDatetime == null) ? 0 : this.scheduledDatetime.hashCode());
+        result = prime * result + ((this.firedDatetime == null) ? 0 : this.firedDatetime.hashCode());
+        result = prime * result + ((this.returnValue == null) ? 0 : this.returnValue.hashCode());
+        result = prime * result + ((this.elapsed == null) ? 0 : this.elapsed.hashCode());
+        result = prime * result + ((this.status == null) ? 0 : this.status.hashCode());
         result = prime * result + ((this.errorDetail == null) ? 0 : this.errorDetail.hashCode());
-        result = prime * result + ((this.logDatetime == null) ? 0 : this.logDatetime.hashCode());
         return result;
     }
 
@@ -313,12 +391,15 @@ public class CronTaskLog implements Serializable {
         sb.append(", ").append(taskGroup);
         sb.append(", ").append(taskClass);
         sb.append(", ").append(taskMethod);
+        sb.append(", ").append(host);
+        sb.append(", ").append(url);
         sb.append(", ").append(initialParameter);
-        sb.append(", ").append(taskStatus);
-        sb.append(", ").append(logLevel);
-        sb.append(", ").append(message);
+        sb.append(", ").append(scheduledDatetime);
+        sb.append(", ").append(firedDatetime);
+        sb.append(", ").append(returnValue);
+        sb.append(", ").append(elapsed);
+        sb.append(", ").append(status);
         sb.append(", ").append(errorDetail);
-        sb.append(", ").append(logDatetime);
 
         sb.append(")");
         return sb.toString();

@@ -11,57 +11,60 @@ import com.github.cronsmith.cron.CronExpression;
 
 /**
  * 
- * @Description: CustomTaskImpl
+ * @Description: AbstractCustomTask
  * @Author: Fred Feng
- * @Date: 08/04/2025
+ * @Date: 25/04/2025
  * @Version 1.0.0
  */
-public class CustomTaskImpl implements CustomTask {
+public abstract class AbstractCustomTask implements CustomTask {
 
-    private static final Logger log = LoggerFactory.getLogger(CustomTaskImpl.class);
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    public CustomTaskImpl(Map<String, Object> info, TaskInvocation taskInvocation) {
-        this.info = info;
-        this.taskInvocation = taskInvocation;
+    public AbstractCustomTask(Map<String, Object> record) {
+        this.record = record;
     }
 
-    private final Map<String, Object> info;
-    private final TaskInvocation taskInvocation;
+    protected final Map<String, Object> record;
 
     @Override
     public TaskId getTaskId() {
-        return TaskId.of((String) info.getOrDefault("taskGroup", TaskId.DEFAULT_GROUP),
-                (String) info.get("taskName"));
+        return TaskId.of((String) record.getOrDefault("taskGroup", TaskId.DEFAULT_GROUP),
+                (String) record.get("taskName"));
     }
 
     @Override
     public String getTaskClassName() {
-        return (String) info.get("taskClass");
+        return (String) record.get("taskClass");
     }
 
     @Override
     public String getTaskMethodName() {
-        return (String) info.get("taskMethod");
+        return (String) record.get("taskMethod");
+    }
+
+    @Override
+    public String getUrl() {
+        return (String) record.get("url");
     }
 
     @Override
     public String getDescription() {
-        return (String) info.get("description");
+        return (String) record.get("description");
     }
 
     @Override
     public long getTimeout() {
-        return (Long) info.getOrDefault("timeout", -1L);
+        return (Long) record.getOrDefault("timeout", -1L);
     }
 
     @Override
     public int getMaxRetryCount() {
-        return (Integer) info.getOrDefault("maxRetryCount", -1);
+        return (Integer) record.getOrDefault("maxRetryCount", -1);
     }
 
     @Override
     public CronExpression getCronExpression() {
-        Object object = info.get("cronExpression");
+        Object object = record.get("cronExpression");
         if (object instanceof CronExpression) {
             return (CronExpression) object;
         } else if (object instanceof CharSequence) {
@@ -79,12 +82,11 @@ public class CustomTaskImpl implements CustomTask {
     }
 
     @Override
-    public Object execute(String initialParameter) {
-        String taskClassName = (String) info.get("taskClass");
-        String taskMethodName = (String) info.getOrDefault("taskMethod", DEFAULT_METHOD_NAME);
+    public final Object execute(String initialParameter) {
+        String taskClassName = (String) record.get("taskClass");
+        String taskMethodName = (String) record.getOrDefault("taskMethod", DEFAULT_METHOD_NAME);
         try {
-            return taskInvocation.invokeTaskMethod(getTaskId(), taskClassName, taskMethodName,
-                    initialParameter);
+            return invokeTaskMethod(getTaskId(), taskClassName, taskMethodName, initialParameter);
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
                 log.error(e.getMessage(), e);
@@ -92,6 +94,9 @@ public class CustomTaskImpl implements CustomTask {
         }
         return null;
     }
+
+    protected abstract Object invokeTaskMethod(TaskId taskId, String taskClassName,
+            String taskMethodName, String initialParameter);
 
     @Override
     public String toString() {

@@ -21,6 +21,8 @@ public class CronTaskDetail implements Serializable {
     private String taskGroup;
     private String taskClass;
     private String taskMethod;
+    private String host;
+    private String url;
     private String initialParameter;
     private String description;
     private byte[] cronExpression;
@@ -39,6 +41,8 @@ public class CronTaskDetail implements Serializable {
         this.taskGroup = value.taskGroup;
         this.taskClass = value.taskClass;
         this.taskMethod = value.taskMethod;
+        this.host = value.host;
+        this.url = value.url;
         this.initialParameter = value.initialParameter;
         this.description = value.description;
         this.cronExpression = value.cronExpression;
@@ -56,6 +60,8 @@ public class CronTaskDetail implements Serializable {
         String taskGroup,
         String taskClass,
         String taskMethod,
+        String host,
+        String url,
         String initialParameter,
         String description,
         byte[] cronExpression,
@@ -71,6 +77,8 @@ public class CronTaskDetail implements Serializable {
         this.taskGroup = taskGroup;
         this.taskClass = taskClass;
         this.taskMethod = taskMethod;
+        this.host = host;
+        this.url = url;
         this.initialParameter = initialParameter;
         this.description = description;
         this.cronExpression = cronExpression;
@@ -140,6 +148,36 @@ public class CronTaskDetail implements Serializable {
      */
     public CronTaskDetail setTaskMethod(String taskMethod) {
         this.taskMethod = taskMethod;
+        return this;
+    }
+
+    /**
+     * Getter for <code>cron_task_detail.host</code>.
+     */
+    public String getHost() {
+        return this.host;
+    }
+
+    /**
+     * Setter for <code>cron_task_detail.host</code>.
+     */
+    public CronTaskDetail setHost(String host) {
+        this.host = host;
+        return this;
+    }
+
+    /**
+     * Getter for <code>cron_task_detail.url</code>.
+     */
+    public String getUrl() {
+        return this.url;
+    }
+
+    /**
+     * Setter for <code>cron_task_detail.url</code>.
+     */
+    public CronTaskDetail setUrl(String url) {
+        this.url = url;
         return this;
     }
 
@@ -326,6 +364,18 @@ public class CronTaskDetail implements Serializable {
         }
         else if (!this.taskMethod.equals(other.taskMethod))
             return false;
+        if (this.host == null) {
+            if (other.host != null)
+                return false;
+        }
+        else if (!this.host.equals(other.host))
+            return false;
+        if (this.url == null) {
+            if (other.url != null)
+                return false;
+        }
+        else if (!this.url.equals(other.url))
+            return false;
         if (this.initialParameter == null) {
             if (other.initialParameter != null)
                 return false;
@@ -397,6 +447,8 @@ public class CronTaskDetail implements Serializable {
         result = prime * result + ((this.taskGroup == null) ? 0 : this.taskGroup.hashCode());
         result = prime * result + ((this.taskClass == null) ? 0 : this.taskClass.hashCode());
         result = prime * result + ((this.taskMethod == null) ? 0 : this.taskMethod.hashCode());
+        result = prime * result + ((this.host == null) ? 0 : this.host.hashCode());
+        result = prime * result + ((this.url == null) ? 0 : this.url.hashCode());
         result = prime * result + ((this.initialParameter == null) ? 0 : this.initialParameter.hashCode());
         result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
         result = prime * result + ((this.cronExpression == null) ? 0 : Arrays.hashCode(this.cronExpression));
@@ -418,6 +470,8 @@ public class CronTaskDetail implements Serializable {
         sb.append(", ").append(taskGroup);
         sb.append(", ").append(taskClass);
         sb.append(", ").append(taskMethod);
+        sb.append(", ").append(host);
+        sb.append(", ").append(url);
         sb.append(", ").append(initialParameter);
         sb.append(", ").append(description);
         sb.append(", ").append("[binary...]");

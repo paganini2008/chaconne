@@ -49,53 +49,48 @@ public class JdbcTaskManager implements TaskManager {
             String.format("select %s from cron_task_detail where 1=1", SELECT_COLUMNS);
 
     private final DataSource dataSource;
-    private TaskInvocation taskInvocation = new DefaultTaskInvocation();
 
     public JdbcTaskManager(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    public void setTaskInvocation(TaskInvocation taskInvocation) {
-        this.taskInvocation = taskInvocation;
-    }
-
     private class JdbcTaskDetail implements TaskDetail {
 
-        private final Map<String, Object> info;
+        private final Map<String, Object> record;
 
-        JdbcTaskDetail(Map<String, Object> info) {
-            this.info = info;
+        JdbcTaskDetail(Map<String, Object> record) {
+            this.record = record;
         }
 
         @Override
         public Task getTask() {
-            String taskClassName = (String) info.get("taskClass");
-            return taskInvocation.retrieveTaskObject(taskClassName, info);
+            String taskClassName = (String) record.get("taskClass");
+            return TaskReflectionUtils.getTaskObject(taskClassName, record);
         }
 
         @Override
         public String getInitialParameter() {
-            return (String) info.get("initialParameter");
+            return (String) record.get("initialParameter");
         }
 
         @Override
         public TaskStatus getTaskStatus() {
-            return TaskStatus.valueOf(((String) info.get("taskStatus")).toUpperCase());
+            return TaskStatus.valueOf(((String) record.get("taskStatus")).toUpperCase());
         }
 
         @Override
         public LocalDateTime getNextFiredDateTime() {
-            return (LocalDateTime) info.get("nextFiredDateTime");
+            return (LocalDateTime) record.get("nextFiredDateTime");
         }
 
         @Override
         public LocalDateTime getPreviousFiredDateTime() {
-            return (LocalDateTime) info.get("prevFiredDateTime");
+            return (LocalDateTime) record.get("prevFiredDateTime");
         }
 
         @Override
         public LocalDateTime getLastModified() {
-            return (LocalDateTime) info.get("lastModified");
+            return (LocalDateTime) record.get("lastModified");
         }
 
         @Override
@@ -209,15 +204,15 @@ public class JdbcTaskManager implements TaskManager {
         try {
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnCount = rsmd.getColumnCount();
-            CamelCasedLinkedHashMap info = new CamelCasedLinkedHashMap(columnCount);
+            CamelCasedLinkedHashMap record = new CamelCasedLinkedHashMap(columnCount);
             for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
                 String columnLabel = rsmd.getColumnLabel(columnIndex);
                 int columnType = rsmd.getColumnType(columnIndex);
                 Object value = columnType == Types.BLOB ? rs.getBytes(columnIndex)
                         : rs.getObject(columnIndex);
-                info.put(columnLabel, value);
+                record.put(columnLabel, value);
             }
-            return info;
+            return record;
         } catch (SQLException e) {
             throw new ChaconneException(e.getMessage(), e);
         }

@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.github.chaconne.CustomTaskImpl;
+import com.github.chaconne.CustomTask;
+import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.TaskDetail;
 import com.github.chaconne.TaskId;
-import com.github.chaconne.TaskInvocation;
 import com.github.chaconne.TaskManager;
 import com.github.chaconne.client.ApiResponse;
 import com.github.chaconne.client.CreateTaskRequest;
@@ -35,12 +35,12 @@ public class TaskManagerEndpoint {
     private TaskManager taskManager;
 
     @Autowired
-    private TaskInvocation taskInvocation;
+    private CustomTaskFactory customTaskFactory;
 
     @PostMapping("/save-task")
     public ApiResponse<TaskDetailVo> saveTask(@RequestBody CreateTaskRequest requestBody) {
         Map<String, Object> beanMap = BeanUtils.bean2Map(requestBody);
-        CustomTaskImpl customTask = new CustomTaskImpl(beanMap, taskInvocation);
+        CustomTask customTask = customTaskFactory.createTaskObject(beanMap);
         boolean saved = true;
         if (requestBody.getUpdatePolicy() != null) {
             switch (requestBody.getUpdatePolicy()) {

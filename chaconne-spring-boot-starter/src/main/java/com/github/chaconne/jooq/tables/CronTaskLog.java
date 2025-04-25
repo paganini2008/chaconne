@@ -12,11 +12,11 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function10;
+import org.jooq.Function13;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row10;
+import org.jooq.Row13;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -61,7 +61,7 @@ public class CronTaskLog extends TableImpl<CronTaskLogRecord> {
     /**
      * The column <code>cron_task_log.task_class</code>.
      */
-    public final TableField<CronTaskLogRecord, String> TASK_CLASS = createField(DSL.name("task_class"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<CronTaskLogRecord, String> TASK_CLASS = createField(DSL.name("task_class"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>cron_task_log.task_method</code>.
@@ -69,34 +69,49 @@ public class CronTaskLog extends TableImpl<CronTaskLogRecord> {
     public final TableField<CronTaskLogRecord, String> TASK_METHOD = createField(DSL.name("task_method"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>cron_task_log.host</code>.
+     */
+    public final TableField<CronTaskLogRecord, String> HOST = createField(DSL.name("host"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>cron_task_log.url</code>.
+     */
+    public final TableField<CronTaskLogRecord, String> URL = createField(DSL.name("url"), SQLDataType.VARCHAR(1024), this, "");
+
+    /**
      * The column <code>cron_task_log.initial_parameter</code>.
      */
     public final TableField<CronTaskLogRecord, String> INITIAL_PARAMETER = createField(DSL.name("initial_parameter"), SQLDataType.CLOB, this, "");
 
     /**
-     * The column <code>cron_task_log.task_status</code>.
+     * The column <code>cron_task_log.scheduled_datetime</code>.
      */
-    public final TableField<CronTaskLogRecord, String> TASK_STATUS = createField(DSL.name("task_status"), SQLDataType.VARCHAR(45), this, "");
+    public final TableField<CronTaskLogRecord, LocalDateTime> SCHEDULED_DATETIME = createField(DSL.name("scheduled_datetime"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
 
     /**
-     * The column <code>cron_task_log.log_level</code>.
+     * The column <code>cron_task_log.fired_datetime</code>.
      */
-    public final TableField<CronTaskLogRecord, String> LOG_LEVEL = createField(DSL.name("log_level"), SQLDataType.VARCHAR(45).nullable(false), this, "");
+    public final TableField<CronTaskLogRecord, LocalDateTime> FIRED_DATETIME = createField(DSL.name("fired_datetime"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
 
     /**
-     * The column <code>cron_task_log.message</code>.
+     * The column <code>cron_task_log.return_value</code>.
      */
-    public final TableField<CronTaskLogRecord, String> MESSAGE = createField(DSL.name("message"), SQLDataType.VARCHAR(1024), this, "");
+    public final TableField<CronTaskLogRecord, String> RETURN_VALUE = createField(DSL.name("return_value"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>cron_task_log.elapsed</code>.
+     */
+    public final TableField<CronTaskLogRecord, Long> ELAPSED = createField(DSL.name("elapsed"), SQLDataType.BIGINT, this, "");
+
+    /**
+     * The column <code>cron_task_log.status</code>.
+     */
+    public final TableField<CronTaskLogRecord, Integer> STATUS = createField(DSL.name("status"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>cron_task_log.error_detail</code>.
      */
     public final TableField<CronTaskLogRecord, String> ERROR_DETAIL = createField(DSL.name("error_detail"), SQLDataType.CLOB, this, "");
-
-    /**
-     * The column <code>cron_task_log.log_datetime</code>.
-     */
-    public final TableField<CronTaskLogRecord, LocalDateTime> LOG_DATETIME = createField(DSL.name("log_datetime"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
 
     private CronTaskLog(Name alias, Table<CronTaskLogRecord> aliased) {
         this(alias, aliased, null);
@@ -176,18 +191,18 @@ public class CronTaskLog extends TableImpl<CronTaskLogRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row10 type methods
+    // Row13 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row10<String, String, String, String, String, String, String, String, String, LocalDateTime> fieldsRow() {
-        return (Row10) super.fieldsRow();
+    public Row13<String, String, String, String, String, String, String, LocalDateTime, LocalDateTime, String, Long, Integer, String> fieldsRow() {
+        return (Row13) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function10<? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function13<? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super String, ? super Long, ? super Integer, ? super String, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -195,7 +210,7 @@ public class CronTaskLog extends TableImpl<CronTaskLogRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function10<? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function13<? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super String, ? super Long, ? super Integer, ? super String, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

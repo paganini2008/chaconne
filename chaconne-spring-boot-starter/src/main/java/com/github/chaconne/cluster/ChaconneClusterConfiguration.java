@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import com.github.chaconne.TaskInvocation;
+import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.UpcomingTaskQueue;
 import com.github.chaconne.cluster.utils.ApplicationContextUtils;
 import com.github.chaconne.cluster.utils.NetUtils;
@@ -86,8 +86,8 @@ public class ChaconneClusterConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public TaskInvocation taskInvocation(HazelcastInstance hazelcastInstance) {
-        return new LocalTaskInvocation(hazelcastInstance);
+    public CustomTaskFactory customTaskFactory(HazelcastInstance hazelcastInstance) {
+        return new LocalCustomTaskFactory(hazelcastInstance);
     }
 
     @Bean
@@ -100,15 +100,10 @@ public class ChaconneClusterConfiguration {
         return new TaskMemberLock(hazelcastInstance);
     }
 
+    @Order(Ordered.HIGHEST_PRECEDENCE)
     @Bean
     public ClockWheelSchedulerStarter clockWheelSchedulerStarter() {
         return new ClockWheelSchedulerStarter();
-    }
-
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    @Bean
-    public TaskAnnotationBeanPropcessor taskAnnotationBeanPropcessor() {
-        return new TaskAnnotationBeanPropcessor();
     }
 
 }

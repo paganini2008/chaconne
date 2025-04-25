@@ -53,7 +53,7 @@ public class TaskProxy implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (Task.DEFAULT_METHOD_NAME.equals(method.getName())) {
             taskListeners.forEach(l -> {
-                l.onTaskBegan(taskDetail);
+                l.onTaskBegan(datetime, taskDetail);
             });
             Future<Object> future = executorService.submit(() -> {
                 return method.invoke(taskDetail.getTask(), args);
@@ -89,7 +89,7 @@ public class TaskProxy implements InvocationHandler {
                 errorHandler.onHandleTaskResult(datetime, e);
             } finally {
                 taskListeners.forEach(l -> {
-                    l.onTaskEnded(taskDetail, thrown);
+                    l.onTaskEnded(datetime, taskDetail, thrown);
                 });
             }
         });

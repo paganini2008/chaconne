@@ -11,9 +11,9 @@ import java.util.Map;
  */
 public interface TaskInvocation {
 
-    Task retrieveTaskObject(String taskClassName, Map<String, Object> record);
+    Task retrieveTaskObject2(String taskClassName, Map<String, Object> record);
 
-    Object invokeTaskMethod(TaskId taskId, String taskClassName, String taskMethodName,
+    Object invokeTaskMethod2(TaskId taskId, String taskClassName, String taskMethodName,
             String initialParameter);
 
 }

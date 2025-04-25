@@ -2,8 +2,10 @@ DROP TABLE IF EXISTS cron_task_detail;
 CREATE TABLE cron_task_detail (
   task_name varchar(255) NOT NULL,
   task_group varchar(255) NOT NULL,
-  task_class varchar(255) NOT NULL,
+  task_class varchar(255),
   task_method varchar(255),
+  host varchar(255),
+  url varchar(1024),
   initial_parameter text,
   description varchar(1024),
   cron_expression blob NOT NULL,
@@ -20,12 +22,15 @@ DROP TABLE IF EXISTS cron_task_log;
 CREATE TABLE cron_task_log (
   task_name varchar(255) NOT NULL,
   task_group varchar(255) NOT NULL,
-  task_class varchar(255) NOT NULL,
+  task_class varchar(255),
   task_method varchar(255),
+  host varchar(255),
+  url varchar(1024),
   initial_parameter text,
-  task_status varchar(45),
-  log_level varchar(45) NOT NULL,
-  message varchar(1024),
-  error_detail text,
-  log_datetime timestamp NOT NULL
+  scheduled_datetime timestamp NOT NULL,
+  fired_datetime timestamp NOT NULL,
+  return_value text,
+  elapsed bigint,
+  status int NOT NULL,
+  error_detail text
 )

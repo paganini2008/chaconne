@@ -1,5 +1,6 @@
 package com.github.chaconne.cluster;
 
+import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.github.chaconne.TaskDetail;
@@ -17,21 +18,21 @@ public class LoggingTaskListener implements TaskListener {
     private static final Logger log = LoggerFactory.getLogger(LoggingTaskListener.class);
 
     @Override
-    public void onTaskScheduled(TaskDetail taskDetail) {
+    public void onTaskScheduled(LocalDateTime ldt, TaskDetail taskDetail) {
         if (log.isTraceEnabled()) {
             log.trace("Task Scheduled: {}", taskDetail.toString());
         }
     }
 
     @Override
-    public void onTaskBegan(TaskDetail taskDetail) {
+    public void onTaskBegan(LocalDateTime ldt, TaskDetail taskDetail) {
         if (log.isTraceEnabled()) {
             log.trace("Task Began: {}", taskDetail.toString());
         }
     }
 
     @Override
-    public void onTaskEnded(TaskDetail taskDetail, Throwable e) {
+    public void onTaskEnded(LocalDateTime ldt, TaskDetail taskDetail, Throwable e) {
         if (e != null) {
             if (log.isErrorEnabled()) {
                 log.error("Task Ended: {}", taskDetail.toString(), e);

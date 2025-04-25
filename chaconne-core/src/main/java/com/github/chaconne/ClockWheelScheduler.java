@@ -139,7 +139,7 @@ public class ClockWheelScheduler {
                 taskManager.setTaskStatus(taskId, TaskStatus.SCHEDULED);
                 TaskDetail taskDetail = taskManager.getTaskDetail(taskId);
                 taskListeners.forEach(l -> {
-                    l.onTaskScheduled(taskDetail);
+                    l.onTaskScheduled(now, taskDetail);
                 });
                 preloaded = true;
             } else {

@@ -19,11 +19,10 @@ import org.jooq.impl.DefaultConfiguration;
 import org.jooq.tools.LoggerListener;
 import com.github.chaconne.ChaconneException;
 import com.github.chaconne.CustomTask;
-import com.github.chaconne.DefaultTaskInvocation;
+import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.Task;
 import com.github.chaconne.TaskDetail;
 import com.github.chaconne.TaskId;
-import com.github.chaconne.TaskInvocation;
 import com.github.chaconne.TaskManager;
 import com.github.chaconne.TaskStatus;
 import com.github.chaconne.jooq.tables.records.CronTaskDetailRecord;
@@ -53,10 +52,10 @@ public class JooqTaskManager implements TaskManager {
         this.dsl = dsl;
     }
 
-    private TaskInvocation taskInvocation = new DefaultTaskInvocation();
+    private CustomTaskFactory customTaskFactory;
 
-    public void setTaskInvocation(TaskInvocation taskInvocation) {
-        this.taskInvocation = taskInvocation;
+    public void setCustomTaskFactory(CustomTaskFactory customTaskFactory) {
+        this.customTaskFactory = customTaskFactory;
     }
 
     private class JooqTaskDetail implements TaskDetail {
@@ -69,9 +68,8 @@ public class JooqTaskManager implements TaskManager {
 
         @Override
         public Task getTask() {
-            String taskClassName = cronTaskDetailRecord.getTaskClass();
-            return taskInvocation.retrieveTaskObject(taskClassName,
-                    new CamelCasedLinkedHashMap(cronTaskDetailRecord.intoMap()));
+            return customTaskFactory
+                    .createTaskObject(new CamelCasedLinkedHashMap(cronTaskDetailRecord.intoMap()));
         }
 
         @Override
@@ -140,6 +138,7 @@ public class JooqTaskManager implements TaskManager {
             dsl.insertInto(CRON_TASK_DETAIL)
                     .columns(CRON_TASK_DETAIL.TASK_NAME, CRON_TASK_DETAIL.TASK_GROUP,
                             CRON_TASK_DETAIL.TASK_CLASS, CRON_TASK_DETAIL.TASK_METHOD,
+
                             CRON_TASK_DETAIL.DESCRIPTION, CRON_TASK_DETAIL.TASK_STATUS,
                             CRON_TASK_DETAIL.CRON_EXPRESSION, CRON_TASK_DETAIL.CRON,
                             CRON_TASK_DETAIL.MAX_RETRY_COUNT, CRON_TASK_DETAIL.TIMEOUT,

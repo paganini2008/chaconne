@@ -54,7 +54,7 @@ public class ClockWheelJooqStoreTests {
 
     @Test
     public void testB() {
-        List<TaskDetail> taskDetails = taskManager.findTaskDetails("default", null, 10, 0);
+        List<TaskDetail> taskDetails = taskManager.findTaskDetails("default", null, null, 10, 0);
         for (TaskDetail taskDetail : taskDetails) {
             System.out.println(taskDetail.toString());
         }

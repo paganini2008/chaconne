@@ -12,11 +12,11 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function14;
+import org.jooq.Function16;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row14;
+import org.jooq.Row16;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -61,12 +61,22 @@ public class CronTaskDetail extends TableImpl<CronTaskDetailRecord> {
     /**
      * The column <code>cron_task_detail.task_class</code>.
      */
-    public final TableField<CronTaskDetailRecord, String> TASK_CLASS = createField(DSL.name("task_class"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<CronTaskDetailRecord, String> TASK_CLASS = createField(DSL.name("task_class"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>cron_task_detail.task_method</code>.
      */
     public final TableField<CronTaskDetailRecord, String> TASK_METHOD = createField(DSL.name("task_method"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>cron_task_detail.host</code>.
+     */
+    public final TableField<CronTaskDetailRecord, String> HOST = createField(DSL.name("host"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>cron_task_detail.url</code>.
+     */
+    public final TableField<CronTaskDetailRecord, String> URL = createField(DSL.name("url"), SQLDataType.VARCHAR(1024), this, "");
 
     /**
      * The column <code>cron_task_detail.initial_parameter</code>.
@@ -196,18 +206,18 @@ public class CronTaskDetail extends TableImpl<CronTaskDetailRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row14 type methods
+    // Row16 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row14<String, String, String, String, String, String, byte[], String, LocalDateTime, LocalDateTime, String, Integer, Long, LocalDateTime> fieldsRow() {
-        return (Row14) super.fieldsRow();
+    public Row16<String, String, String, String, String, String, String, String, byte[], String, LocalDateTime, LocalDateTime, String, Integer, Long, LocalDateTime> fieldsRow() {
+        return (Row16) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function14<? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super byte[], ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super String, ? super Integer, ? super Long, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function16<? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super byte[], ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super String, ? super Integer, ? super Long, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -215,7 +225,7 @@ public class CronTaskDetail extends TableImpl<CronTaskDetailRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function14<? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super byte[], ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super String, ? super Integer, ? super Long, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function16<? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super byte[], ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super String, ? super Integer, ? super Long, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

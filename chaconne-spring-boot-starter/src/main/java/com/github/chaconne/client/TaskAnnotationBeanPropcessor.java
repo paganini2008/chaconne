@@ -38,12 +38,12 @@ public class TaskAnnotationBeanPropcessor
             createTaskRequest.setTaskName(task.name());
             createTaskRequest.setTaskClass(targetClass.getName());
             createTaskRequest.setTaskMethod(method.getName());
+            createTaskRequest.setUrl(beanName);
             createTaskRequest.setDescription(task.description());
             createTaskRequest.setCron(task.cron());
             createTaskRequest.setMaxRetryCount(task.maxRetryCount());
             createTaskRequest.setTimeout(task.timeout());
             createTaskRequest.setInitialParameter(task.initialParameter());
-            createTaskRequest.setUpdatePolicy(task.updatePolicy());
             createTaskRequests.add(createTaskRequest);
         }
         return bean;

@@ -1,12 +1,18 @@
 package com.github.chaconne.cluster;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.ClassUtils;
 import com.github.chaconne.TaskId;
+import com.github.chaconne.TaskInvocationException;
+import com.github.chaconne.TaskReflectionUtils;
 import com.github.chaconne.client.RunTaskRequest;
+import com.github.chaconne.cluster.utils.ApplicationContextUtils;
 import com.hazelcast.collection.IQueue;
 import com.hazelcast.core.HazelcastInstance;
 
@@ -27,7 +33,6 @@ public class TaskGroupConsumer implements Runnable, InitializingBean, Disposable
     }
 
     private final AtomicBoolean running = new AtomicBoolean(false);
-    private final ManagedTaskInvocation taskInvocation = new ManagedTaskInvocation();
 
     @Override
     public void run() {
@@ -35,7 +40,7 @@ public class TaskGroupConsumer implements Runnable, InitializingBean, Disposable
             try {
                 RunTaskRequest runTaskRequest = queue.take();
                 if (runTaskRequest != null) {
-                    taskInvocation.invokeTaskMethod(
+                    invokeTaskMethod(
                             TaskId.of(runTaskRequest.getTaskGroup(), runTaskRequest.getTaskName()),
                             runTaskRequest.getTaskClass(), runTaskRequest.getTaskMethod(),
                             runTaskRequest.getInitialParameter());
@@ -45,6 +50,25 @@ public class TaskGroupConsumer implements Runnable, InitializingBean, Disposable
                     log.error(e.getMessage(), e);
                 }
             }
+        }
+    }
+
+    protected Object invokeTaskMethod(TaskId taskId, String taskClassName, String taskMethodName,
+            String initialParameter) {
+        Class<?> beanClass;
+        try {
+            beanClass = ClassUtils.forName(taskMethodName, null);
+        } catch (ClassNotFoundException e) {
+            throw new TaskInvocationException(e.getMessage(), e);
+        }
+        Object taskObject = ApplicationContextUtils.getBean(beanClass);
+        Method method = TaskReflectionUtils.getTaskMethod(taskId, taskClassName, taskMethodName);
+        try {
+            return method.invoke(taskObject, initialParameter);
+        } catch (InvocationTargetException e) {
+            throw new TaskInvocationException(e.getMessage(), e.getTargetException());
+        } catch (Exception e) {
+            throw new TaskInvocationException(e.getMessage(), e);
         }
     }
 

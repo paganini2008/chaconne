@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import com.github.chaconne.TaskInvocation;
+import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.UpcomingTaskQueue;
 import com.github.chaconne.cluster.utils.NetUtils;
 import com.hazelcast.config.Config;
@@ -125,8 +125,8 @@ public class ChaconneServerConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public TaskInvocation taskInvocation(TaskSchedulerRestService taskSchedulerRestService) {
-        return new RemoteTaskInvocation(taskSchedulerRestService);
+    public CustomTaskFactory customTaskFactory(TaskSchedulerRestService taskSchedulerRestService) {
+        return new RemoteCustomTaskFactory(taskSchedulerRestService);
     }
 
 }

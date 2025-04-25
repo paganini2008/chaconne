@@ -5,10 +5,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.github.chaconne.ClockWheelScheduler;
+import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.DefaultExecutorServiceFactory;
 import com.github.chaconne.ExecutorServiceFactory;
 import com.github.chaconne.LoggingErrorHandler;
-import com.github.chaconne.TaskInvocation;
 import com.github.chaconne.TaskManager;
 import com.github.chaconne.UpcomingTaskQueue;
 import com.github.cronsmith.scheduler.ErrorHandler;
@@ -42,9 +42,9 @@ public class ClockWheelAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public TaskManager taskManager(DSLContext dslContext, TaskInvocation taskInvocation) {
+    public TaskManager taskManager(DSLContext dslContext, CustomTaskFactory customTaskFactory) {
         JooqTaskManager taskManager = new JooqTaskManager(dslContext);
-        taskManager.setTaskInvocation(taskInvocation);
+        taskManager.setCustomTaskFactory(customTaskFactory);
         return taskManager;
     }
 
