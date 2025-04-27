@@ -1,4 +1,4 @@
-package com.github.chaconne.cluster;
+package com.github.chaconne.common;
 
 import java.io.Serializable;
 import java.util.Map;

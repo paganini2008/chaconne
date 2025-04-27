@@ -1,6 +1,7 @@
 package com.github.chaconne.cluster;
 
 import org.springframework.context.ApplicationEvent;
+import com.github.chaconne.common.TaskMember;
 
 /**
  * 

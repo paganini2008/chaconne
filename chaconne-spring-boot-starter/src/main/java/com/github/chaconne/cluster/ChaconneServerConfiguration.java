@@ -15,7 +15,8 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.UpcomingTaskQueue;
-import com.github.chaconne.cluster.utils.NetUtils;
+import com.github.chaconne.common.TaskMember;
+import com.github.chaconne.common.utils.NetUtils;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.InterfacesConfig;
 import com.hazelcast.config.NetworkConfig;
@@ -29,7 +30,7 @@ import com.hazelcast.core.HazelcastInstance;
  * @Date: 12/04/2025
  * @Version 1.0.0
  */
-@Import({TaskManagerEndpoint.class})
+@Import({TaskManagerEndpoint.class, TaskMemberManagerEndpoint.class})
 @Configuration(proxyBeanMethods = false)
 public class ChaconneServerConfiguration {
 

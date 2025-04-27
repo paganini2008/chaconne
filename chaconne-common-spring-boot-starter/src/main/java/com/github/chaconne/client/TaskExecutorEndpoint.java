@@ -1,5 +1,6 @@
 package com.github.chaconne.client;
 
+import java.lang.reflect.Method;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.github.chaconne.ChaconneException;
-import com.github.chaconne.cluster.utils.ApplicationContextUtils;
-import com.github.chaconne.cluster.utils.ExceptionUtils;
+import com.github.chaconne.common.utils.ApplicationContextUtils;
+import com.github.chaconne.common.utils.ExceptionUtils;
 
 /**
  * 
@@ -37,9 +38,18 @@ public class TaskExecutorEndpoint {
             throw new ChaconneException(e.getMessage(), e);
         }
         try {
+            Object result = null;
             Object taskBean = ApplicationContextUtils.getOrCreateBean(beanClass);
-            Object result = MethodUtils.invokeMethod(taskBean, true, runTaskRequest.getTaskMethod(),
-                    runTaskRequest.getInitialParameter());
+            Method method = MethodUtils.getMatchingMethod(beanClass, runTaskRequest.getTaskMethod(),
+                    String.class);
+            if (method != null) {
+                method.setAccessible(true);
+                result = method.invoke(taskBean, runTaskRequest.getInitialParameter());
+            } else {
+                method = MethodUtils.getMatchingMethod(beanClass, runTaskRequest.getTaskMethod());
+                method.setAccessible(true);
+                result = method.invoke(taskBean);
+            }
             return ApiResponse.ok(result);
         } catch (Throwable e) {
             return ApiResponse.bad("Failed to run task: " + runTaskRequest,

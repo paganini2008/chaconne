@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.github.chaconne.ClockWheelScheduler;
 import com.github.chaconne.CustomTask;
 import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.TaskDetail;
@@ -15,10 +16,10 @@ import com.github.chaconne.TaskManager;
 import com.github.chaconne.client.ApiResponse;
 import com.github.chaconne.client.CreateTaskRequest;
 import com.github.chaconne.client.TaskIdRequest;
-import com.github.chaconne.cluster.utils.BeanUtils;
 import com.github.chaconne.cluster.web.PageRequest;
 import com.github.chaconne.cluster.web.PageResponse;
 import com.github.chaconne.cluster.web.TaskDetailPageReader;
+import com.github.chaconne.common.utils.BeanUtils;
 
 /**
  * 
@@ -30,6 +31,9 @@ import com.github.chaconne.cluster.web.TaskDetailPageReader;
 @RequestMapping("/chac")
 @RestController
 public class TaskManagerEndpoint {
+
+    @Autowired
+    private ClockWheelScheduler clockWheelScheduler;
 
     @Autowired
     private TaskManager taskManager;
@@ -71,6 +75,14 @@ public class TaskManagerEndpoint {
                     .ok(new TaskDetailVo(taskManager.getTaskDetail(customTask.getTaskId())));
         }
     }
+
+    @PostMapping("/schedule-task")
+    public ApiResponse<Boolean> scheduleTask(@RequestBody TaskIdRequest requestBody) {
+        boolean flag = clockWheelScheduler
+                .schedule(TaskId.of(requestBody.getTaskGroup(), requestBody.getTaskName()));
+        return ApiResponse.ok(flag);
+    }
+
 
     @PostMapping("/exist-task")
     public ApiResponse<Boolean> hasTask(@RequestBody TaskIdRequest requestBody) {

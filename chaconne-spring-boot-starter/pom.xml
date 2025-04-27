@@ -17,7 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>com.github.paganini2008</groupId>  
-		  <artifactId>chaconne-core</artifactId>  
+		  <artifactId>chaconne-common-spring-boot-starter</artifactId>  
 		  <version>1.0.0-RC1</version>  
         </dependency>
         
@@ -68,22 +68,7 @@
             <artifactId>spring-webmvc</artifactId>
             <scope>provided</scope>
         </dependency>
-<dependency>
-    <groupId>org.apache.httpcomponents.client5</groupId>
-    <artifactId>httpclient5</artifactId>
-</dependency>
 
-        
-                <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework.retry</groupId>
-            <artifactId>spring-retry</artifactId>
-        </dependency>
     </dependencies>
     <build>
         <plugins>

@@ -3,7 +3,7 @@ package com.github.chaconne;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
@@ -21,14 +21,14 @@ import com.github.cronsmith.scheduler.ErrorHandler;
 public class TaskProxy implements InvocationHandler {
 
     private Method callbackMethod;
-    private final LocalDateTime datetime;
+    private final ZonedDateTime datetime;
     private final TaskDetail taskDetail;
     private final Object proxyObject;
     private final ExecutorService executorService;
     private final List<TaskListener> taskListeners;
     private final ErrorHandler errorHandler;
 
-    TaskProxy(LocalDateTime datetime, TaskDetail taskDetail, ExecutorService executorService,
+    TaskProxy(ZonedDateTime datetime, TaskDetail taskDetail, ExecutorService executorService,
             List<TaskListener> taskListeners, ErrorHandler errorHandler) {
         this.datetime = datetime;
         this.taskDetail = taskDetail;
@@ -89,7 +89,7 @@ public class TaskProxy implements InvocationHandler {
                 errorHandler.onHandleTaskResult(datetime, e);
             } finally {
                 taskListeners.forEach(l -> {
-                    l.onTaskEnded(datetime, taskDetail, thrown);
+                    l.onTaskEnded(datetime, taskDetail, returnValue, thrown);
                 });
             }
         });

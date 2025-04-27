@@ -9,37 +9,18 @@ import java.io.Serializable;
  * @Date: 11/04/2025
  * @Version 1.0.0
  */
-public class CreateTaskRequest implements TaskIdRequest, Serializable {
+public class CreateTaskRequest extends TaskIdRequest implements Serializable {
 
     private static final long serialVersionUID = 1976938346500751980L;
 
-    private String taskName;
-    private String taskGroup;
     private String taskClass;
     private String taskMethod;
-    private String url;
     private String description;
-    private String cron;
+    private String cronExpression;
     private int maxRetryCount;
     private long timeout;
     private String initialParameter;
     private UpdatePolicy updatePolicy = UpdatePolicy.CREATE;
-
-    public String getTaskName() {
-        return taskName;
-    }
-
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
-    }
-
-    public String getTaskGroup() {
-        return taskGroup;
-    }
-
-    public void setTaskGroup(String taskGroup) {
-        this.taskGroup = taskGroup;
-    }
 
     public String getTaskClass() {
         return taskClass;
@@ -57,14 +38,6 @@ public class CreateTaskRequest implements TaskIdRequest, Serializable {
         this.taskMethod = taskMethod;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -73,12 +46,12 @@ public class CreateTaskRequest implements TaskIdRequest, Serializable {
         this.description = description;
     }
 
-    public String getCron() {
-        return cron;
+    public String getCronExpression() {
+        return cronExpression;
     }
 
-    public void setCron(String cron) {
-        this.cron = cron;
+    public void setCronExpression(String cronExpression) {
+        this.cronExpression = cronExpression;
     }
 
     public int getMaxRetryCount() {

@@ -26,11 +26,11 @@ import com.github.cronsmith.scheduler.StringUtils;
 public class JdbcTaskManager implements TaskManager {
 
     private static final String SQL_INSERT_STATEMENT =
-            "insert into cron_task_detail(task_name,task_group,task_class,task_method,description,cron_expression,cron,next_fired_datetime,max_retry_count,timeout,task_status,initial_parameter,last_modified) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            "insert into cron_task_detail(task_name,task_group,task_class,task_method,url,description,cron_expression,cron,next_fired_datetime,max_retry_count,timeout,task_status,initial_parameter,last_modified) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static final String SQL_UPDATE_STATEMENT =
-            "update cron_task_detail set task_class=?,task_method=?,description=?,cron_expression=?,cron=?,max_retry_count=?,timeout=?,initial_parameter=?,last_modified=? where task_name=? and task_group=?";
+            "update cron_task_detail set task_class=?,task_method=?,url=?,description=?,cron_expression=?,cron=?,max_retry_count=?,timeout=?,initial_parameter=?,last_modified=? where task_name=? and task_group=?";
     private static final String SELECT_COLUMNS =
-            "task_name,task_group,task_class,task_method,description,cron_expression,cron,next_fired_datetime,prev_fired_datetime,max_retry_count,timeout,task_status,initial_parameter,last_modified";
+            "task_name,task_group,task_class,task_method,url,description,cron_expression,cron,next_fired_datetime,prev_fired_datetime,max_retry_count,timeout,task_status,initial_parameter,last_modified";
     private static final String SQL_SELECT_ONE_STATEMENT = String.format(
             "select %s from cron_task_detail where task_name=? and task_group=?", SELECT_COLUMNS);
     private static final String SQL_CHECK_EXISTENCE_STATEMENT =
@@ -120,15 +120,16 @@ public class JdbcTaskManager implements TaskManager {
                 psm.setObject(4,
                         task instanceof CustomTask ? ((CustomTask) task).getTaskMethodName()
                                 : Task.DEFAULT_METHOD_NAME);
-                psm.setObject(5, task.getDescription());
-                psm.setBytes(6, task.getCronExpression().serialize());
-                psm.setObject(7, task.getCronExpression().toString());
-                psm.setObject(8, nextFired);
-                psm.setObject(9, task.getMaxRetryCount());
-                psm.setObject(10, task.getTimeout());
-                psm.setObject(11, TaskStatus.STANDBY.name().toLowerCase());
-                psm.setObject(12, initialParameter);
-                psm.setObject(13, LocalDateTime.now(DEFAULT_ZONE_ID));
+                psm.setObject(5, task instanceof CustomTask ? ((CustomTask) task).getUrl() : null);
+                psm.setObject(6, task.getDescription());
+                psm.setBytes(7, task.getCronExpression().serialize());
+                psm.setObject(8, task.getCronExpression().toString());
+                psm.setObject(9, nextFired);
+                psm.setObject(10, task.getMaxRetryCount());
+                psm.setObject(11, task.getTimeout());
+                psm.setObject(12, TaskStatus.STANDBY.name().toLowerCase());
+                psm.setObject(13, initialParameter);
+                psm.setObject(14, LocalDateTime.now(DEFAULT_ZONE_ID));
                 psm.executeUpdate();
                 connection.commit();
             } catch (SQLException e) {
@@ -145,15 +146,16 @@ public class JdbcTaskManager implements TaskManager {
                     : task.getClass().getName());
             psm.setObject(2, task instanceof CustomTask ? ((CustomTask) task).getTaskMethodName()
                     : Task.DEFAULT_METHOD_NAME);
-            psm.setObject(3, task.getDescription());
-            psm.setBytes(4, task.getCronExpression().serialize());
-            psm.setObject(5, task.getCronExpression().toString());
-            psm.setObject(6, task.getMaxRetryCount());
-            psm.setObject(7, task.getTimeout());
-            psm.setObject(8, initialParameter);
-            psm.setObject(9, LocalDateTime.now(DEFAULT_ZONE_ID));
-            psm.setObject(10, task.getTaskId().getName());
-            psm.setObject(11, task.getTaskId().getGroup());
+            psm.setObject(3, task instanceof CustomTask ? ((CustomTask) task).getUrl() : null);
+            psm.setObject(4, task.getDescription());
+            psm.setBytes(5, task.getCronExpression().serialize());
+            psm.setObject(6, task.getCronExpression().toString());
+            psm.setObject(7, task.getMaxRetryCount());
+            psm.setObject(8, task.getTimeout());
+            psm.setObject(9, initialParameter);
+            psm.setObject(10, LocalDateTime.now(DEFAULT_ZONE_ID));
+            psm.setObject(11, task.getTaskId().getName());
+            psm.setObject(12, task.getTaskId().getGroup());
             psm.executeUpdate();
             connection.commit();
         } catch (SQLException e) {

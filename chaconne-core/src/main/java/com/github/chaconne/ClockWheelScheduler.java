@@ -2,6 +2,7 @@ package com.github.chaconne;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -74,9 +75,18 @@ public class ClockWheelScheduler {
         this.errorHandler = errorHandler;
     }
 
-    public void schedule(Task task, String initialParameter) {
-        taskManager.saveTask(task, initialParameter);
-        preloadUpcomingTasks(task.getTaskId());
+    public boolean schedule(TaskId taskId) {
+        if (taskManager.getTaskStatus(taskId) == TaskStatus.STANDBY) {
+            return preloadUpcomingTasks(taskId);
+        }
+        return false;
+    }
+
+    public boolean schedule(Task task, String initialParameter) {
+        if (!taskManager.hasTask(task.getTaskId())) {
+            taskManager.saveTask(task, initialParameter);
+        }
+        return preloadUpcomingTasks(task.getTaskId());
     }
 
     public void pause(Task task) {
@@ -111,8 +121,9 @@ public class ClockWheelScheduler {
 
     private boolean preloadUpcomingTasks(TaskId taskId) {
         boolean preloaded = false;
-        LocalDateTime now = getNow();
-        LocalDateTime nextFiredDateTime = taskManager.computeNextFiredDateTime(taskId, now);
+        ZonedDateTime now = getNow();
+        LocalDateTime nextFiredDateTime =
+                taskManager.computeNextFiredDateTime(taskId, now.toLocalDateTime());
         if (nextFiredDateTime == null) {
             taskManager.setTaskStatus(taskId, TaskStatus.FINISHED);
             TaskDetail taskDetail = taskManager.getTaskDetail(taskId);
@@ -125,9 +136,9 @@ public class ClockWheelScheduler {
                     log.trace("TaskId '{}' will be triggered at {}", taskId, nextFiredDateTime);
                 }
             }
-            LocalDateTime duration = now.plus(1L, ChronoUnit.MINUTES);
-            List<LocalDateTime> firedDateTimes =
-                    taskManager.findNextFiredDateTimes(taskId, now, duration);
+            ZonedDateTime interval = now.plus(1L, ChronoUnit.MINUTES);
+            List<LocalDateTime> firedDateTimes = taskManager.findNextFiredDateTimes(taskId,
+                    now.toLocalDateTime(), interval.toLocalDateTime());
             if (firedDateTimes != null && firedDateTimes.size() > 0) {
                 for (LocalDateTime ldt : firedDateTimes) {
                     if (taskQueue.addTask(ldt, taskId)) {
@@ -174,16 +185,16 @@ public class ClockWheelScheduler {
         log.info("ClockWheelScheduler is closed.");
     }
 
-    private LocalDateTime getNow() {
-        return LocalDateTime.now(zoneId).withNano(0);
+    private ZonedDateTime getNow() {
+        return ZonedDateTime.now(zoneId).withNano(0);
     }
 
     private class TaskQueueLoop implements OneOffTask {
 
         @Override
         public boolean execute() {
-            final LocalDateTime firedDateTime = getNow();
-            Collection<TaskId> taskIds = taskQueue.matchTaskIds(firedDateTime);
+            final ZonedDateTime firedDateTime = getNow();
+            Collection<TaskId> taskIds = taskQueue.matchTaskIds(firedDateTime.toLocalDateTime());
             if (log.isTraceEnabled()) {
                 log.trace("FiredDateTime: {}, TaskIds' size: {}, TaskQueueLength: {}",
                         firedDateTime, taskIds.size(), taskQueue.length());

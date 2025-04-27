@@ -12,14 +12,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("chaconne.client")
 public class ChaconneClientProperties {
 
-    private String baseUrls = "http://localhost:6104";
+    private String baseUrl = "http://localhost:6142";
 
-    public String getBaseUrls() {
-        return baseUrls;
+    public String getBaseUrl() {
+        return baseUrl;
     }
 
-    public void setBaseUrls(String baseUrls) {
-        this.baseUrls = baseUrls;
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 
 }

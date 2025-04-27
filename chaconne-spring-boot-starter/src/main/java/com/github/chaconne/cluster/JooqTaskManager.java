@@ -64,12 +64,15 @@ public class JooqTaskManager implements TaskManager {
 
         JooqTaskDetail(CronTaskDetailRecord cronTaskDetailRecord) {
             this.cronTaskDetailRecord = cronTaskDetailRecord;
+            this.task = customTaskFactory
+                    .createTaskObject(new CamelCasedLinkedHashMap(cronTaskDetailRecord.intoMap()));
         }
+
+        private final Task task;
 
         @Override
         public Task getTask() {
-            return customTaskFactory
-                    .createTaskObject(new CamelCasedLinkedHashMap(cronTaskDetailRecord.intoMap()));
+            return task;
         }
 
         @Override
@@ -117,15 +120,18 @@ public class JooqTaskManager implements TaskManager {
     public TaskDetail saveTask(Task task, String initialParameter) throws ChaconneException {
         String taskClassName = task.getClass().getName();
         String taskMethodName = Task.DEFAULT_METHOD_NAME;
+        String url = null;
         if (task instanceof CustomTask) {
             taskClassName = ((CustomTask) task).getTaskClassName();
             taskMethodName = ((CustomTask) task).getTaskMethodName();
+            url = ((CustomTask) task).getUrl();
         }
         byte[] data = task.getCronExpression().serialize();
         String cron = task.getCronExpression().toString();
         if (hasTask(task.getTaskId())) {
             dsl.update(CRON_TASK_DETAIL).set(CRON_TASK_DETAIL.TASK_CLASS, taskClassName)
                     .set(CRON_TASK_DETAIL.TASK_METHOD, taskMethodName)
+                    .set(CRON_TASK_DETAIL.URL, url)
                     .set(CRON_TASK_DETAIL.DESCRIPTION, task.getDescription())
                     .set(CRON_TASK_DETAIL.CRON_EXPRESSION, data).set(CRON_TASK_DETAIL.CRON, cron)
                     .set(CRON_TASK_DETAIL.MAX_RETRY_COUNT, task.getMaxRetryCount())
@@ -133,18 +139,20 @@ public class JooqTaskManager implements TaskManager {
                     .set(CRON_TASK_DETAIL.LAST_MODIFIED, LocalDateTime.now(DEFAULT_ZONE_ID))
                     .set(CRON_TASK_DETAIL.INITIAL_PARAMETER, initialParameter)
                     .set(CRON_TASK_DETAIL.TASK_STATUS, TaskStatus.STANDBY.name().toUpperCase())
+                    .where(CRON_TASK_DETAIL.TASK_NAME.eq(task.getTaskId().getName())
+                            .and(CRON_TASK_DETAIL.TASK_GROUP.eq(task.getTaskId().getGroup())))
                     .execute();
         } else {
             dsl.insertInto(CRON_TASK_DETAIL)
                     .columns(CRON_TASK_DETAIL.TASK_NAME, CRON_TASK_DETAIL.TASK_GROUP,
                             CRON_TASK_DETAIL.TASK_CLASS, CRON_TASK_DETAIL.TASK_METHOD,
-
-                            CRON_TASK_DETAIL.DESCRIPTION, CRON_TASK_DETAIL.TASK_STATUS,
-                            CRON_TASK_DETAIL.CRON_EXPRESSION, CRON_TASK_DETAIL.CRON,
-                            CRON_TASK_DETAIL.MAX_RETRY_COUNT, CRON_TASK_DETAIL.TIMEOUT,
-                            CRON_TASK_DETAIL.LAST_MODIFIED, CRON_TASK_DETAIL.INITIAL_PARAMETER)
+                            CRON_TASK_DETAIL.URL, CRON_TASK_DETAIL.DESCRIPTION,
+                            CRON_TASK_DETAIL.TASK_STATUS, CRON_TASK_DETAIL.CRON_EXPRESSION,
+                            CRON_TASK_DETAIL.CRON, CRON_TASK_DETAIL.MAX_RETRY_COUNT,
+                            CRON_TASK_DETAIL.TIMEOUT, CRON_TASK_DETAIL.LAST_MODIFIED,
+                            CRON_TASK_DETAIL.INITIAL_PARAMETER)
                     .values(task.getTaskId().getName(), task.getTaskId().getGroup(), taskClassName,
-                            taskMethodName, task.getDescription(),
+                            taskMethodName, url, task.getDescription(),
                             TaskStatus.STANDBY.name().toUpperCase(), data, cron,
                             task.getMaxRetryCount(), task.getTimeout(),
                             LocalDateTime.now(DEFAULT_ZONE_ID), initialParameter)

@@ -1,4 +1,4 @@
-package com.github.chaconne.cluster;
+package com.github.chaconne.common;
 
 import org.apache.commons.lang3.StringUtils;
 

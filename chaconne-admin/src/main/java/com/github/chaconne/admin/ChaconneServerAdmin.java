@@ -3,7 +3,7 @@ package com.github.chaconne.admin;
 import java.util.TimeZone;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import com.github.chaconne.cluster.EnableChaconne;
+import com.github.chaconne.cluster.EnableChaconneServer;
 
 /**
  * 
@@ -12,7 +12,7 @@ import com.github.chaconne.cluster.EnableChaconne;
  * @Date: 21/04/2025
  * @Version 1.0.0
  */
-@EnableChaconne
+@EnableChaconneServer
 @SpringBootApplication
 public class ChaconneServerAdmin {
 

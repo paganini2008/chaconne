@@ -1,4 +1,4 @@
-package com.github.chaconne.cluster.utils;
+package com.github.chaconne.common.utils;
 
 import java.security.KeyStore;
 import java.security.SecureRandom;
@@ -12,7 +12,6 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import lombok.experimental.UtilityClass;
 
 /**
  * 
@@ -21,8 +20,7 @@ import lombok.experimental.UtilityClass;
  * @Date: 21/04/2025
  * @Version 1.0.0
  */
-@UtilityClass
-public class SslUtils {
+public abstract class SslUtils {
 
     private static final Logger log = LoggerFactory.getLogger(SslUtils.class);
 

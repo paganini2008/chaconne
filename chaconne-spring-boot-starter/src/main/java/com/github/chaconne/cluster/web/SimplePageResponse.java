@@ -3,7 +3,6 @@ package com.github.chaconne.cluster.web;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
-import lombok.SneakyThrows;
 
 /**
  * @Description: SimplePageResponse in Generic paging tools
@@ -68,7 +67,6 @@ public class SimplePageResponse<T> implements PageResponse<T>, Serializable {
             this.pageResponse = pageResponse;
         }
 
-        @SneakyThrows
         public boolean hasNext() {
             if (current == null) {
                 current = pageResponse;

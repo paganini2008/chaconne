@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.event.SmartApplicationListener;
+import com.github.chaconne.common.TaskMember;
 import com.hazelcast.collection.IList;
 import com.hazelcast.collection.ItemEvent;
 import com.hazelcast.collection.ItemListener;
@@ -28,6 +29,7 @@ public class RemoteTaskMemberManager implements TaskMemberManager, SmartApplicat
 
     public RemoteTaskMemberManager(HazelcastInstance hazelcastInstance) {
         this.executors = hazelcastInstance.getList("REMOTE_TASK_EXECUTOR");
+        this.executors.addItemListener(this, true);
     }
 
     private final Queue<TaskMember> schedulers = new PriorityBlockingQueue<>();
@@ -62,13 +64,16 @@ public class RemoteTaskMemberManager implements TaskMemberManager, SmartApplicat
             }
         } else if (event instanceof TaskMemberRemovedEvent) {
             TaskMemberRemovedEvent removedEvent = (TaskMemberRemovedEvent) event;
+            TaskMember taskMember = removedEvent.getTaskMember();
             if (removedEvent.getClusterMode() == ClusterMode.LOCAL) {
-                TaskMember taskMember = removedEvent.getTaskMember();
                 schedulers.remove(taskMember);
+            } else {
+                executors.remove(taskMember);
             }
         }
         if (log.isInfoEnabled()) {
             log.info("Task schedulers: {}", schedulers.toString());
+            log.info("Task executors: {}", executors.toString());
         }
     }
 

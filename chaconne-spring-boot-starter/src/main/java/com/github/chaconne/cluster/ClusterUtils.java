@@ -1,6 +1,8 @@
 package com.github.chaconne.cluster;
 
 import org.springframework.beans.BeanUtils;
+import com.github.chaconne.common.TaskMember;
+import com.github.chaconne.common.TaskMemberInstance;
 import com.hazelcast.cluster.Member;
 
 /**

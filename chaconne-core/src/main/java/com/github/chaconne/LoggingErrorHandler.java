@@ -1,6 +1,6 @@
 package com.github.chaconne;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.github.cronsmith.scheduler.ErrorHandler;
@@ -24,14 +24,14 @@ public class LoggingErrorHandler implements ErrorHandler {
     }
 
     @Override
-    public void onHandleTask(LocalDateTime datetime, Throwable e) {
+    public void onHandleTask(ZonedDateTime datetime, Throwable e) {
         if (log.isErrorEnabled()) {
             log.error(e.getMessage(), e);
         }
     }
 
     @Override
-    public void onHandleTaskResult(LocalDateTime datetime, Throwable e) {
+    public void onHandleTaskResult(ZonedDateTime datetime, Throwable e) {
         if (log.isErrorEnabled()) {
             log.error(e.getMessage(), e);
         }

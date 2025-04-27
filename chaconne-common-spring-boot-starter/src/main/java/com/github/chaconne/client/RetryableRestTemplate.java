@@ -1,4 +1,4 @@
-package com.github.chaconne.cluster;
+package com.github.chaconne.client;
 
 import java.io.IOException;
 import java.net.URI;
@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.lang.Nullable;
 import org.springframework.retry.ExhaustedRetryException;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.RetryContext;
@@ -78,21 +78,23 @@ public class RetryableRestTemplate extends RestTemplate implements RetryListener
                 maxAttempts > 0 ? new SimpleRetryPolicy(maxAttempts, retryableExceptions)
                         : new NeverRetryPolicy();
         retryTemplate.setRetryPolicy(retryPolicy);
-        retryTemplate.setBackOffPolicy(new FixedBackOffPolicy());
+        FixedBackOffPolicy fixedBackOffPolicy = new FixedBackOffPolicy();
+        fixedBackOffPolicy.setBackOffPeriod(3000L);
+        retryTemplate.setBackOffPolicy(fixedBackOffPolicy);
         retryTemplate.setListeners(new RetryListener[] {this});
         return retryTemplate;
     }
 
     @Override
-    protected <T> T doExecute(URI uri, HttpMethod method, RequestCallback requestCallback,
-            ResponseExtractor<T> responseExtractor) throws RestClientException {
+    protected <T> T doExecute(URI uri, @Nullable String uriTemplate, @Nullable HttpMethod method,
+            @Nullable RequestCallback requestCallback,
+            @Nullable ResponseExtractor<T> responseExtractor) throws RestClientException {
         return retryTemplate.execute(context -> {
             return RetryableRestTemplate.super.doExecute(retrieveOriginalUri(uri), null, method,
                     requestCallback, responseExtractor);
         }, context -> {
             Throwable e = context.getLastThrowable();
-            throw e instanceof RestClientException ? (RestClientException) e
-                    : new ExhaustedRetryException(e.getMessage(), e);
+            throw new ExhaustedRetryException(e.getMessage(), e);
         });
     }
 
@@ -103,8 +105,8 @@ public class RetryableRestTemplate extends RestTemplate implements RetryListener
     @Override
     public <T, E extends Throwable> boolean open(RetryContext context,
             RetryCallback<T, E> callback) {
-        if (log.isInfoEnabled()) {
-            log.info("Start to retry. Retry count: {}", context.getRetryCount());
+        if (log.isTraceEnabled()) {
+            log.trace("Start to retry. Retry count: {}", context.getRetryCount());
         }
         return true;
     }
@@ -117,8 +119,8 @@ public class RetryableRestTemplate extends RestTemplate implements RetryListener
                 log.error("Complete to retry. Retry count: {}", context.getRetryCount(), e);
             }
         } else {
-            if (log.isInfoEnabled()) {
-                log.info("Complete to retry. Retry count: {}", context.getRetryCount());
+            if (log.isTraceEnabled()) {
+                log.trace("Complete to retry. Retry count: {}", context.getRetryCount());
             }
         }
     }
@@ -131,14 +133,6 @@ public class RetryableRestTemplate extends RestTemplate implements RetryListener
                 log.error(e.getMessage(), e);
             }
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-        RetryableRestTemplate retryableRestTemplate = new RetryableRestTemplate();
-        ResponseEntity<String> body = retryableRestTemplate.exchange(
-                "http://127.0.0.1:8089/json/?fields=61439", HttpMethod.GET, null, String.class);
-        System.out.println(body.getStatusCode());
-        System.out.println(body.getBody());
     }
 
 }

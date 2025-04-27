@@ -1,6 +1,6 @@
 package com.github.chaconne;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * 
@@ -11,11 +11,12 @@ import java.time.LocalDateTime;
  */
 public interface TaskListener {
 
-    default void onTaskScheduled(LocalDateTime ldt, TaskDetail taskDetail) {};
+    default void onTaskScheduled(ZonedDateTime scheduledDateTime, TaskDetail taskDetail) {};
 
-    default void onTaskBegan(LocalDateTime ldt, TaskDetail taskDetail) {}
+    default void onTaskBegan(ZonedDateTime firedDateTime, TaskDetail taskDetail) {}
 
-    default void onTaskEnded(LocalDateTime ldt, TaskDetail taskDetail, Throwable e) {}
+    default void onTaskEnded(ZonedDateTime firedDateTime, TaskDetail taskDetail, Object returnValue,
+            Throwable e) {}
 
     default void onTaskCanceled(TaskDetail taskDetail) {}
 

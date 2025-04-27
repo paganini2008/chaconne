@@ -1,5 +1,6 @@
 package com.github.chaconne.cluster;
 
+import java.util.List;
 import org.jooq.DSLContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,7 @@ import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.DefaultExecutorServiceFactory;
 import com.github.chaconne.ExecutorServiceFactory;
 import com.github.chaconne.LoggingErrorHandler;
+import com.github.chaconne.TaskListener;
 import com.github.chaconne.TaskManager;
 import com.github.chaconne.UpcomingTaskQueue;
 import com.github.cronsmith.scheduler.ErrorHandler;
@@ -25,12 +27,13 @@ public class ClockWheelAutoConfiguration {
 
     @Bean
     public ClockWheelScheduler clockWheelScheduler(TaskManager taskManager,
-            UpcomingTaskQueue taskQueue) {
+            UpcomingTaskQueue taskQueue, List<TaskListener> taskListeners) {
         ClockWheelScheduler clockWheelScheduler = new ClockWheelScheduler(executorServiceFactory());
         clockWheelScheduler.setTaskManager(taskManager);
         clockWheelScheduler.setTaskQueue(taskQueue);
         clockWheelScheduler.setErrorHandler(errorHandler());
         clockWheelScheduler.getTaskListeners().add(new LoggingTaskListener());
+        clockWheelScheduler.getTaskListeners().addAll(taskListeners);
         return clockWheelScheduler;
     }
 

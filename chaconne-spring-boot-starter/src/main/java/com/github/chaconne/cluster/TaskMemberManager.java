@@ -2,6 +2,7 @@ package com.github.chaconne.cluster;
 
 import java.util.List;
 import java.util.Queue;
+import com.github.chaconne.common.TaskMember;
 
 /**
  * 

@@ -77,6 +77,7 @@ public class DefaultLoadBalancedManager<T>
     public T getNextCandidate(Object attachment) {
         int n = 0;
         T chosenCandidate;
+        List<T> candidates = filterCandidates(this.candidates, attachment);
         do {
             chosenCandidate = loadBalancer.selectCandidate(candidates, attachment);
         } while (!activeCandidates.contains(chosenCandidate) && n++ < candidates.size());
@@ -85,6 +86,10 @@ public class DefaultLoadBalancedManager<T>
         }
         this.currentCandidate = chosenCandidate;
         return chosenCandidate;
+    }
+
+    protected List<T> filterCandidates(List<T> candidates, Object attachment) {
+        return candidates;
     }
 
     @Override

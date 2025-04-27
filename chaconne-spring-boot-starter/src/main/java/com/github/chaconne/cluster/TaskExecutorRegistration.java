@@ -4,7 +4,10 @@ import java.util.UUID;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import com.github.chaconne.cluster.utils.NetUtils;
+import com.github.chaconne.common.TaskMember;
+import com.github.chaconne.common.TaskMemberInstance;
+import com.github.chaconne.common.TaskMemberRegistration;
+import com.github.chaconne.common.utils.NetUtils;
 
 /**
  * 

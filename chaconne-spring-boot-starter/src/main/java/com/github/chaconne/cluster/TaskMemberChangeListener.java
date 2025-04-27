@@ -1,5 +1,7 @@
 package com.github.chaconne.cluster;
 
+import com.github.chaconne.common.TaskMember;
+
 /**
  * 
  * @Description: TaskMemberChangeListener

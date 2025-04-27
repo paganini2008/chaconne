@@ -7,10 +7,10 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
-import com.github.chaconne.cluster.TaskMember;
-import com.github.chaconne.cluster.TaskMemberInstance;
-import com.github.chaconne.cluster.TaskMemberRegistration;
-import com.github.chaconne.cluster.utils.NetUtils;
+import com.github.chaconne.common.TaskMember;
+import com.github.chaconne.common.TaskMemberInstance;
+import com.github.chaconne.common.TaskMemberRegistration;
+import com.github.chaconne.common.utils.NetUtils;
 
 /**
  * 
@@ -56,7 +56,7 @@ public class RemoteTaskExecutorRegistration implements FactoryBean<TaskMember>, 
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
-        TaskExecutorRestTemplate taskRestTemplate =
+        TaskExecutorRestService taskRestTemplate =
                 event.getApplicationContext().getBean(TaskExecutorRestTemplate.class);
         TaskMemberRequest taskMemberRequest = new TaskMemberRequest();
         taskMemberRequest.setMemberId(taskMember.getMemberId());

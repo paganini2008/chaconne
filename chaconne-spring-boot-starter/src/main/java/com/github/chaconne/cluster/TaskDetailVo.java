@@ -9,7 +9,7 @@ import com.github.chaconne.CustomTask;
 import com.github.chaconne.Task;
 import com.github.chaconne.TaskDetail;
 import com.github.chaconne.TaskStatus;
-import com.github.chaconne.cluster.utils.BeanUtils;
+import com.github.chaconne.common.utils.BeanUtils;
 import com.github.chaconne.utils.CamelCasedLinkedHashMap;
 
 /**

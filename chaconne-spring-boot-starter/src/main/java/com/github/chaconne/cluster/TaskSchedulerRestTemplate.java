@@ -9,7 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import com.github.chaconne.client.ApiResponse;
+import com.github.chaconne.client.RetryableRestTemplate;
 import com.github.chaconne.client.TaskIdRequest;
+import com.github.chaconne.common.TaskMember;
 
 /**
  * 
@@ -48,9 +50,9 @@ public class TaskSchedulerRestTemplate extends RetryableRestTemplate
 
     @Override
     public ResponseEntity<ApiResponse<Object>> runTask(TaskIdRequest taskIdRequest) {
-        String hostUrl = String.format("lb://%s", taskIdRequest.getTaskGroup());
+        String hostUrl = taskIdRequest.getUrl();
         HttpEntity<Object> httpEntity = new HttpEntity<Object>(taskIdRequest, getHttpHeaders());
-        return this.exchange(URI.create(String.format("%s/%s", hostUrl, "chac/run-task")),
+        return this.exchange(URI.create(String.format("%s/chac/run-task", hostUrl)),
                 HttpMethod.POST, httpEntity,
                 new ParameterizedTypeReference<ApiResponse<Object>>() {});
     }
