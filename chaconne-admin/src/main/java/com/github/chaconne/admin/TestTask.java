@@ -3,7 +3,6 @@ package com.github.chaconne.admin;
 import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import com.github.chaconne.client.Task;
 
 /**
@@ -13,7 +12,7 @@ import com.github.chaconne.client.Task;
  * @Date: 22/04/2025
  * @Version 1.0.0
  */
-@Component
+// @Component
 public class TestTask {
 
     private static final Logger log = LoggerFactory.getLogger(TestTask.class);

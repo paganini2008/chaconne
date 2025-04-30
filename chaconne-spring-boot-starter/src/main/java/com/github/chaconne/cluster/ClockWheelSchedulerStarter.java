@@ -23,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 import com.github.chaconne.ClockWheelScheduler;
 import com.github.chaconne.CustomTask;
 import com.github.chaconne.CustomTaskFactory;
+import com.github.chaconne.Task;
 
 /**
  * 
@@ -36,6 +37,7 @@ public class ClockWheelSchedulerStarter implements BeanPostProcessor, SmartAppli
 
     private static final Logger log = LoggerFactory.getLogger(ClockWheelSchedulerStarter.class);
 
+    private final List<Task> taskBeans = new ArrayList<>();
     private final List<Map<String, Object>> taskDefinitions = new ArrayList<>();
 
     private Environment environment;
@@ -55,16 +57,20 @@ public class ClockWheelSchedulerStarter implements BeanPostProcessor, SmartAppli
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName)
             throws BeansException {
-        final Class<?> targetClass = AopProxyUtils.ultimateTargetClass(bean);
-        List<Method> methodList = MethodUtils.getMethodsListWithAnnotation(targetClass,
-                com.github.chaconne.client.Task.class);
-        if (CollectionUtils.isEmpty(methodList)) {
-            return bean;
-        }
-        for (Method method : methodList) {
-            com.github.chaconne.client.Task task =
-                    method.getAnnotation(com.github.chaconne.client.Task.class);
-            taskDefinitions.add(createTaskDefinition(task, method));
+        if (bean instanceof Task) {
+            taskBeans.add((Task) bean);
+        } else {
+            final Class<?> targetClass = AopProxyUtils.ultimateTargetClass(bean);
+            List<Method> methodList = MethodUtils.getMethodsListWithAnnotation(targetClass,
+                    com.github.chaconne.client.Task.class);
+            if (CollectionUtils.isEmpty(methodList)) {
+                return bean;
+            }
+            for (Method method : methodList) {
+                com.github.chaconne.client.Task task =
+                        method.getAnnotation(com.github.chaconne.client.Task.class);
+                taskDefinitions.add(createTaskDefinition(task, method));
+            }
         }
         return bean;
     }
@@ -100,11 +106,20 @@ public class ClockWheelSchedulerStarter implements BeanPostProcessor, SmartAppli
         if (taskMemberLock.tryLock()) {
             CustomTaskFactory customTaskFactory =
                     applicationContext.getBean(CustomTaskFactory.class);
+            for (Task taskBean : taskBeans) {
+                try {
+                    clockWheelScheduler.schedule(taskBean, null);
+                    log.info("Save Task: {}", taskBean.toString());
+                } catch (Exception e) {
+                    if (log.isErrorEnabled()) {
+                        log.error(e.getMessage(), e);
+                    }
+                }
+            }
             for (Map<String, Object> taskDefinition : taskDefinitions) {
                 try {
                     CustomTask customTask = customTaskFactory.createTaskObject(taskDefinition);
-                    clockWheelScheduler.schedule(customTask,
-                            (String) taskDefinition.get("initialParameter"));
+                    clockWheelScheduler.schedule(customTask, null);
                     log.info("Save CustomTask: {}", customTask.toString());
                 } catch (Exception e) {
                     if (log.isErrorEnabled()) {

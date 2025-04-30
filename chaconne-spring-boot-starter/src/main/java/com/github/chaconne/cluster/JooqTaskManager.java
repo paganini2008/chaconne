@@ -138,7 +138,9 @@ public class JooqTaskManager implements TaskManager {
                     .set(CRON_TASK_DETAIL.MAX_RETRY_COUNT, task.getMaxRetryCount())
                     .set(CRON_TASK_DETAIL.TIMEOUT, task.getTimeout())
                     .set(CRON_TASK_DETAIL.LAST_MODIFIED, LocalDateTime.now(DEFAULT_ZONE_ID))
-                    .set(CRON_TASK_DETAIL.INITIAL_PARAMETER, initialParameter)
+                    .set(CRON_TASK_DETAIL.INITIAL_PARAMETER,
+                            StringUtils.isNotBlank(initialParameter) ? initialParameter
+                                    : task.getInitialParameter())
                     .set(CRON_TASK_DETAIL.TASK_STATUS, TaskStatus.STANDBY.name().toUpperCase())
                     .where(CRON_TASK_DETAIL.TASK_NAME.eq(task.getTaskId().getName())
                             .and(CRON_TASK_DETAIL.TASK_GROUP.eq(task.getTaskId().getGroup())))
@@ -156,7 +158,9 @@ public class JooqTaskManager implements TaskManager {
                             taskMethodName, url, task.getDescription(),
                             TaskStatus.STANDBY.name().toUpperCase(), data, cron,
                             task.getMaxRetryCount(), task.getTimeout(),
-                            LocalDateTime.now(DEFAULT_ZONE_ID), initialParameter)
+                            LocalDateTime.now(DEFAULT_ZONE_ID),
+                            StringUtils.isNotBlank(initialParameter) ? initialParameter
+                                    : task.getInitialParameter())
                     .execute();
         }
         return getTaskDetail(task.getTaskId());

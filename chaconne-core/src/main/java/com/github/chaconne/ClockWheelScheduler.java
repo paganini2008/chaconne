@@ -83,10 +83,15 @@ public class ClockWheelScheduler {
     }
 
     public boolean schedule(Task task, String initialParameter) {
-        if (!taskManager.hasTask(task.getTaskId())) {
-            taskManager.saveTask(task, initialParameter);
+        TaskStatus taskStatus = taskManager.getTaskStatus(task.getTaskId());
+        if (taskStatus == null) {
+            TaskDetail taskDetail = taskManager.saveTask(task, initialParameter);
+            taskStatus = taskDetail.getTaskStatus();
         }
-        return preloadUpcomingTasks(task.getTaskId());
+        if (taskStatus == TaskStatus.STANDBY) {
+            return preloadUpcomingTasks(task.getTaskId());
+        }
+        return false;
     }
 
     public void pause(Task task) {

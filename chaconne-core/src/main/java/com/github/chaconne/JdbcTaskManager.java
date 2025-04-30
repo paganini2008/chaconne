@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
+import org.apache.commons.lang3.StringUtils;
 import com.github.chaconne.utils.CamelCasedLinkedHashMap;
 import com.github.cronsmith.cron.CronExpression;
-import com.github.cronsmith.scheduler.StringUtils;
 
 /**
  * 
@@ -128,7 +128,8 @@ public class JdbcTaskManager implements TaskManager {
                 psm.setObject(10, task.getMaxRetryCount());
                 psm.setObject(11, task.getTimeout());
                 psm.setObject(12, TaskStatus.STANDBY.name().toLowerCase());
-                psm.setObject(13, initialParameter);
+                psm.setObject(13, StringUtils.isNotBlank(initialParameter) ? initialParameter
+                        : task.getInitialParameter());
                 psm.setObject(14, LocalDateTime.now(DEFAULT_ZONE_ID));
                 psm.executeUpdate();
                 connection.commit();
@@ -152,7 +153,8 @@ public class JdbcTaskManager implements TaskManager {
             psm.setObject(6, task.getCronExpression().toString());
             psm.setObject(7, task.getMaxRetryCount());
             psm.setObject(8, task.getTimeout());
-            psm.setObject(9, initialParameter);
+            psm.setObject(9, StringUtils.isNotBlank(initialParameter) ? initialParameter
+                    : task.getInitialParameter());
             psm.setObject(10, LocalDateTime.now(DEFAULT_ZONE_ID));
             psm.setObject(11, task.getTaskId().getName());
             psm.setObject(12, task.getTaskId().getGroup());

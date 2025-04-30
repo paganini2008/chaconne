@@ -31,6 +31,10 @@ public interface Task {
         return 0;
     }
 
+    default String getInitialParameter() {
+        return "";
+    }
+
     Object execute(String initialParameter);
 
     default void handleResult(Object result, Throwable reason) {}

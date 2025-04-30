@@ -93,7 +93,10 @@ public class InMemoryTaskManager implements TaskManager {
     public TaskDetail saveTask(Task task, String initialParameter) {
         task.getCronExpression().sync();
         taskStore.put(task.getTaskId(),
-                new InMemoryTaskDetail(task, initialParameter, TaskStatus.STANDBY));
+                new InMemoryTaskDetail(task,
+                        StringUtils.isNotBlank(initialParameter) ? initialParameter
+                                : task.getInitialParameter(),
+                        TaskStatus.STANDBY));
         return taskStore.get(task.getTaskId());
     }
 

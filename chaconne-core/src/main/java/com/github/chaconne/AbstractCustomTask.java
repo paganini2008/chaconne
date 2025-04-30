@@ -63,6 +63,11 @@ public abstract class AbstractCustomTask implements CustomTask {
     }
 
     @Override
+    public String getInitialParameter() {
+        return (String) record.get("initialParameter");
+    }
+
+    @Override
     public CronExpression getCronExpression() {
         Object object = record.get("cronExpression");
         if (object instanceof CronExpression) {
