@@ -82,7 +82,7 @@ public abstract class AbstractCustomTask implements CustomTask {
     }
 
     @Override
-    public final Object execute(String initialParameter) {
+    public Object execute(String initialParameter) {
         String taskClassName = (String) record.get("taskClass");
         String taskMethodName = (String) record.getOrDefault("taskMethod", DEFAULT_METHOD_NAME);
         try {
@@ -93,6 +93,15 @@ public abstract class AbstractCustomTask implements CustomTask {
             }
         }
         return null;
+    }
+
+    @Override
+    public void handleResult(Object result, Throwable reason) {
+        String taskClassName = (String) record.get("taskClass");
+        Object taskObject = TaskReflectionUtils.getTaskObject(taskClassName);
+        if (taskObject instanceof Task) {
+            ((Task) taskObject).handleResult(result, reason);
+        }
     }
 
     protected abstract Object invokeTaskMethod(TaskId taskId, String taskClassName,

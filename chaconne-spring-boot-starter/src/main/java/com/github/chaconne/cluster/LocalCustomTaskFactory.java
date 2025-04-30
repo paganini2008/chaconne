@@ -60,6 +60,11 @@ public class LocalCustomTaskFactory implements CustomTaskFactory {
             }
             return null;
         }
+
+        @Override
+        public void handleResult(Object result, Throwable reason) {}
+
+
     }
 
 }

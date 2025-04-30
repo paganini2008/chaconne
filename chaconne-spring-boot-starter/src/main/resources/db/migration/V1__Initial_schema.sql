@@ -9,12 +9,12 @@ CREATE TABLE cron_task_detail (
   description varchar(1024),
   cron_expression blob NOT NULL,
   cron varchar(255) NOT NULL,
-  next_fired_datetime timestamp,
-  prev_fired_datetime timestamp,
+  next_fired_datetime datetime,
+  prev_fired_datetime datetime,
   task_status varchar(45) NOT NULL,
   max_retry_count int,
   timeout bigint,
-  last_modified timestamp DEFAULT CURRENT_TIMESTAMP
+  last_modified datetime DEFAULT CURRENT_TIMESTAMP
 );
 
 DROP TABLE IF EXISTS cron_task_log;
@@ -25,8 +25,8 @@ CREATE TABLE cron_task_log (
   task_method varchar(255),
   url varchar(1024),
   initial_parameter text,
-  scheduled_datetime timestamp NOT NULL,
-  fired_datetime timestamp NOT NULL,
+  scheduled_datetime datetime NOT NULL,
+  fired_datetime datetime NOT NULL,
   return_value text,
   elapsed bigint,
   status int NOT NULL,

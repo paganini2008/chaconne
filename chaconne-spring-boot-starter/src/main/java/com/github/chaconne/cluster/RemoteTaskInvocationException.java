@@ -12,6 +12,7 @@ import com.github.chaconne.TaskInvocationException;
 public class RemoteTaskInvocationException extends TaskInvocationException {
 
     private static final long serialVersionUID = -4972729566401123014L;
+    private static final String NEWLINE = System.getProperty("line.separator");
 
     public RemoteTaskInvocationException(String msg) {
         this(msg, new String[0]);
@@ -28,12 +29,8 @@ public class RemoteTaskInvocationException extends TaskInvocationException {
         return details;
     }
 
-    @Override
-    public synchronized Throwable getCause() {
-        // TODO Auto-generated method stub
-        return super.getCause();
+    public String getDetailString() {
+        return String.join(NEWLINE, details);
     }
-
-
 
 }

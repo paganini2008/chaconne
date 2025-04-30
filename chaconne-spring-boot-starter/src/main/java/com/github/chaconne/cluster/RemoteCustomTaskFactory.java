@@ -54,6 +54,13 @@ public class RemoteCustomTaskFactory implements CustomTaskFactory {
                     errorDetails);
         }
 
+        @Override
+        public void handleResult(Object result, Throwable reason) {
+            if (log.isTraceEnabled()) {
+                log.trace("ResponseBodyString: ", result != null ? result.toString() : "<NONE>");
+            }
+        }
+
     }
 
 

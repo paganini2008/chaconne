@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import com.github.cronsmith.scheduler.ErrorHandler;
 
 /**
@@ -33,8 +34,9 @@ public class TaskProxy implements InvocationHandler {
         this.datetime = datetime;
         this.taskDetail = taskDetail;
         try {
-            this.callbackMethod = taskDetail.getTask().getClass().getDeclaredMethod("handleResult",
-                    Object.class, Throwable.class);
+            this.callbackMethod =
+                    MethodUtils.getMatchingAccessibleMethod(taskDetail.getTask().getClass(),
+                            "handleResult", new Class<?>[] {Object.class, Throwable.class});
         } catch (Exception e) {
         }
         this.proxyObject = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
@@ -67,6 +69,7 @@ public class TaskProxy implements InvocationHandler {
                 } else {
                     returnValue = future.get();
                 }
+
             } catch (Throwable e) {
                 thrown = e;
                 errorHandler.onHandleTask(datetime, e);

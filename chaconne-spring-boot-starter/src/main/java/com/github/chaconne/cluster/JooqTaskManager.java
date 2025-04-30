@@ -20,6 +20,7 @@ import org.jooq.tools.LoggerListener;
 import com.github.chaconne.ChaconneException;
 import com.github.chaconne.CustomTask;
 import com.github.chaconne.CustomTaskFactory;
+import com.github.chaconne.DefaultCustomTaskFactory;
 import com.github.chaconne.Task;
 import com.github.chaconne.TaskDetail;
 import com.github.chaconne.TaskId;
@@ -52,7 +53,7 @@ public class JooqTaskManager implements TaskManager {
         this.dsl = dsl;
     }
 
-    private CustomTaskFactory customTaskFactory;
+    private CustomTaskFactory customTaskFactory = new DefaultCustomTaskFactory();
 
     public void setCustomTaskFactory(CustomTaskFactory customTaskFactory) {
         this.customTaskFactory = customTaskFactory;
