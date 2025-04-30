@@ -37,7 +37,7 @@ public class LocalCustomTaskFactory implements CustomTaskFactory {
      * @Date: 26/04/2025
      * @Version 1.0.0
      */
-    private class LocalCustomTask extends AbstractCustomTask {
+    class LocalCustomTask extends AbstractCustomTask {
 
         LocalCustomTask(Map<String, Object> record) {
             super(record);

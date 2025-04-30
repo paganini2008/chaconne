@@ -25,7 +25,7 @@ public class DefaultCustomTaskFactory implements CustomTaskFactory {
      * @Date: 25/04/2025
      * @Version 1.0.0
      */
-    private static class DefaultCustomTask extends AbstractCustomTask {
+    class DefaultCustomTask extends AbstractCustomTask {
 
         DefaultCustomTask(Map<String, Object> record) {
             super(record);

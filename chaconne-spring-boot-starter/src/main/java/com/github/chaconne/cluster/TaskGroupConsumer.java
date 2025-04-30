@@ -57,7 +57,7 @@ public class TaskGroupConsumer implements Runnable, InitializingBean, Disposable
             String initialParameter) {
         Class<?> beanClass;
         try {
-            beanClass = ClassUtils.forName(taskMethodName, null);
+            beanClass = ClassUtils.forName(taskClassName, null);
         } catch (ClassNotFoundException e) {
             throw new TaskInvocationException(e.getMessage(), e);
         }

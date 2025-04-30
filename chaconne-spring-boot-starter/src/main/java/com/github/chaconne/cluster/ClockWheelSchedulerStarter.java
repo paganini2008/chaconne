@@ -82,10 +82,8 @@ public class ClockWheelSchedulerStarter implements BeanPostProcessor, SmartAppli
                                 method.getName()));
         info.put("taskClass", method.getDeclaringClass().getName());
         info.put("taskMethod", method.getName());
-        info.put("url",
-                StringUtils.isNotBlank(taskAnnotation.url()) ? taskAnnotation.url()
-                        : String.format("lb://%s",
-                                environment.getRequiredProperty("spring.application.name")));
+        info.put("url", StringUtils.isNotBlank(taskAnnotation.url()) ? taskAnnotation.url()
+                : String.format("lb://%s", applicationName));
         info.put("description", taskAnnotation.description());
         info.put("cronExpression", taskAnnotation.cron());
         info.put("timeout", taskAnnotation.timeout());

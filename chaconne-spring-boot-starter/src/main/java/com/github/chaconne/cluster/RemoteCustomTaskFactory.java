@@ -29,7 +29,7 @@ public class RemoteCustomTaskFactory implements CustomTaskFactory {
         return new RemoteCustomTask(record);
     }
 
-    private class RemoteCustomTask extends AbstractCustomTask {
+    class RemoteCustomTask extends AbstractCustomTask {
 
         RemoteCustomTask(Map<String, Object> record) {
             super(record);
