@@ -11,6 +11,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import com.github.chaconne.CustomTaskFactory;
@@ -128,6 +130,12 @@ public class ChaconneServerConfiguration {
     @Bean
     public CustomTaskFactory customTaskFactory(TaskSchedulerRestService taskSchedulerRestService) {
         return new RemoteCustomTaskFactory(taskSchedulerRestService);
+    }
+
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    @Bean
+    public ClockWheelSchedulerStarter clockWheelSchedulerStarter() {
+        return new ClockWheelSchedulerStarter();
     }
 
 }

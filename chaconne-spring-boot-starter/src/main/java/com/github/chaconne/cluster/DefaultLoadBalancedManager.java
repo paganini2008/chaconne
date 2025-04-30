@@ -75,14 +75,17 @@ public class DefaultLoadBalancedManager<T>
 
     @Override
     public T getNextCandidate(Object attachment) {
+        if (countOfCandidates() == 0) {
+            throw new NoAvailableCandidateException();
+        }
         int n = 0;
-        T chosenCandidate;
+        T chosenCandidate = null;
         List<T> candidates = filterCandidates(this.candidates, attachment);
         do {
             chosenCandidate = loadBalancer.selectCandidate(candidates, attachment);
         } while (!activeCandidates.contains(chosenCandidate) && n++ < candidates.size());
         if (n >= candidates.size()) {
-            throw new NoAvailableCandidateException();
+            // throw new NoAvailableCandidateException();
         }
         this.currentCandidate = chosenCandidate;
         return chosenCandidate;

@@ -103,8 +103,8 @@ public class ChaconneClusterConfiguration {
 
     @Order(Ordered.HIGHEST_PRECEDENCE)
     @Bean
-    public ClockWheelSchedulerStarter clockWheelSchedulerStarter() {
-        return new ClockWheelSchedulerStarter();
+    public ClockWheelSchedulerLocalStarter clockWheelSchedulerStarter() {
+        return new ClockWheelSchedulerLocalStarter();
     }
 
 }

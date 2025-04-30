@@ -13,6 +13,8 @@ public interface TaskListener {
 
     default void onTaskScheduled(ZonedDateTime scheduledDateTime, TaskDetail taskDetail) {};
 
+    default void onTaskTriggered(ZonedDateTime firedDateTime, TaskDetail taskDetail) {}
+
     default void onTaskBegan(ZonedDateTime firedDateTime, TaskDetail taskDetail) {}
 
     default void onTaskEnded(ZonedDateTime firedDateTime, TaskDetail taskDetail, Object returnValue,

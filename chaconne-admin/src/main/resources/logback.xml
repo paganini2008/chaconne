@@ -60,7 +60,7 @@
 	</root>
 	
 	<logger name="org.apache.kafka.clients" level="INFO"></logger>
-    <logger name="com.github.chaconne.ClockWheelScheduler" level="INFO"></logger>
+    <logger name="com.github.chaconne" level="TRACE"></logger>
     <logger name="com.github.doodler.common.jdbc" level="ERROR"></logger>
     <logger name="com.github.greenfinger.jdbc" level="ERROR"></logger>
     <logger name="com.github.doodler.common.http.LoggingHttpRequestInterceptor" level="INFO"></logger>

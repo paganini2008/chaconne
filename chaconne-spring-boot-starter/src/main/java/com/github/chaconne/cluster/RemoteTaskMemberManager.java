@@ -1,5 +1,6 @@
 package com.github.chaconne.cluster;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -49,7 +50,7 @@ public class RemoteTaskMemberManager implements TaskMemberManager, SmartApplicat
 
     @Override
     public List<TaskMember> getExecutors() {
-        return executors;
+        return Collections.unmodifiableList(executors);
     }
 
     @Override
@@ -73,7 +74,7 @@ public class RemoteTaskMemberManager implements TaskMemberManager, SmartApplicat
         }
         if (log.isInfoEnabled()) {
             log.info("Task schedulers: {}", schedulers.toString());
-            log.info("Task executors: {}", executors.toString());
+            log.info("Task executors: {}", getExecutors().toString());
         }
     }
 

@@ -1,5 +1,7 @@
 package com.github.chaconne.cluster;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.SmartApplicationListener;
 import com.github.chaconne.common.TaskMember;
@@ -13,6 +15,8 @@ import com.github.chaconne.common.TaskMember;
  */
 public class TaskMemberLoadBalancedManager extends DefaultLoadBalancedManager<TaskMember>
         implements SmartApplicationListener {
+
+    private static final Logger log = LoggerFactory.getLogger(TaskMemberLoadBalancedManager.class);
 
     private TaskMember currentTaskMember;
 
@@ -38,6 +42,9 @@ public class TaskMemberLoadBalancedManager extends DefaultLoadBalancedManager<Ta
                 removeCandidate(removedEvent.getTaskMember());
             }
         }
+        getActiveCandidates().forEach(tm -> {
+            log.info("Active Task Member: {}", tm);
+        });
     }
 
     @Override

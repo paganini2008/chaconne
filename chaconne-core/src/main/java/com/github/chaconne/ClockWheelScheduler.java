@@ -200,16 +200,18 @@ public class ClockWheelScheduler {
         public boolean execute() {
             final ZonedDateTime firedDateTime = getNow();
             Collection<TaskId> taskIds = taskQueue.matchTaskIds(firedDateTime.toLocalDateTime());
-            if (log.isTraceEnabled()) {
+            if (taskIds.size() > 0 && log.isTraceEnabled()) {
                 log.trace("FiredDateTime: {}, TaskIds' size: {}, TaskQueueLength: {}",
                         firedDateTime, taskIds.size(), taskQueue.length());
             }
             if (taskIds != null && taskIds.size() > 0) {
                 taskIds.forEach(taskId -> {
-
                     workerThreads.execute(() -> preloadUpcomingTasks(taskId));
                     TaskDetail taskDetail = taskManager.getTaskDetail(taskId);
                     if (taskDetail != null && !taskDetail.isUnavailable()) {
+                        taskListeners.forEach(l -> {
+                            l.onTaskTriggered(firedDateTime, taskDetail);
+                        });
                         taskManager.setTaskStatus(taskId, TaskStatus.RUNNING);
                         TaskProxy taskProxy = new TaskProxy(firedDateTime, taskDetail,
                                 workerThreads, taskListeners, errorHandler);

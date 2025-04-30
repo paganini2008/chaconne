@@ -25,7 +25,7 @@ import com.github.cronsmith.scheduler.ErrorHandler;
 @Configuration(proxyBeanMethods = false)
 public class ClockWheelAutoConfiguration {
 
-    @Bean
+    @Bean(destroyMethod = "close")
     public ClockWheelScheduler clockWheelScheduler(TaskManager taskManager,
             UpcomingTaskQueue taskQueue, List<TaskListener> taskListeners) {
         ClockWheelScheduler clockWheelScheduler = new ClockWheelScheduler(executorServiceFactory());
