@@ -41,7 +41,6 @@ public class FinalRetryer implements Runnable, DisposableBean {
 
     public void retry(Runnable r) {
         queue.add(r);
-        System.out.println("jiaru: " + r);
         synchronized (this) {
             if (scheduledFuture == null) {
                 executorService = Executors.newSingleThreadScheduledExecutor();
@@ -59,10 +58,9 @@ public class FinalRetryer implements Runnable, DisposableBean {
             try {
                 r.run();
                 queue.remove(r);
-                System.out.println("OOOOOOOOOOOOOOOOOOOKKKKKKKKKKKKKKKKKKKK");
             } catch (Exception e) {
                 if (log.isErrorEnabled()) {
-                    log.error("::::::::::::::::::" + e.getMessage());
+                    log.error(e.getMessage(), e);
                 }
             }
         }
