@@ -4,12 +4,12 @@ import java.util.Collection;
 
 /**
  * 
- * @Description: LoadBalancedManager
+ * @Description: LoadBalancerManager
  * @Author: Fred Feng
  * @Date: 19/04/2025
  * @Version 1.0.0
  */
-public interface LoadBalancedManager<T> {
+public interface LoadBalancerManager<T> {
 
     default void addCandidate(T candidate) {
         addCandidate(candidate, 1);

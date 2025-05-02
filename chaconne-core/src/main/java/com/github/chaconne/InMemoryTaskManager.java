@@ -197,4 +197,7 @@ public class InMemoryTaskManager implements TaskManager {
         return null;
     }
 
+    @Override
+    public void restoreTasks(TaskRestoreHandler recoveryHandler) throws ChaconneException {}
+
 }

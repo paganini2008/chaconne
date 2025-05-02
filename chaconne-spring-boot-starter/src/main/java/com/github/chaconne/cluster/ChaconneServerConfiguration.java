@@ -1,19 +1,23 @@
 package com.github.chaconne.cluster;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.jooq.DSLContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.UpcomingTaskQueue;
@@ -21,6 +25,8 @@ import com.github.chaconne.common.TaskMember;
 import com.github.chaconne.common.utils.NetUtils;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.InterfacesConfig;
+import com.hazelcast.config.MapConfig;
+import com.hazelcast.config.MapStoreConfig;
 import com.hazelcast.config.NetworkConfig;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
@@ -41,8 +47,15 @@ public class ChaconneServerConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public Config hazelcastConfig(ClusterInfo clusterInfo) {
+    public Config hazelcastConfig(ClusterInfo clusterInfo, HazelcastTaskQueueStore taskQueueStore) {
+        MapStoreConfig mapStoreConfig =
+                new MapStoreConfig().setEnabled(true).setImplementation(taskQueueStore)
+                        .setWriteBatchSize(10).setWriteDelaySeconds(0).setWriteCoalescing(false);
+        MapConfig taskQueueMapConfig = new MapConfig(HazelcastTaskQueue.DEFAULT_QUEUE_NAME);
+        taskQueueMapConfig.setMapStoreConfig(mapStoreConfig);
+
         Config config = new Config();
+        config.addMapConfig(taskQueueMapConfig);
         config.setInstanceName(applicationName);
         NetworkConfig networkConfig = config.getNetworkConfig();
         networkConfig.setPort(15701);
@@ -51,6 +64,11 @@ public class ChaconneServerConfiguration {
         interfaceConfig.setEnabled(true).addInterface(NetUtils.getLocalAddress().getHostAddress());
         config.getMemberAttributeConfig().setAttributes(clusterInfo);
         return config;
+    }
+
+    @Bean
+    public HazelcastTaskQueueStore hazelcastTaskQueueStore(@Lazy DSLContext dslContext) {
+        return new HazelcastTaskQueueStore(dslContext);
     }
 
     @ConditionalOnMissingBean
@@ -90,24 +108,37 @@ public class ChaconneServerConfiguration {
         return new TaskMemberLock(hazelcastInstance);
     }
 
+    @Bean
+    public TaskLogger taskLogger(DSLContext dslContext) {
+        return new TaskLogger(dslContext);
+    }
+
     @ConditionalOnMissingBean
     @Bean
     public UpcomingTaskQueue upcomingTaskQueue(HazelcastInstance hazelcastInstance) {
         return new HazelcastTaskQueue(hazelcastInstance);
     }
 
-    @ConditionalOnMissingBean(LoadBalancedManager.class)
+    @ConditionalOnMissingBean(LoadBalancerManager.class)
     @Bean
-    public TaskMemberLoadBalancedManager loadBalancedManager() {
-        return new TaskMemberLoadBalancedManager();
+    public TaskMemberLoadBalancerManager loadBalancedManager() {
+        TaskMemberLoadBalancerManager loadBalancerManager = new TaskMemberLoadBalancerManager();
+        loadBalancerManager.setPing(new ApiPing());
+        return loadBalancerManager;
+    }
+
+    @Bean
+    public LoadBalancingUriRewriter uriRewriter(
+            LoadBalancerManager<TaskMember> loadBalancerManager) {
+        return new LoadBalancingUriRewriter(loadBalancerManager);
     }
 
     @ConditionalOnMissingBean
     @Bean
     public TaskSchedulerRestService taskSchedulerRestService(
-            LoadBalancedManager<TaskMember> loadBalancedManager,
-            ClientHttpRequestFactory requestFactory) {
-        return new TaskSchedulerRestTemplate(loadBalancedManager, requestFactory);
+            ClientHttpRequestFactory requestFactory,
+            List<ClientHttpRequestInterceptor> interceptors) {
+        return new TaskSchedulerRestTemplate(requestFactory, interceptors);
     }
 
     @ConditionalOnMissingBean

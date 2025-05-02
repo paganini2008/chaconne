@@ -42,7 +42,7 @@ public interface TaskMember {
     }
 
     default String getPingUrl() {
-        return "/ping";
+        return "/chac/ping";
     }
 
 }

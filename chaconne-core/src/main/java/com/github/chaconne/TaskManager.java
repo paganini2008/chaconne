@@ -44,6 +44,8 @@ public interface TaskManager {
     LocalDateTime computeNextFiredDateTime(TaskId taskId, LocalDateTime previousFiredDateTime)
             throws ChaconneException;
 
+    void restoreTasks(TaskRestoreHandler recoveryHandler) throws ChaconneException;
+
     void setTaskStatus(TaskId taskId, TaskStatus status) throws ChaconneException;
 
 }

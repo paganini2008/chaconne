@@ -42,37 +42,13 @@ public class TaskManagerEndpoint {
     private CustomTaskFactory customTaskFactory;
 
     @PostMapping("/save-task")
-    public ApiResponse<TaskDetailVo> saveTask(@RequestBody CreateTaskRequest requestBody) {
+    public ApiResponse<Boolean> saveTask(@RequestBody CreateTaskRequest requestBody) {
         Map<String, Object> beanMap = BeanUtils.bean2Map(requestBody);
         CustomTask customTask = customTaskFactory.createTaskObject(beanMap);
-        boolean saved = true;
-        if (requestBody.getUpdatePolicy() != null) {
-            switch (requestBody.getUpdatePolicy()) {
-                case CREATE:
-                    if (taskManager.hasTask(customTask.getTaskId())) {
-                        saved = false;
-                    }
-                    break;
-                case REBUILD:
-                    TaskDetail taskDetail = taskManager.removeTask(customTask.getTaskId());
-                    saved = taskDetail != null;
-                    break;
-                case MERGE:
-                    break;
-                case NONE:
-                    break;
-                default:
-                    throw new IllegalArgumentException(
-                            "Unexpected value: " + requestBody.getUpdatePolicy());
-            }
-        }
-        if (saved) {
-            TaskDetail taskDetail =
-                    taskManager.saveTask(customTask, requestBody.getInitialParameter());
-            return ApiResponse.ok(new TaskDetailVo(taskDetail));
+        if (!taskManager.hasTask(customTask.getTaskId())) {
+            return ApiResponse.ok(true);
         } else {
-            return ApiResponse
-                    .ok(new TaskDetailVo(taskManager.getTaskDetail(customTask.getTaskId())));
+            return ApiResponse.ok(false);
         }
     }
 
@@ -82,7 +58,6 @@ public class TaskManagerEndpoint {
                 .schedule(TaskId.of(requestBody.getTaskGroup(), requestBody.getTaskName()));
         return ApiResponse.ok(flag);
     }
-
 
     @PostMapping("/exist-task")
     public ApiResponse<Boolean> hasTask(@RequestBody TaskIdRequest requestBody) {

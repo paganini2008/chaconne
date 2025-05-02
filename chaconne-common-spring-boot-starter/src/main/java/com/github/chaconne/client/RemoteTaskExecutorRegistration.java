@@ -1,15 +1,20 @@
 package com.github.chaconne.client;
 
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
+import org.springframework.retry.ExhaustedRetryException;
+import org.springframework.web.client.ResourceAccessException;
 import com.github.chaconne.common.TaskMember;
 import com.github.chaconne.common.TaskMemberInstance;
 import com.github.chaconne.common.TaskMemberRegistration;
+import com.github.chaconne.common.utils.FinalRetryer;
 import com.github.chaconne.common.utils.NetUtils;
 
 /**
@@ -19,8 +24,11 @@ import com.github.chaconne.common.utils.NetUtils;
  * @Date: 14/04/2025
  * @Version 1.0.0
  */
-public class RemoteTaskExecutorRegistration implements FactoryBean<TaskMember>, InitializingBean,
-        EnvironmentAware, ApplicationListener<ApplicationReadyEvent>, TaskMemberRegistration {
+public class RemoteTaskExecutorRegistration extends FinalRetryer
+        implements FactoryBean<TaskMember>, InitializingBean, EnvironmentAware,
+        ApplicationListener<ApplicationReadyEvent>, TaskMemberRegistration {
+
+    private static final Logger log = LoggerFactory.getLogger(RemoteTaskExecutorRegistration.class);
 
     protected Environment environment;
     protected TaskMember taskMember;
@@ -64,7 +72,24 @@ public class RemoteTaskExecutorRegistration implements FactoryBean<TaskMember>, 
         taskMemberRequest.setHost(taskMember.getHost());
         taskMemberRequest.setPort(taskMember.getPort());
         taskMemberRequest.setContextPath(taskMember.getContextPath());
-        taskRestTemplate.registerTaskMember(taskMemberRequest);
+        Runnable r = () -> {
+            taskRestTemplate.registerTaskMember(taskMemberRequest);
+        };
+        try {
+            r.run();
+        } catch (ExhaustedRetryException e) {
+            if (e.getCause() instanceof ResourceAccessException) {
+                retry(r);
+            } else {
+                if (log.isErrorEnabled()) {
+                    log.error(e.getMessage(), e);
+                }
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error(e.getMessage(), e);
+            }
+        }
     }
 
 }

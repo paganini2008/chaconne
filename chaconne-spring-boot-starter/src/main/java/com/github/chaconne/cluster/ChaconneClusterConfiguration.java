@@ -1,11 +1,13 @@
 package com.github.chaconne.cluster;
 
+import org.jooq.DSLContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import com.github.chaconne.CustomTaskFactory;
@@ -15,6 +17,8 @@ import com.github.chaconne.common.utils.ApplicationContextUtils;
 import com.github.chaconne.common.utils.NetUtils;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.InterfacesConfig;
+import com.hazelcast.config.MapConfig;
+import com.hazelcast.config.MapStoreConfig;
 import com.hazelcast.config.NetworkConfig;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
@@ -36,8 +40,15 @@ public class ChaconneClusterConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public Config hazelcastConfig(ClusterInfo clusterInfo) {
+    public Config hazelcastConfig(ClusterInfo clusterInfo, HazelcastTaskQueueStore taskQueueStore) {
+        MapStoreConfig mapStoreConfig =
+                new MapStoreConfig().setEnabled(true).setImplementation(taskQueueStore)
+                        .setWriteBatchSize(10).setWriteDelaySeconds(0).setWriteCoalescing(false);
+        MapConfig taskQueueMapConfig = new MapConfig(HazelcastTaskQueue.DEFAULT_QUEUE_NAME);
+        taskQueueMapConfig.setMapStoreConfig(mapStoreConfig);
+
         Config config = new Config();
+        config.addMapConfig(taskQueueMapConfig);
         config.setInstanceName(applicationName);
         NetworkConfig networkConfig = config.getNetworkConfig();
         networkConfig.setPort(15701);
@@ -46,6 +57,11 @@ public class ChaconneClusterConfiguration {
         interfaceConfig.setEnabled(true).addInterface(NetUtils.getLocalAddress().getHostAddress());
         config.getMemberAttributeConfig().setAttributes(clusterInfo);
         return config;
+    }
+
+    @Bean
+    public HazelcastTaskQueueStore hazelcastTaskQueueStore(@Lazy DSLContext dslContext) {
+        return new HazelcastTaskQueueStore(dslContext);
     }
 
     @ConditionalOnMissingBean
@@ -77,6 +93,11 @@ public class ChaconneClusterConfiguration {
     public TaskMemberManager taskMemberManager(HazelcastInstance hazelcastInstance) {
         LocalTaskMemberManager taskMemberManager = new LocalTaskMemberManager();
         return taskMemberManager;
+    }
+
+    @Bean
+    public TaskLogger taskLogger(DSLContext dslContext) {
+        return new TaskLogger(dslContext);
     }
 
     @ConditionalOnMissingBean

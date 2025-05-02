@@ -13,7 +13,7 @@ public interface TaskExecutorRestService {
 
     ResponseEntity<ApiResponse<Boolean>> hasTask(TaskIdRequest taskIdRequest);
 
-    ResponseEntity<ApiResponse<Object>> saveTask(CreateTaskRequest createTaskRequest);
+    ResponseEntity<ApiResponse<Boolean>> saveTask(CreateTaskRequest createTaskRequest);
 
     ResponseEntity<ApiResponse<Object>> scheduleTask(TaskIdRequest taskIdRequest);
 

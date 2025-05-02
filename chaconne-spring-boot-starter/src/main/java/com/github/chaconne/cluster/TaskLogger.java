@@ -1,6 +1,5 @@
 package com.github.chaconne.cluster;
 
-import static com.github.chaconne.jooq.tables.CronTaskDetail.CRON_TASK_DETAIL;
 import static com.github.chaconne.jooq.tables.CronTaskLog.CRON_TASK_LOG;
 import java.time.Duration;
 import java.time.ZonedDateTime;
@@ -8,7 +7,7 @@ import org.jooq.DSLContext;
 import com.github.chaconne.CustomTask;
 import com.github.chaconne.TaskDetail;
 import com.github.chaconne.TaskListener;
-import com.github.chaconne.common.utils.ExceptionUtils;
+import com.github.chaconne.utils.ExceptionUtils;
 
 /**
  * 
@@ -42,8 +41,8 @@ public class TaskLogger implements TaskListener {
     public void onTaskBegan(ZonedDateTime firedDateTime, TaskDetail taskDetail) {
         CustomTask task = (CustomTask) taskDetail.getTask();
         dsl.update(CRON_TASK_LOG).set(CRON_TASK_LOG.FIRED_DATETIME, firedDateTime.toLocalDateTime())
-                .where(CRON_TASK_DETAIL.TASK_NAME.eq(task.getTaskId().getName())
-                        .and(CRON_TASK_DETAIL.TASK_GROUP.eq(task.getTaskId().getGroup())))
+                .where(CRON_TASK_LOG.TASK_NAME.eq(task.getTaskId().getName())
+                        .and(CRON_TASK_LOG.TASK_GROUP.eq(task.getTaskId().getGroup())))
                 .execute();
     }
 
@@ -58,8 +57,8 @@ public class TaskLogger implements TaskListener {
                 .set(CRON_TASK_LOG.RETURN_VALUE,
                         returnValue != null ? returnValue.toString() : null)
                 .set(CRON_TASK_LOG.ERROR_DETAIL, e != null ? ExceptionUtils.toString(e) : null)
-                .where(CRON_TASK_DETAIL.TASK_NAME.eq(task.getTaskId().getName())
-                        .and(CRON_TASK_DETAIL.TASK_GROUP.eq(task.getTaskId().getGroup())))
+                .where(CRON_TASK_LOG.TASK_NAME.eq(task.getTaskId().getName())
+                        .and(CRON_TASK_LOG.TASK_GROUP.eq(task.getTaskId().getGroup())))
                 .execute();
     }
 

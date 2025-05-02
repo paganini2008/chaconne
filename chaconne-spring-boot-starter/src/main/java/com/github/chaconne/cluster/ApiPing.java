@@ -17,7 +17,12 @@ import com.github.chaconne.common.TaskMember;
  */
 public class ApiPing implements Ping<TaskMember> {
 
-    private final RetryableRestTemplate restTemplate = new RetryableRestTemplate();
+    private final RetryableRestTemplate restTemplate;
+
+    public ApiPing() {
+        restTemplate = new RetryableRestTemplate();
+        restTemplate.afterPropertiesSet();
+    }
 
     @Override
     public boolean isAlive(TaskMember tm) throws Exception {

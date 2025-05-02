@@ -17,6 +17,13 @@ CREATE TABLE cron_task_detail (
   last_modified datetime DEFAULT CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS cron_task_queue;
+CREATE TABLE cron_task_queue (
+  fired_datetime datetime,
+  task_name varchar(255) NOT NULL,
+  task_group varchar(255) NOT NULL
+);
+
 DROP TABLE IF EXISTS cron_task_log;
 CREATE TABLE cron_task_log (
   task_name varchar(255) NOT NULL,
@@ -25,10 +32,10 @@ CREATE TABLE cron_task_log (
   task_method varchar(255),
   url varchar(1024),
   initial_parameter text,
-  scheduled_datetime datetime NOT NULL,
-  fired_datetime datetime NOT NULL,
+  scheduled_datetime datetime,
+  fired_datetime datetime,
   return_value text,
   elapsed bigint,
-  status int NOT NULL,
+  status int,
   error_detail text
 )

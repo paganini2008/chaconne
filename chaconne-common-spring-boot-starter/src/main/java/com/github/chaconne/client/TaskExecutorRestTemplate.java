@@ -52,11 +52,11 @@ public class TaskExecutorRestTemplate extends RetryableRestTemplate
     }
 
     @Override
-    public ResponseEntity<ApiResponse<Object>> saveTask(CreateTaskRequest createTaskRequest) {
+    public ResponseEntity<ApiResponse<Boolean>> saveTask(CreateTaskRequest createTaskRequest) {
         HttpEntity<Object> httpEntity = new HttpEntity<Object>(createTaskRequest, getHttpHeaders());
         return this.exchange(URI.create(String.format("%s/chac/save-task", uri.toString())),
                 HttpMethod.POST, httpEntity,
-                new ParameterizedTypeReference<ApiResponse<Object>>() {});
+                new ParameterizedTypeReference<ApiResponse<Boolean>>() {});
     }
 
     @Override

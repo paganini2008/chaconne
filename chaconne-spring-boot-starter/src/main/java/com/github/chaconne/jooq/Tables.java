@@ -6,6 +6,7 @@ package com.github.chaconne.jooq;
 
 import com.github.chaconne.jooq.tables.CronTaskDetail;
 import com.github.chaconne.jooq.tables.CronTaskLog;
+import com.github.chaconne.jooq.tables.CronTaskQueue;
 
 
 /**
@@ -23,4 +24,9 @@ public class Tables {
      * The table <code>cron_task_log</code>.
      */
     public static final CronTaskLog CRON_TASK_LOG = CronTaskLog.CRON_TASK_LOG;
+
+    /**
+     * The table <code>cron_task_queue</code>.
+     */
+    public static final CronTaskQueue CRON_TASK_QUEUE = CronTaskQueue.CRON_TASK_QUEUE;
 }

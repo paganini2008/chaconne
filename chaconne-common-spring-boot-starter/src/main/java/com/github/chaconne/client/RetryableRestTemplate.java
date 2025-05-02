@@ -61,7 +61,7 @@ public class RetryableRestTemplate extends RestTemplate implements RetryListener
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (retryTemplate == null) {
             retryTemplate = defaultRetryTemplate();
         }

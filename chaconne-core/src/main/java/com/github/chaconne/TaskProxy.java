@@ -10,7 +10,7 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.reflect.MethodUtils;
-import com.github.cronsmith.scheduler.ErrorHandler;
+import com.github.chaconne.utils.ExceptionUtils;
 
 /**
  * 
@@ -57,12 +57,12 @@ public class TaskProxy implements InvocationHandler {
             taskListeners.forEach(l -> {
                 l.onTaskBegan(datetime, taskDetail);
             });
-            Future<Object> future = executorService.submit(() -> {
-                return method.invoke(taskDetail.getTask(), args);
-            });
             Object returnValue = null;
             Throwable thrown = null;
             try {
+                Future<Object> future = executorService.submit(() -> {
+                    return method.invoke(taskDetail.getTask(), args);
+                });
                 if (taskDetail.getTask().getTimeout() > 0) {
                     returnValue =
                             future.get(taskDetail.getTask().getTimeout(), TimeUnit.MILLISECONDS);
@@ -71,8 +71,8 @@ public class TaskProxy implements InvocationHandler {
                 }
 
             } catch (Throwable e) {
-                thrown = e;
-                errorHandler.onHandleTask(datetime, e);
+                thrown = ExceptionUtils.getOriginalException(e);
+                errorHandler.onHandleTask(datetime, thrown);
                 throw e;
             } finally {
                 handleReturnValue(returnValue, thrown);

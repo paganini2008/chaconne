@@ -24,8 +24,6 @@ public class LoggingTaskListener implements TaskListener {
         }
     }
 
-
-
     @Override
     public void onTaskTriggered(ZonedDateTime zdt, TaskDetail taskDetail) {
         if (log.isTraceEnabled()) {

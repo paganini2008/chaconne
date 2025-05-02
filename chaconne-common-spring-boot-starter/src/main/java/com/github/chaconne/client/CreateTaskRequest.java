@@ -20,7 +20,6 @@ public class CreateTaskRequest extends TaskIdRequest implements Serializable {
     private int maxRetryCount;
     private long timeout;
     private String initialParameter;
-    private UpdatePolicy updatePolicy = UpdatePolicy.CREATE;
 
     public String getTaskClass() {
         return taskClass;
@@ -76,14 +75,6 @@ public class CreateTaskRequest extends TaskIdRequest implements Serializable {
 
     public void setInitialParameter(String initialParameter) {
         this.initialParameter = initialParameter;
-    }
-
-    public UpdatePolicy getUpdatePolicy() {
-        return updatePolicy;
-    }
-
-    public void setUpdatePolicy(UpdatePolicy updatePolicy) {
-        this.updatePolicy = updatePolicy;
     }
 
 }

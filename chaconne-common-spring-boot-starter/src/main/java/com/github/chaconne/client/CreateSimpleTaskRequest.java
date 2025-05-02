@@ -18,7 +18,6 @@ public class CreateSimpleTaskRequest extends TaskIdRequest {
     private String cronExpression;
     private int maxRetryCount;
     private long timeout;
-    private UpdatePolicy updatePolicy = UpdatePolicy.CREATE;
 
     public String getTaskUrl() {
         return taskUrl;
@@ -82,14 +81,6 @@ public class CreateSimpleTaskRequest extends TaskIdRequest {
 
     public void setTimeout(long timeout) {
         this.timeout = timeout;
-    }
-
-    public UpdatePolicy getUpdatePolicy() {
-        return updatePolicy;
-    }
-
-    public void setUpdatePolicy(UpdatePolicy updatePolicy) {
-        this.updatePolicy = updatePolicy;
     }
 
 }

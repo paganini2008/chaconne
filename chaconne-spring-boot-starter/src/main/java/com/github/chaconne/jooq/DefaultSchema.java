@@ -6,6 +6,7 @@ package com.github.chaconne.jooq;
 
 import com.github.chaconne.jooq.tables.CronTaskDetail;
 import com.github.chaconne.jooq.tables.CronTaskLog;
+import com.github.chaconne.jooq.tables.CronTaskQueue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +40,11 @@ public class DefaultSchema extends SchemaImpl {
     public final CronTaskLog CRON_TASK_LOG = CronTaskLog.CRON_TASK_LOG;
 
     /**
+     * The table <code>cron_task_queue</code>.
+     */
+    public final CronTaskQueue CRON_TASK_QUEUE = CronTaskQueue.CRON_TASK_QUEUE;
+
+    /**
      * No further instances allowed
      */
     private DefaultSchema() {
@@ -55,7 +61,8 @@ public class DefaultSchema extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.asList(
             CronTaskDetail.CRON_TASK_DETAIL,
-            CronTaskLog.CRON_TASK_LOG
+            CronTaskLog.CRON_TASK_LOG,
+            CronTaskQueue.CRON_TASK_QUEUE
         );
     }
 }

@@ -18,15 +18,15 @@ import com.github.cronsmith.scheduler.ExecutorUtils;
 
 /**
  * 
- * @Description: DefaultLoadBalancedManager
+ * @Description: DefaultLoadBalancerManager
  * @Author: Fred Feng
  * @Date: 19/04/2025
  * @Version 1.0.0
  */
-public class DefaultLoadBalancedManager<T>
-        implements LoadBalancedManager<T>, Runnable, InitializingBean, DisposableBean {
+public class DefaultLoadBalancerManager<T>
+        implements LoadBalancerManager<T>, Runnable, InitializingBean, DisposableBean {
 
-    private static final Logger log = LoggerFactory.getLogger(DefaultLoadBalancedManager.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultLoadBalancerManager.class);
 
     private final List<T> candidates = new CopyOnWriteArrayList<>();
     private final Set<T> activeCandidates = new CopyOnWriteArraySet<>();
@@ -51,7 +51,7 @@ public class DefaultLoadBalancedManager<T>
     public void addCandidate(T member, int weight) {
         for (int i = 0; i < weight; i++) {
             candidates.add(member);
-            activeCandidates.add(currentCandidate);
+            activeCandidates.add(member);
         }
     }
 
@@ -76,16 +76,22 @@ public class DefaultLoadBalancedManager<T>
     @Override
     public T getNextCandidate(Object attachment) {
         if (countOfCandidates() == 0) {
-            throw new NoAvailableCandidateException();
+            throw new NoAvailableCandidateException(
+                    attachment != null ? attachment.toString() : "");
         }
-        int n = 0;
         T chosenCandidate = null;
         List<T> candidates = filterCandidates(this.candidates, attachment);
+        if (candidates == null || candidates.size() == 0) {
+            throw new NoAvailableCandidateException(
+                    attachment != null ? attachment.toString() : "");
+        }
+        int n = 0;
         do {
             chosenCandidate = loadBalancer.selectCandidate(candidates, attachment);
         } while (!activeCandidates.contains(chosenCandidate) && n++ < candidates.size());
-        if (n >= candidates.size()) {
-            // throw new NoAvailableCandidateException();
+        if (!activeCandidates.contains(chosenCandidate)) {
+            throw new NoAvailableCandidateException(
+                    attachment != null ? attachment.toString() : "");
         }
         this.currentCandidate = chosenCandidate;
         return chosenCandidate;

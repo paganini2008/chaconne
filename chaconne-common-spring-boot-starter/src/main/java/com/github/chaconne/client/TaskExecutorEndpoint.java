@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.github.chaconne.ChaconneException;
 import com.github.chaconne.common.utils.ApplicationContextUtils;
-import com.github.chaconne.common.utils.ExceptionUtils;
+import com.github.chaconne.utils.ExceptionUtils;
 
 /**
  * 

@@ -1,6 +1,7 @@
 package com.github.chaconne.cluster;
 
 import java.net.URI;
+import java.util.Collection;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -8,10 +9,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import com.github.chaconne.client.ApiResponse;
 import com.github.chaconne.client.RetryableRestTemplate;
 import com.github.chaconne.client.TaskIdRequest;
-import com.github.chaconne.common.TaskMember;
 
 /**
  * 
@@ -23,16 +24,12 @@ import com.github.chaconne.common.TaskMember;
 public class TaskSchedulerRestTemplate extends RetryableRestTemplate
         implements TaskSchedulerRestService {
 
-    private LoadBalancedManager<TaskMember> loadBalancedManager;
-
-    public TaskSchedulerRestTemplate(ClientHttpRequestFactory requestFactory) {
-        this(new TaskMemberLoadBalancedManager(), requestFactory);
-    }
-
-    public TaskSchedulerRestTemplate(LoadBalancedManager<TaskMember> loadBalancedManager,
-            ClientHttpRequestFactory requestFactory) {
+    public TaskSchedulerRestTemplate(ClientHttpRequestFactory requestFactory,
+            Collection<ClientHttpRequestInterceptor> interceptors) {
         super(requestFactory);
-        this.loadBalancedManager = loadBalancedManager;
+        if (interceptors != null && interceptors.size() > 0) {
+            getInterceptors().addAll(interceptors);
+        }
     }
 
     private HttpHeaders defaultHttpHeaders;
@@ -57,9 +54,4 @@ public class TaskSchedulerRestTemplate extends RetryableRestTemplate
                 new ParameterizedTypeReference<ApiResponse<Object>>() {});
     }
 
-    @Override
-    protected URI retrieveOriginalUri(URI uri) {
-        TaskMember taskMember = loadBalancedManager.getNextCandidate(uri);
-        return URI.create(taskMember.getUrl());
-    }
 }

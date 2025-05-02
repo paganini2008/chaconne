@@ -14,7 +14,10 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
+import org.springframework.retry.ExhaustedRetryException;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.ResourceAccessException;
+import com.github.chaconne.common.utils.FinalRetryer;
 
 /**
  * 
@@ -23,7 +26,7 @@ import org.springframework.util.CollectionUtils;
  * @Date: 10/04/2025
  * @Version 1.0.0
  */
-public class TaskAnnotationBeanPropcessor
+public class TaskAnnotationBeanPropcessor extends FinalRetryer
         implements BeanPostProcessor, ApplicationListener<ApplicationReadyEvent>, EnvironmentAware {
 
     private static final Logger log = LoggerFactory.getLogger(TaskAnnotationBeanPropcessor.class);
@@ -74,18 +77,32 @@ public class TaskAnnotationBeanPropcessor
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         TaskExecutorRestService taskExecutorRestService =
-                event.getApplicationContext().getBean(TaskExecutorRestTemplate.class);
+                event.getApplicationContext().getBean(TaskExecutorRestService.class);
         for (CreateTaskRequest request : createTaskRequests) {
-            if (!taskExecutorRestService.hasTask(request).getBody().getData()) {
-                try {
-                    taskExecutorRestService.saveTask(request);
+            Runnable r = () -> {
+                ApiResponse<Boolean> apiResponse =
+                        taskExecutorRestService.saveTask(request).getBody();
+                if (apiResponse.getData().booleanValue()) {
                     taskExecutorRestService.scheduleTask(request);
-                } catch (Exception e) {
+                }
+            };
+            try {
+                r.run();
+            } catch (ExhaustedRetryException e) {
+                if (e.getCause() instanceof ResourceAccessException) {
+                    retry(r);
+                } else {
                     if (log.isErrorEnabled()) {
                         log.error(e.getMessage(), e);
                     }
                 }
+            } catch (Exception e) {
+                if (log.isErrorEnabled()) {
+                    log.error(e.getMessage(), e);
+                }
             }
         }
     }
+
+
 }

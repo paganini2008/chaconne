@@ -1,5 +1,7 @@
 package com.github.chaconne.cluster;
 
+import java.net.URI;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
@@ -8,25 +10,24 @@ import com.github.chaconne.common.TaskMember;
 
 /**
  * 
- * @Description: TaskMemberLoadBalancedManager
+ * @Description: TaskMemberLoadBalancerManager
  * @Author: Fred Feng
  * @Date: 19/04/2025
  * @Version 1.0.0
  */
-public class TaskMemberLoadBalancedManager extends DefaultLoadBalancedManager<TaskMember>
+public class TaskMemberLoadBalancerManager extends DefaultLoadBalancerManager<TaskMember>
         implements SmartApplicationListener {
 
-    private static final Logger log = LoggerFactory.getLogger(TaskMemberLoadBalancedManager.class);
-
-    private TaskMember currentTaskMember;
-
-    public void setCurrentTaskMember(TaskMember currentTaskMember) {
-        this.currentTaskMember = currentTaskMember;
-    }
+    private static final Logger log = LoggerFactory.getLogger(TaskMemberLoadBalancerManager.class);
 
     @Override
-    protected boolean shouldIgnored(TaskMember taskMember) {
-        return currentTaskMember != null && currentTaskMember.equals(taskMember);
+    protected List<TaskMember> filterCandidates(List<TaskMember> candidates, Object attachment) {
+        if (attachment instanceof URI) {
+            URI uri = (URI) attachment;
+            String host = uri.getHost();
+            return candidates.stream().filter(c -> c.getGroup().equalsIgnoreCase(host)).toList();
+        }
+        return candidates;
     }
 
     @Override

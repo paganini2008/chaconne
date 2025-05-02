@@ -90,14 +90,7 @@ public abstract class AbstractCustomTask implements CustomTask {
     public Object execute(String initialParameter) {
         String taskClassName = (String) record.get("taskClass");
         String taskMethodName = (String) record.getOrDefault("taskMethod", DEFAULT_METHOD_NAME);
-        try {
-            return invokeTaskMethod(getTaskId(), taskClassName, taskMethodName, initialParameter);
-        } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error(e.getMessage(), e);
-            }
-        }
-        return null;
+        return invokeTaskMethod(getTaskId(), taskClassName, taskMethodName, initialParameter);
     }
 
     @Override

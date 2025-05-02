@@ -41,9 +41,10 @@ public class RemoteCustomTaskFactory implements CustomTaskFactory {
             RunTaskRequest runTaskRequest = new RunTaskRequest();
             runTaskRequest.setTaskGroup(taskId.getGroup());
             runTaskRequest.setTaskName(taskId.getName());
-            runTaskRequest.setInitialParameter(initialParameter);
             runTaskRequest.setTaskClass(taskClassName);
             runTaskRequest.setTaskMethod(taskMethodName);
+            runTaskRequest.setUrl(getUrl());
+            runTaskRequest.setInitialParameter(initialParameter);
             ResponseEntity<ApiResponse<Object>> responseEntity =
                     taskSchedulerRestService.runTask(runTaskRequest);
             if (responseEntity.getStatusCode().is2xxSuccessful()) {

@@ -8,12 +8,12 @@ import org.springframework.context.annotation.Configuration;
 import com.github.chaconne.ClockWheelScheduler;
 import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.DefaultExecutorServiceFactory;
+import com.github.chaconne.ErrorHandler;
 import com.github.chaconne.ExecutorServiceFactory;
 import com.github.chaconne.LoggingErrorHandler;
 import com.github.chaconne.TaskListener;
 import com.github.chaconne.TaskManager;
 import com.github.chaconne.UpcomingTaskQueue;
-import com.github.cronsmith.scheduler.ErrorHandler;
 
 /**
  * 

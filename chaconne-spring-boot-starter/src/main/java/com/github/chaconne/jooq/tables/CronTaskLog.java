@@ -81,12 +81,12 @@ public class CronTaskLog extends TableImpl<CronTaskLogRecord> {
     /**
      * The column <code>cron_task_log.scheduled_datetime</code>.
      */
-    public final TableField<CronTaskLogRecord, LocalDateTime> SCHEDULED_DATETIME = createField(DSL.name("scheduled_datetime"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
+    public final TableField<CronTaskLogRecord, LocalDateTime> SCHEDULED_DATETIME = createField(DSL.name("scheduled_datetime"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>cron_task_log.fired_datetime</code>.
      */
-    public final TableField<CronTaskLogRecord, LocalDateTime> FIRED_DATETIME = createField(DSL.name("fired_datetime"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
+    public final TableField<CronTaskLogRecord, LocalDateTime> FIRED_DATETIME = createField(DSL.name("fired_datetime"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>cron_task_log.return_value</code>.
@@ -101,7 +101,7 @@ public class CronTaskLog extends TableImpl<CronTaskLogRecord> {
     /**
      * The column <code>cron_task_log.status</code>.
      */
-    public final TableField<CronTaskLogRecord, Integer> STATUS = createField(DSL.name("status"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<CronTaskLogRecord, Integer> STATUS = createField(DSL.name("status"), SQLDataType.INTEGER, this, "");
 
     /**
      * The column <code>cron_task_log.error_detail</code>.

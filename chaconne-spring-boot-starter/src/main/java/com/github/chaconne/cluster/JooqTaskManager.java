@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
+import org.jooq.Cursor;
 import org.jooq.DSLContext;
 import org.jooq.Record1;
 import org.jooq.Record2;
@@ -25,6 +26,7 @@ import com.github.chaconne.Task;
 import com.github.chaconne.TaskDetail;
 import com.github.chaconne.TaskId;
 import com.github.chaconne.TaskManager;
+import com.github.chaconne.TaskRestoreHandler;
 import com.github.chaconne.TaskStatus;
 import com.github.chaconne.jooq.tables.records.CronTaskDetailRecord;
 import com.github.chaconne.utils.CamelCasedLinkedHashMap;
@@ -255,7 +257,6 @@ public class JooqTaskManager implements TaskManager {
     @Override
     public List<TaskId> findUpcomingTasksBetween(LocalDateTime startDateTime,
             LocalDateTime endDateTime) throws ChaconneException {
-        System.out.println("findUpcomingTasksBetween: " + startDateTime + ", " + endDateTime);
         Result<Record2<String, String>> records = dsl
                 .select(CRON_TASK_DETAIL.TASK_GROUP, CRON_TASK_DETAIL.TASK_NAME)
                 .from(CRON_TASK_DETAIL)
@@ -282,6 +283,7 @@ public class JooqTaskManager implements TaskManager {
                 data.setPrevFiredDatetime(data.getNextFiredDatetime());
                 data.setNextFiredDatetime(nextFired);
                 data.setCronExpression(cronExpression.serialize());
+                data.setLastModified(LocalDateTime.now(DEFAULT_ZONE_ID));
                 dsl.update(CRON_TASK_DETAIL).set(data)
                         .where(CRON_TASK_DETAIL.TASK_NAME.eq(taskId.getName())
                                 .and(CRON_TASK_DETAIL.TASK_GROUP.eq(taskId.getGroup())))
@@ -301,4 +303,52 @@ public class JooqTaskManager implements TaskManager {
                 .execute();
     }
 
+    @Override
+    public void restoreTasks(TaskRestoreHandler handler) throws ChaconneException {
+        LocalDateTime now = LocalDateTime.now(DEFAULT_ZONE_ID);
+        try (Cursor<CronTaskDetailRecord> records = dsl.selectFrom(CRON_TASK_DETAIL)
+                .where(CRON_TASK_DETAIL.TASK_STATUS.eq(TaskStatus.SCHEDULED.name().toUpperCase())
+                        .and(CRON_TASK_DETAIL.NEXT_FIRED_DATETIME.le(now)))
+                .fetchLazy()) {
+            for (CronTaskDetailRecord record : records) {
+                CronExpression cronExpression =
+                        CronExpression.deserialize(record.getCronExpression());
+                LocalDateTime nextFired = cronExpression.getNextFiredDateTime(now);
+                if (nextFired != null) {
+                    record.setPrevFiredDatetime(record.getNextFiredDatetime());
+                    record.setNextFiredDatetime(nextFired);
+                    record.setCronExpression(cronExpression.serialize());
+                    record.setLastModified(LocalDateTime.now(DEFAULT_ZONE_ID));
+                    dsl.update(CRON_TASK_DETAIL).set(record)
+                            .where(CRON_TASK_DETAIL.TASK_NAME.eq(record.getTaskName())
+                                    .and(CRON_TASK_DETAIL.TASK_GROUP.eq(record.getTaskGroup())))
+                            .execute();
+                }
+                handler.onRestore(TaskId.of(record.getTaskGroup(), record.getTaskName()),
+                        nextFired);
+            }
+        }
+        try (Cursor<CronTaskDetailRecord> records = dsl.selectFrom(CRON_TASK_DETAIL)
+                .where(CRON_TASK_DETAIL.TASK_STATUS.eq(TaskStatus.STANDBY.name().toUpperCase())
+                        .and(CRON_TASK_DETAIL.NEXT_FIRED_DATETIME.le(now)))
+                .fetchLazy()) {
+            for (CronTaskDetailRecord record : records) {
+                CronExpression cronExpression =
+                        CronExpression.deserialize(record.getCronExpression());
+                LocalDateTime nextFired = cronExpression.getNextFiredDateTime(now);
+                if (nextFired != null) {
+                    record.setPrevFiredDatetime(record.getNextFiredDatetime());
+                    record.setNextFiredDatetime(nextFired);
+                    record.setCronExpression(cronExpression.serialize());
+                    record.setLastModified(LocalDateTime.now(DEFAULT_ZONE_ID));
+                    dsl.update(CRON_TASK_DETAIL).set(record)
+                            .where(CRON_TASK_DETAIL.TASK_NAME.eq(record.getTaskName())
+                                    .and(CRON_TASK_DETAIL.TASK_GROUP.eq(record.getTaskGroup())))
+                            .execute();
+                }
+                handler.onRestore(TaskId.of(record.getTaskGroup(), record.getTaskName()),
+                        nextFired);
+            }
+        }
+    }
 }

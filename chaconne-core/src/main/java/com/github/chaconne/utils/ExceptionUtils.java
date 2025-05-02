@@ -1,4 +1,4 @@
-package com.github.chaconne.common.utils;
+package com.github.chaconne.utils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -74,7 +74,7 @@ public abstract class ExceptionUtils {
         return false;
     }
 
-    public static Throwable getOriginalException(Exception e) {
+    public static Throwable getOriginalException(Throwable e) {
         if (e instanceof InvocationTargetException) {
             return ((InvocationTargetException) e).getTargetException();
         }

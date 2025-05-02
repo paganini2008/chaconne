@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.github.cronsmith.scheduler.ErrorHandler;
 
 /**
  * 
@@ -125,10 +124,15 @@ public class ClockWheelScheduler {
     }
 
     private boolean preloadUpcomingTasks(TaskId taskId) {
-        boolean preloaded = false;
         ZonedDateTime now = getNow();
         LocalDateTime nextFiredDateTime =
                 taskManager.computeNextFiredDateTime(taskId, now.toLocalDateTime());
+        return preload(taskId, nextFiredDateTime);
+    }
+
+    private boolean preload(TaskId taskId, LocalDateTime nextFiredDateTime) {
+        boolean preloaded = false;
+        ZonedDateTime now = getNow();
         if (nextFiredDateTime == null) {
             taskManager.setTaskStatus(taskId, TaskStatus.FINISHED);
             TaskDetail taskDetail = taskManager.getTaskDetail(taskId);
@@ -171,6 +175,8 @@ public class ClockWheelScheduler {
             consumer = new OneOffTimer(1, 1, TimeUnit.SECONDS, new TaskQueueLoop());
             consumer.start(false, true);
             log.info("ClockWheelScheduler is started.");
+
+            new TaskRestoreRunner().start();
         }
     }
 
@@ -192,6 +198,24 @@ public class ClockWheelScheduler {
 
     private ZonedDateTime getNow() {
         return ZonedDateTime.now(zoneId).withNano(0);
+    }
+
+    private class TaskRestoreRunner implements Runnable {
+
+        public void start() {
+            Thread thread = new Thread(this);
+            thread.setName("TaskRestoreRunner");
+            thread.start();
+        }
+
+        @Override
+        public void run() {
+            log.info("Restore tasks ...");
+            taskManager.restoreTasks((taskId, nextFiredDateTime) -> {
+                preload(taskId, nextFiredDateTime);
+            });
+        }
+
     }
 
     private class TaskQueueLoop implements OneOffTask {

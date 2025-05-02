@@ -393,5 +393,8 @@ public class JdbcTaskManager implements TaskManager {
         }
     }
 
+    @Override
+    public void restoreTasks(TaskRestoreHandler recoveryHandler) throws ChaconneException {}
+
 
 }
