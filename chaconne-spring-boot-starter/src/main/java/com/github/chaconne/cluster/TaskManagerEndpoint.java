@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.github.chaconne.ClockWheelScheduler;
+import com.github.chaconne.TimeWheelScheduler;
 import com.github.chaconne.CustomTask;
 import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.TaskDetail;
@@ -33,7 +33,7 @@ import com.github.chaconne.common.utils.BeanUtils;
 public class TaskManagerEndpoint {
 
     @Autowired
-    private ClockWheelScheduler clockWheelScheduler;
+    private TimeWheelScheduler clockWheelScheduler;
 
     @Autowired
     private TaskManager taskManager;

@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Import;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import({ChaconneClusterConfiguration.class, ClockWheelAutoConfiguration.class})
+@Import({ChaconneClusterConfiguration.class, TimeWheelAutoConfiguration.class})
 public @interface EnableChaconne {
 
 }

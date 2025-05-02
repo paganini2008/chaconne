@@ -15,23 +15,22 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.util.CollectionUtils;
-import com.github.chaconne.ClockWheelScheduler;
 import com.github.chaconne.CustomTask;
 import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.Task;
+import com.github.chaconne.TimeWheelScheduler;
 
 /**
  * 
- * @Description: ClockWheelSchedulerLocalStarter
+ * @Description: TimeWheelSchedulerLocalStarter
  * @Author: Fred Feng
  * @Date: 22/04/2025
  * @Version 1.0.0
  */
-public class ClockWheelSchedulerLocalStarter extends ClockWheelSchedulerStarter
+public class TimeWheelSchedulerLocalStarter extends TimeWheelSchedulerStarter
         implements BeanPostProcessor, EnvironmentAware {
 
-    private static final Logger log =
-            LoggerFactory.getLogger(ClockWheelSchedulerLocalStarter.class);
+    private static final Logger log = LoggerFactory.getLogger(TimeWheelSchedulerLocalStarter.class);
 
     private final List<Task> taskBeans = new ArrayList<>();
     private final List<Map<String, Object>> taskDefinitions = new ArrayList<>();
@@ -89,12 +88,12 @@ public class ClockWheelSchedulerLocalStarter extends ClockWheelSchedulerStarter
 
     @Override
     protected void prepareOnTaskMemberLocked() {
-        ClockWheelScheduler clockWheelScheduler =
-                applicationContext.getBean(ClockWheelScheduler.class);
+        TimeWheelScheduler timeWheelScheduler =
+                applicationContext.getBean(TimeWheelScheduler.class);
         CustomTaskFactory customTaskFactory = applicationContext.getBean(CustomTaskFactory.class);
         for (Task taskBean : taskBeans) {
             try {
-                clockWheelScheduler.schedule(taskBean, null);
+                timeWheelScheduler.schedule(taskBean, null);
                 log.info("Save Task: {}", taskBean.toString());
             } catch (Exception e) {
                 if (log.isErrorEnabled()) {
@@ -105,7 +104,7 @@ public class ClockWheelSchedulerLocalStarter extends ClockWheelSchedulerStarter
         for (Map<String, Object> taskDefinition : taskDefinitions) {
             try {
                 CustomTask customTask = customTaskFactory.createTaskObject(taskDefinition);
-                clockWheelScheduler.schedule(customTask, null);
+                timeWheelScheduler.schedule(customTask, null);
                 log.info("Save CustomTask: {}", customTask.toString());
             } catch (Exception e) {
                 if (log.isErrorEnabled()) {

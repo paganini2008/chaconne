@@ -5,7 +5,7 @@ import javax.sql.DataSource;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import com.github.chaconne.ClockWheelScheduler;
+import com.github.chaconne.TimeWheelScheduler;
 import com.github.chaconne.JdbcTaskManager;
 import com.github.chaconne.TaskDetail;
 
@@ -28,7 +28,7 @@ public class ClockWheelJdbcStoreTests {
 
     @Test
     public void testA() {
-        ClockWheelScheduler clockWheel = new ClockWheelScheduler();
+        TimeWheelScheduler clockWheel = new TimeWheelScheduler();
         clockWheel.setTaskManager(new JdbcTaskManager(dataSource));
         clockWheel.schedule(new TestTask(), "Tomcat");
         clockWheel.start();

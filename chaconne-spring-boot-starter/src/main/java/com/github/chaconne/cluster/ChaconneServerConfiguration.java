@@ -165,8 +165,8 @@ public class ChaconneServerConfiguration {
 
     @Order(Ordered.HIGHEST_PRECEDENCE)
     @Bean
-    public ClockWheelSchedulerStarter clockWheelSchedulerStarter() {
-        return new ClockWheelSchedulerStarter();
+    public TimeWheelSchedulerStarter clockWheelSchedulerStarter() {
+        return new TimeWheelSchedulerStarter();
     }
 
 }

@@ -5,7 +5,6 @@ import org.jooq.DSLContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.github.chaconne.ClockWheelScheduler;
 import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.DefaultExecutorServiceFactory;
 import com.github.chaconne.ErrorHandler;
@@ -13,28 +12,29 @@ import com.github.chaconne.ExecutorServiceFactory;
 import com.github.chaconne.LoggingErrorHandler;
 import com.github.chaconne.TaskListener;
 import com.github.chaconne.TaskManager;
+import com.github.chaconne.TimeWheelScheduler;
 import com.github.chaconne.UpcomingTaskQueue;
 
 /**
  * 
- * @Description: ClockWheelAutoConfiguration
+ * @Description: TimeWheelAutoConfiguration
  * @Author: Fred Feng
  * @Date: 14/04/2025
  * @Version 1.0.0
  */
 @Configuration(proxyBeanMethods = false)
-public class ClockWheelAutoConfiguration {
+public class TimeWheelAutoConfiguration {
 
     @Bean(destroyMethod = "close")
-    public ClockWheelScheduler clockWheelScheduler(TaskManager taskManager,
+    public TimeWheelScheduler timeWheelScheduler(TaskManager taskManager,
             UpcomingTaskQueue taskQueue, List<TaskListener> taskListeners) {
-        ClockWheelScheduler clockWheelScheduler = new ClockWheelScheduler(executorServiceFactory());
-        clockWheelScheduler.setTaskManager(taskManager);
-        clockWheelScheduler.setTaskQueue(taskQueue);
-        clockWheelScheduler.setErrorHandler(errorHandler());
-        clockWheelScheduler.getTaskListeners().add(new LoggingTaskListener());
-        clockWheelScheduler.getTaskListeners().addAll(taskListeners);
-        return clockWheelScheduler;
+        TimeWheelScheduler timeWheelScheduler = new TimeWheelScheduler(executorServiceFactory());
+        timeWheelScheduler.setTaskManager(taskManager);
+        timeWheelScheduler.setTaskQueue(taskQueue);
+        timeWheelScheduler.setErrorHandler(errorHandler());
+        timeWheelScheduler.getTaskListeners().add(new LoggingTaskListener());
+        timeWheelScheduler.getTaskListeners().addAll(taskListeners);
+        return timeWheelScheduler;
     }
 
     @ConditionalOnMissingBean

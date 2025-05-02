@@ -6,13 +6,14 @@ package com.github.chaconne.jooq;
 
 import com.github.chaconne.jooq.tables.CronTaskDetail;
 import com.github.chaconne.jooq.tables.CronTaskLog;
+import com.github.chaconne.jooq.tables.CronTaskMember;
 import com.github.chaconne.jooq.tables.CronTaskQueue;
 
 
 /**
  * Convenience access to all tables in the default schema.
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
 
     /**
@@ -24,6 +25,11 @@ public class Tables {
      * The table <code>cron_task_log</code>.
      */
     public static final CronTaskLog CRON_TASK_LOG = CronTaskLog.CRON_TASK_LOG;
+
+    /**
+     * The table <code>cron_task_member</code>.
+     */
+    public static final CronTaskMember CRON_TASK_MEMBER = CronTaskMember.CRON_TASK_MEMBER;
 
     /**
      * The table <code>cron_task_queue</code>.

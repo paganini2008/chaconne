@@ -7,7 +7,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
-import com.github.chaconne.ClockWheelScheduler;
+import com.github.chaconne.TimeWheelScheduler;
 import com.github.chaconne.TaskDetail;
 import com.github.chaconne.TaskManager;
 import com.github.chaconne.cluster.JooqTaskManager;
@@ -40,7 +40,7 @@ public class ClockWheelJooqStoreTests {
 
     @Test
     public void testA() {
-        ClockWheelScheduler clockWheel = new ClockWheelScheduler();
+        TimeWheelScheduler clockWheel = new TimeWheelScheduler();
         clockWheel.setTaskManager(taskManager);
         clockWheel.schedule(new TestClusterTask(), "Tomcat");
         clockWheel.start();

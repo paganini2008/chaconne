@@ -6,16 +6,16 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.SmartApplicationListener;
-import com.github.chaconne.ClockWheelScheduler;
+import com.github.chaconne.TimeWheelScheduler;
 
 /**
  * 
- * @Description: ClockWheelSchedulerStarter
+ * @Description: TimeWheelSchedulerStarter
  * @Author: Fred Feng
  * @Date: 30/04/2025
  * @Version 1.0.0
  */
-public class ClockWheelSchedulerStarter
+public class TimeWheelSchedulerStarter
         implements SmartApplicationListener, ApplicationContextAware {
 
     protected ApplicationContext applicationContext;
@@ -34,9 +34,9 @@ public class ClockWheelSchedulerStarter
     }
 
     protected void prepareOnTaskMemberLocked() {
-        ClockWheelScheduler clockWheelScheduler =
-                applicationContext.getBean(ClockWheelScheduler.class);
-        clockWheelScheduler.start();
+        TimeWheelScheduler timeWheelScheduler =
+                applicationContext.getBean(TimeWheelScheduler.class);
+        timeWheelScheduler.start();
     }
 
     @Override

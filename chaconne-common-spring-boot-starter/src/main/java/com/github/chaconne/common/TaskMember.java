@@ -25,10 +25,6 @@ public interface TaskMember {
         return "";
     }
 
-    default int getRole() {
-        return 0;
-    }
-
     default boolean isSsl() {
         return false;
     }

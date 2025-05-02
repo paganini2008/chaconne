@@ -1,3 +1,15 @@
+DROP TABLE IF EXISTS cron_task_member;
+CREATE TABLE cron_task_member (
+  member_group VARCHAR(255) NOT NULL,
+  member_id VARCHAR(255) NOT NULL,
+  HOST VARCHAR(255) NOT NULL,
+  PORT INT NOT NULL,
+  is_ssl  TINYINT(1) DEFAULT 0,
+  uptime BIGINT,
+  context_path VARCHAR(255),
+  ping_url VARCHAR(255)
+);
+
 DROP TABLE IF EXISTS cron_task_detail;
 CREATE TABLE cron_task_detail (
   task_name varchar(255) NOT NULL,

@@ -3,6 +3,7 @@ package com.github.chaconne.cluster;
 import java.util.UUID;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import com.github.chaconne.common.TaskMember;
 import com.github.chaconne.common.TaskMemberInstance;
@@ -31,6 +32,9 @@ public class TaskExecutorRegistration
     @Value("${spring.mvc.servlet.path:}")
     private String mvcContextPath;
 
+    @Autowired(required = false)
+    private MetadataInfo metadataInfo;
+
     private TaskMember taskMember;
 
     @Override
@@ -51,6 +55,9 @@ public class TaskExecutorRegistration
         taskMemberInstance.setPort(serverPort);
         taskMemberInstance.setContextPath(servletContextPath + mvcContextPath);
         taskMemberInstance.setUptime(System.currentTimeMillis());
+        if (metadataInfo != null) {
+            taskMemberInstance.setMetadata(metadataInfo.getMetadata());
+        }
         return taskMemberInstance;
     }
 

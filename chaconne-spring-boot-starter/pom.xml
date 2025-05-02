@@ -195,7 +195,7 @@
                     <generator>
                         <database>
                             <name>org.jooq.meta.mysql.MySQLDatabase</name>
-                            <includes>cron_task_detail|cron_task_queue|cron_task_log</includes>
+                            <includes>cron_task_member|cron_task_detail|cron_task_queue|cron_task_log</includes>
                             <inputSchema>demo</inputSchema>
                             <outputSchemaToDefault>true</outputSchemaToDefault>
                         </database>

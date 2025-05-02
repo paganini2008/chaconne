@@ -16,20 +16,20 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 
- * @Description: ClockWheelScheduler
+ * @Description: TimeWheelScheduler
  * @Author: Fred Feng
  * @Date: 30/03/2025
  * @Version 1.0.0
  */
-public class ClockWheelScheduler {
+public class TimeWheelScheduler {
 
-    private static final Logger log = LoggerFactory.getLogger(ClockWheelScheduler.class);
+    private static final Logger log = LoggerFactory.getLogger(TimeWheelScheduler.class);
 
-    public ClockWheelScheduler() {
+    public TimeWheelScheduler() {
         this(new DefaultExecutorServiceFactory());
     }
 
-    public ClockWheelScheduler(ExecutorServiceFactory executorServiceFactory) {
+    public TimeWheelScheduler(ExecutorServiceFactory executorServiceFactory) {
         this.schedulerThreads = executorServiceFactory.getSchedulerThreads();
         this.workerThreads = executorServiceFactory.getWorkerThreads();
         this.executorServiceFactory = executorServiceFactory;

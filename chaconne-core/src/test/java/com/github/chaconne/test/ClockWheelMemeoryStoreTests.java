@@ -1,7 +1,7 @@
 package com.github.chaconne.test;
 
 import org.junit.Test;
-import com.github.chaconne.ClockWheelScheduler;
+import com.github.chaconne.TimeWheelScheduler;
 
 /**
  * 
@@ -14,7 +14,7 @@ public class ClockWheelMemeoryStoreTests {
 
     @Test
     public void testTask() {
-        ClockWheelScheduler clockWheel = new ClockWheelScheduler();
+        TimeWheelScheduler clockWheel = new TimeWheelScheduler();
         clockWheel.schedule(new TestTask(), "Tomcat");
         clockWheel.start();
 
