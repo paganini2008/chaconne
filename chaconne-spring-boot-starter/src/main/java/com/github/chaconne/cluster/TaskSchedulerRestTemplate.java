@@ -10,9 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
-import com.github.chaconne.client.ApiResponse;
-import com.github.chaconne.client.RetryableRestTemplate;
-import com.github.chaconne.client.TaskIdRequest;
+import com.github.chaconne.common.ApiResponse;
+import com.github.chaconne.common.RetryableRestTemplate;
+import com.github.chaconne.common.TaskIdRequest;
 
 /**
  * 

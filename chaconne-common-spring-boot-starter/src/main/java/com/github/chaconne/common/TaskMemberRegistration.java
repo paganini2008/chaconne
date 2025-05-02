@@ -8,5 +8,4 @@ package com.github.chaconne.common;
  * @Version 1.0.0
  */
 public interface TaskMemberRegistration {
-
 }

@@ -1,4 +1,4 @@
-package com.github.chaconne.client;
+package com.github.chaconne.common;
 
 import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import com.github.chaconne.common.TaskMemberRegistration;
 import com.github.chaconne.common.utils.ApplicationContextUtils;
 
 /**
@@ -38,8 +37,8 @@ public class ChaconneClientAutoConfiguration {
 
     @Order(Ordered.HIGHEST_PRECEDENCE)
     @Bean
-    public TaskAnnotationBeanPropcessor taskAnnotationBeanPropcessor() {
-        return new TaskAnnotationBeanPropcessor();
+    public TaskAnnotationBeanFinder taskAnnotationBeanFinder() {
+        return new TaskAnnotationBeanFinder();
     }
 
 }

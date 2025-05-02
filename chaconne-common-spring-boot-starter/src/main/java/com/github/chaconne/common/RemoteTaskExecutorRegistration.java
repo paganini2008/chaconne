@@ -1,4 +1,4 @@
-package com.github.chaconne.client;
+package com.github.chaconne.common;
 
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -11,9 +11,6 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.retry.ExhaustedRetryException;
 import org.springframework.web.client.ResourceAccessException;
-import com.github.chaconne.common.TaskMember;
-import com.github.chaconne.common.TaskMemberInstance;
-import com.github.chaconne.common.TaskMemberRegistration;
 import com.github.chaconne.common.utils.FinalRetryer;
 import com.github.chaconne.common.utils.NetUtils;
 

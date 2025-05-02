@@ -1,4 +1,4 @@
-package com.github.chaconne.client;
+package com.github.chaconne.common;
 
 import org.springframework.http.ResponseEntity;
 

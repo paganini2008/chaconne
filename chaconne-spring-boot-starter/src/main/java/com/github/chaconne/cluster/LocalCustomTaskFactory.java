@@ -6,7 +6,7 @@ import com.github.chaconne.CustomTask;
 import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.TaskId;
 import com.github.chaconne.TaskInvocationException;
-import com.github.chaconne.client.RunTaskRequest;
+import com.github.chaconne.common.RunTaskRequest;
 import com.hazelcast.collection.IQueue;
 import com.hazelcast.core.HazelcastInstance;
 

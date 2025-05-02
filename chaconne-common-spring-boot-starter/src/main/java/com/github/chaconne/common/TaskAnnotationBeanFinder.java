@@ -1,8 +1,8 @@
-package com.github.chaconne.client;
+package com.github.chaconne.common;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.slf4j.Logger;
@@ -21,17 +21,17 @@ import com.github.chaconne.common.utils.FinalRetryer;
 
 /**
  * 
- * @Description: TaskAnnotationBeanPropcessor
+ * @Description: TaskAnnotationBeanFinder
  * @Author: Fred Feng
  * @Date: 10/04/2025
  * @Version 1.0.0
  */
-public class TaskAnnotationBeanPropcessor extends FinalRetryer
+public class TaskAnnotationBeanFinder extends FinalRetryer
         implements BeanPostProcessor, ApplicationListener<ApplicationReadyEvent>, EnvironmentAware {
 
-    private static final Logger log = LoggerFactory.getLogger(TaskAnnotationBeanPropcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(TaskAnnotationBeanFinder.class);
 
-    private final List<CreateTaskRequest> createTaskRequests = new ArrayList<>();
+    private final List<CreateTaskRequest> createTaskRequests = new CopyOnWriteArrayList<>();
 
     private Environment environment;
 
@@ -48,22 +48,22 @@ public class TaskAnnotationBeanPropcessor extends FinalRetryer
         if (CollectionUtils.isEmpty(methodList)) {
             return bean;
         }
+        final String defaultGroup = environment.getRequiredProperty("spring.application.name");
         for (Method method : methodList) {
             Task taskAnnotation = method.getAnnotation(Task.class);
             CreateTaskRequest createTaskRequest = new CreateTaskRequest();
             createTaskRequest.setTaskGroup(
                     StringUtils.isNotBlank(taskAnnotation.group()) ? taskAnnotation.group()
-                            : environment.getRequiredProperty("spring.application.name"));
+                            : defaultGroup);
             createTaskRequest.setTaskName(
                     StringUtils.isNotBlank(taskAnnotation.name()) ? taskAnnotation.name()
-                            : String.format("%s_%s", method.getDeclaringClass().getSimpleName(),
+                            : String.format("%s.%s", method.getDeclaringClass().getName(),
                                     method.getName()));
             createTaskRequest.setTaskClass(targetClass.getName());
             createTaskRequest.setTaskMethod(method.getName());
             createTaskRequest
                     .setUrl(StringUtils.isNotBlank(taskAnnotation.url()) ? taskAnnotation.url()
-                            : String.format("lb://%s",
-                                    environment.getRequiredProperty("spring.application.name")));
+                            : String.format("lb://%s", createTaskRequest.getTaskGroup()));
             createTaskRequest.setDescription(taskAnnotation.description());
             createTaskRequest.setCronExpression(taskAnnotation.cron());
             createTaskRequest.setMaxRetryCount(taskAnnotation.maxRetryCount());

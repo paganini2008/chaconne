@@ -1,8 +1,8 @@
 package com.github.chaconne.cluster;
 
 import org.springframework.http.ResponseEntity;
-import com.github.chaconne.client.ApiResponse;
-import com.github.chaconne.client.TaskIdRequest;
+import com.github.chaconne.common.ApiResponse;
+import com.github.chaconne.common.TaskIdRequest;
 
 /**
  * 

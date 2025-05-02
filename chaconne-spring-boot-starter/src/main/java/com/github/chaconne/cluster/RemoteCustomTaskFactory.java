@@ -6,8 +6,8 @@ import com.github.chaconne.AbstractCustomTask;
 import com.github.chaconne.CustomTask;
 import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.TaskId;
-import com.github.chaconne.client.ApiResponse;
-import com.github.chaconne.client.RunTaskRequest;
+import com.github.chaconne.common.ApiResponse;
+import com.github.chaconne.common.RunTaskRequest;
 
 /**
  * 

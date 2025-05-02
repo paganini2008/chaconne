@@ -1,14 +1,12 @@
 package com.github.chaconne.admin;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import com.github.cronsmith.CRON;
+import com.github.cronsmith.cron.CronExpression;
 
 public class TestMain {
 
     public static void main(String[] args) {
-        System.out.println(ZonedDateTime.now(ZoneId.of("UTC")));
-        System.out.println(LocalDateTime.now(ZoneId.of("UTC")));
+        CronExpression cronExpression = CRON.parse("0/3 * * * * ?");
     }
 
 }

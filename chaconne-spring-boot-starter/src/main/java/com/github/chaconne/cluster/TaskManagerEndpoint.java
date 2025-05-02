@@ -13,12 +13,12 @@ import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.TaskDetail;
 import com.github.chaconne.TaskId;
 import com.github.chaconne.TaskManager;
-import com.github.chaconne.client.ApiResponse;
-import com.github.chaconne.client.CreateTaskRequest;
-import com.github.chaconne.client.TaskIdRequest;
 import com.github.chaconne.cluster.web.PageRequest;
 import com.github.chaconne.cluster.web.PageResponse;
 import com.github.chaconne.cluster.web.TaskDetailPageReader;
+import com.github.chaconne.common.ApiResponse;
+import com.github.chaconne.common.CreateTaskRequest;
+import com.github.chaconne.common.TaskIdRequest;
 import com.github.chaconne.common.utils.BeanUtils;
 
 /**

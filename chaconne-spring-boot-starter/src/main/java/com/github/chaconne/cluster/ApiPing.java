@@ -4,8 +4,8 @@ import java.net.URI;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import com.github.chaconne.client.ApiResponse;
-import com.github.chaconne.client.RetryableRestTemplate;
+import com.github.chaconne.common.ApiResponse;
+import com.github.chaconne.common.RetryableRestTemplate;
 import com.github.chaconne.common.TaskMember;
 
 /**

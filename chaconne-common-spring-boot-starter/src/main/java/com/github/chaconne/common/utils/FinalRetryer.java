@@ -10,7 +10,8 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
-import com.github.chaconne.client.TaskAnnotationBeanPropcessor;
+import org.springframework.beans.factory.InitializingBean;
+import com.github.chaconne.common.TaskAnnotationBeanFinder;
 import com.github.cronsmith.scheduler.ExecutorUtils;
 
 /**
@@ -20,14 +21,25 @@ import com.github.cronsmith.scheduler.ExecutorUtils;
  * @Date: 30/04/2025
  * @Version 1.0.0
  */
-public class FinalRetryer implements Runnable, DisposableBean {
+public class FinalRetryer implements Runnable, InitializingBean, DisposableBean {
 
-    private static final Logger log = LoggerFactory.getLogger(TaskAnnotationBeanPropcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(TaskAnnotationBeanFinder.class);
 
     private final List<Runnable> queue = new CopyOnWriteArrayList<>();
 
     private ScheduledFuture<?> scheduledFuture;
     private ScheduledExecutorService executorService;
+
+    public void setExecutor(ScheduledExecutorService executorService) {
+        this.executorService = executorService;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (executorService == null) {
+            executorService = Executors.newSingleThreadScheduledExecutor();
+        }
+    }
 
     @Override
     public void destroy() throws Exception {
@@ -43,13 +55,11 @@ public class FinalRetryer implements Runnable, DisposableBean {
         queue.add(r);
         synchronized (this) {
             if (scheduledFuture == null) {
-                executorService = Executors.newSingleThreadScheduledExecutor();
                 scheduledFuture =
                         executorService.scheduleWithFixedDelay(this, 5, 5, TimeUnit.SECONDS);
             }
         }
     }
-
 
     @Override
     public void run() {

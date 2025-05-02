@@ -51,20 +51,20 @@ public class ClockWheelSchedulerLocalStarter extends ClockWheelSchedulerStarter
         } else {
             final Class<?> targetClass = AopProxyUtils.ultimateTargetClass(bean);
             List<Method> methodList = MethodUtils.getMethodsListWithAnnotation(targetClass,
-                    com.github.chaconne.client.Task.class);
+                    com.github.chaconne.common.Task.class);
             if (CollectionUtils.isEmpty(methodList)) {
                 return bean;
             }
             for (Method method : methodList) {
-                com.github.chaconne.client.Task task =
-                        method.getAnnotation(com.github.chaconne.client.Task.class);
+                com.github.chaconne.common.Task task =
+                        method.getAnnotation(com.github.chaconne.common.Task.class);
                 taskDefinitions.add(createTaskDefinition(task, method));
             }
         }
         return bean;
     }
 
-    private Map<String, Object> createTaskDefinition(com.github.chaconne.client.Task taskAnnotation,
+    private Map<String, Object> createTaskDefinition(com.github.chaconne.common.Task taskAnnotation,
             Method method) {
         Map<String, Object> info = new HashMap<String, Object>();
         String applicationName = environment.getRequiredProperty("spring.application.name");

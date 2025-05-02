@@ -1,4 +1,4 @@
-package com.github.chaconne.client;
+package com.github.chaconne.common;
 
 import java.lang.reflect.Method;
 import org.apache.commons.lang3.reflect.MethodUtils;
