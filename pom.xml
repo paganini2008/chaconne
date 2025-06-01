@@ -9,8 +9,10 @@
     <modules>
 		<module>chaconne-admin</module>
 		<module>chaconne-core</module>
-		<module>chaconne-common-spring-boot-starter</module>
+		<module>chaconne-client</module>
+		<module>chaconne-common</module>
 		<module>chaconne-spring-boot-starter</module>
+		<module>chaconne-cluster</module>
     </modules>
 	
     <packaging>pom</packaging>

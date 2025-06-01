@@ -15,9 +15,14 @@
         <springboot.version>3.4.3</springboot.version>
     </properties>
     <dependencies>
+        <dependency> 
+      <groupId>com.github.paganini2008</groupId>  
+      <artifactId>chaconne-core</artifactId>  
+      <version>1.0.0-RC1</version> 
+    </dependency>
         <dependency>
             <groupId>com.github.paganini2008</groupId>  
-		  <artifactId>chaconne-common-spring-boot-starter</artifactId>  
+		  <artifactId>chaconne-cluster</artifactId>  
 		  <version>1.0.0-RC1</version>  
         </dependency>
         
@@ -25,6 +30,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
+        
+        <dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			 <version>4.5.0</version>
+		</dependency>
         
         <dependency>
 		    <groupId>org.springframework.boot</groupId>

@@ -135,7 +135,7 @@ public class TimeWheelScheduler {
         ZonedDateTime now = getNow();
         if (nextFiredDateTime == null) {
             taskManager.setTaskStatus(taskId, TaskStatus.FINISHED);
-            TaskDetail taskDetail = taskManager.getTaskDetail(taskId);
+            TaskDetail taskDetail = taskManager.getTaskDetail(taskId, true);
             taskListeners.forEach(l -> {
                 l.onTaskFinished(taskDetail);
             });
@@ -157,10 +157,12 @@ public class TimeWheelScheduler {
                     }
                 }
                 taskManager.setTaskStatus(taskId, TaskStatus.SCHEDULED);
-                TaskDetail taskDetail = taskManager.getTaskDetail(taskId);
-                taskListeners.forEach(l -> {
-                    l.onTaskScheduled(now, taskDetail);
-                });
+                TaskDetail taskDetail = taskManager.getTaskDetail(taskId, false);
+                if (taskDetail != null) {
+                    taskListeners.forEach(l -> {
+                        l.onTaskScheduled(now, taskDetail);
+                    });
+                }
                 preloaded = true;
             } else {
                 taskManager.setTaskStatus(taskId, TaskStatus.STANDBY);
@@ -231,7 +233,7 @@ public class TimeWheelScheduler {
             if (taskIds != null && taskIds.size() > 0) {
                 taskIds.forEach(taskId -> {
                     workerThreads.execute(() -> preloadUpcomingTasks(taskId));
-                    TaskDetail taskDetail = taskManager.getTaskDetail(taskId);
+                    TaskDetail taskDetail = taskManager.getTaskDetail(taskId, false);
                     if (taskDetail != null && !taskDetail.isUnavailable()) {
                         taskListeners.forEach(l -> {
                             l.onTaskTriggered(firedDateTime, taskDetail);

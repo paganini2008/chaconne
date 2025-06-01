@@ -1,12 +1,15 @@
 package com.github.chaconne.cluster;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.SmartApplicationListener;
 import com.github.chaconne.common.TaskMember;
+import com.github.chaconne.common.lb.DefaultLoadBalancerManager;
 
 /**
  * 
@@ -19,6 +22,20 @@ public class TaskMemberLoadBalancerManager extends DefaultLoadBalancerManager<Ta
         implements SmartApplicationListener {
 
     private static final Logger log = LoggerFactory.getLogger(TaskMemberLoadBalancerManager.class);
+
+    public TaskMemberLoadBalancerManager(TaskMemberManager taskMemberManager) {
+        Set<String> groups = taskMemberManager.getGroups();
+        if (groups != null && groups.size() > 0) {
+            for (String group : groups) {
+                Collection<TaskMember> taskMembers = taskMemberManager.getTaskMembers(group);
+                if (taskMembers != null && taskMembers.size() > 0) {
+                    for (TaskMember taskMember : taskMembers) {
+                        addCandidate(taskMember);
+                    }
+                }
+            }
+        }
+    }
 
     @Override
     protected List<TaskMember> filterCandidates(List<TaskMember> candidates, Object attachment) {

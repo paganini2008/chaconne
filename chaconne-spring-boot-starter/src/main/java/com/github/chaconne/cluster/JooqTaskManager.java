@@ -24,6 +24,7 @@ import com.github.chaconne.CustomTaskFactory;
 import com.github.chaconne.DefaultCustomTaskFactory;
 import com.github.chaconne.Task;
 import com.github.chaconne.TaskDetail;
+import com.github.chaconne.TaskDetailNotFoundException;
 import com.github.chaconne.TaskId;
 import com.github.chaconne.TaskManager;
 import com.github.chaconne.TaskRestoreHandler;
@@ -165,12 +166,12 @@ public class JooqTaskManager implements TaskManager {
                                     : task.getInitialParameter())
                     .execute();
         }
-        return getTaskDetail(task.getTaskId());
+        return getTaskDetail(task.getTaskId(), true);
     }
 
     @Override
     public TaskDetail removeTask(TaskId taskId) throws ChaconneException {
-        TaskDetail taskDetail = getTaskDetail(taskId);
+        TaskDetail taskDetail = getTaskDetail(taskId, false);
         if (taskDetail != null) {
             dsl.deleteFrom(CRON_TASK_DETAIL).where(CRON_TASK_DETAIL.TASK_NAME.eq(taskId.getName())
                     .and(CRON_TASK_DETAIL.TASK_GROUP.eq(taskId.getGroup()))).execute();
@@ -179,12 +180,17 @@ public class JooqTaskManager implements TaskManager {
     }
 
     @Override
-    public TaskDetail getTaskDetail(TaskId taskId) throws ChaconneException {
+    public TaskDetail getTaskDetail(TaskId taskId, boolean thrown) throws ChaconneException {
         CronTaskDetailRecord data = dsl.selectFrom(CRON_TASK_DETAIL)
                 .where(CRON_TASK_DETAIL.TASK_NAME.eq(taskId.getName())
                         .and(CRON_TASK_DETAIL.TASK_GROUP.eq(taskId.getGroup())))
                 .fetchOne();
-        return new JooqTaskDetail(data);
+        if (data != null) {
+            return new JooqTaskDetail(data);
+        } else if (thrown) {
+            throw new TaskDetailNotFoundException(taskId.toString());
+        }
+        return null;
     }
 
     @Override

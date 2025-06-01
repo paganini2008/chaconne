@@ -137,7 +137,7 @@ public class JdbcTaskManager implements TaskManager {
                 throw new ChaconneException(e.getMessage(), e);
             }
         }
-        return getTaskDetail(task.getTaskId());
+        return getTaskDetail(task.getTaskId(), true);
     }
 
     private void updateTask(Task task, String initialParameter) {
@@ -167,7 +167,7 @@ public class JdbcTaskManager implements TaskManager {
 
     @Override
     public TaskDetail removeTask(TaskId taskId) throws ChaconneException {
-        TaskDetail taskDetail = getTaskDetail(taskId);
+        TaskDetail taskDetail = getTaskDetail(taskId, false);
         if (taskDetail != null) {
             try (Connection connection = dataSource.getConnection();
                     PreparedStatement psm = connection.prepareStatement(SQL_DELETE_STATEMENT)) {
@@ -183,9 +183,14 @@ public class JdbcTaskManager implements TaskManager {
     }
 
     @Override
-    public TaskDetail getTaskDetail(TaskId taskId) throws ChaconneException {
+    public TaskDetail getTaskDetail(TaskId taskId, boolean thrown) throws ChaconneException {
         Map<String, Object> record = getTaskDetailRecord(taskId);
-        return new JdbcTaskDetail(record);
+        if (record != null) {
+            return new JdbcTaskDetail(record);
+        } else if (thrown) {
+            throw new TaskDetailNotFoundException();
+        }
+        return null;
     }
 
     private Map<String, Object> getTaskDetailRecord(TaskId taskId) {
@@ -201,7 +206,7 @@ public class JdbcTaskManager implements TaskManager {
         } catch (SQLException e) {
             throw new ChaconneException(e.getMessage(), e);
         }
-        throw new ChaconneException("No task detail by: " + taskId.toString());
+        return null;
     }
 
     private static Map<String, Object> toMap(ResultSet rs) throws ChaconneException {

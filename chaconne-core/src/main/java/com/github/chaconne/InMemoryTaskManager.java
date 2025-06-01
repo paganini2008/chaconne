@@ -166,8 +166,14 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public TaskDetail getTaskDetail(TaskId taskId) {
-        return taskStore.get(taskId);
+    public TaskDetail getTaskDetail(TaskId taskId, boolean thrown) {
+        TaskDetail taskDetail = taskStore.get(taskId);
+        if (taskDetail != null) {
+            return taskDetail;
+        } else if (thrown) {
+            throw new TaskDetailNotFoundException();
+        }
+        return null;
     }
 
     @Override

@@ -13,6 +13,7 @@ import com.github.chaconne.cluster.EnableChaconneServer;
  * @Version 1.0.0
  */
 @EnableChaconneServer
+// @EnableTaskMemberCluster(mode = ClusterMode.REMOTE)
 @SpringBootApplication
 public class ChaconneServerAdmin {
 

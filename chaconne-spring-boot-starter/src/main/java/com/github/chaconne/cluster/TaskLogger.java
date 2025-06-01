@@ -62,6 +62,4 @@ public class TaskLogger implements TaskListener {
                 .execute();
     }
 
-
-
 }

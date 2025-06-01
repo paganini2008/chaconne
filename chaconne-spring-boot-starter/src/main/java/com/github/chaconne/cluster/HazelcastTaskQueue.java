@@ -1,5 +1,6 @@
 package com.github.chaconne.cluster;
 
+import static com.github.chaconne.Settings.DEFAULT_ZONE_ID;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,6 +34,7 @@ public class HazelcastTaskQueue implements UpcomingTaskQueue, InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         queue = hazelcastInstance.getMap(DEFAULT_QUEUE_NAME);
+        clean(LocalDateTime.now(DEFAULT_ZONE_ID));
     }
 
     @Override
@@ -55,4 +57,15 @@ public class HazelcastTaskQueue implements UpcomingTaskQueue, InitializingBean {
                 : Collections.emptyList();
     }
 
+    @Override
+    public void clean(LocalDateTime targetDateTime) {
+        Set<LocalDateTime> set = queue.keySet();
+        if (set != null) {
+            for (LocalDateTime ldt : set) {
+                if (ldt.isBefore(targetDateTime)) {
+                    queue.remove(ldt);
+                }
+            }
+        }
+    }
 }

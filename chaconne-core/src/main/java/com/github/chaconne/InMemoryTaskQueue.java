@@ -37,4 +37,18 @@ public class InMemoryTaskQueue implements UpcomingTaskQueue {
         return queue.size();
     }
 
+    @Override
+    public void clean(LocalDateTime targetDateTime) {
+        Set<LocalDateTime> set = queue.keySet();
+        if (set != null) {
+            for (LocalDateTime ldt : set) {
+                if (ldt.isBefore(targetDateTime)) {
+                    queue.remove(ldt);
+                }
+            }
+        }
+    }
+
+
+
 }

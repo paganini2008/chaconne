@@ -7,7 +7,6 @@ import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * 
@@ -63,12 +62,14 @@ public abstract class ExceptionUtils {
         }
     }
 
-    public static boolean ignoreException(Throwable e, Class<?>[] exceptionClasses) {
-        if (ArrayUtils.isNotEmpty(exceptionClasses)) {
-            for (Class<?> exceptionClass : exceptionClasses) {
-                if (exceptionClass.isAssignableFrom(e.getClass())) {
-                    return true;
-                }
+    public static boolean ignoreException(Throwable e,
+            Class<? extends Throwable>[] exceptionClasses) {
+        if (exceptionClasses == null || exceptionClasses.length == 0) {
+            return false;
+        }
+        for (Class<?> exceptionClass : exceptionClasses) {
+            if (exceptionClass.isAssignableFrom(e.getClass())) {
+                return true;
             }
         }
         return false;

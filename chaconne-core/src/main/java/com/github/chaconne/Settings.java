@@ -1,5 +1,6 @@
 package com.github.chaconne;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 /**
@@ -12,5 +13,9 @@ import java.time.ZoneId;
 public final class Settings {
 
     public static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("UTC");
+
+    public static LocalDateTime NOW() {
+        return LocalDateTime.now(DEFAULT_ZONE_ID);
+    }
 
 }

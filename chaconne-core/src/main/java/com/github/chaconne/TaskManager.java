@@ -16,17 +16,17 @@ public interface TaskManager {
 
     TaskDetail removeTask(TaskId taskId) throws ChaconneException;
 
-    TaskDetail getTaskDetail(TaskId taskId) throws ChaconneException;
+    TaskDetail getTaskDetail(TaskId taskId, boolean thrown) throws ChaconneException;
 
     boolean hasTask(TaskId taskId) throws ChaconneException;
 
     default String getInitialParameter(TaskId taskId) throws ChaconneException {
-        TaskDetail taskDetail = getTaskDetail(taskId);
+        TaskDetail taskDetail = getTaskDetail(taskId, false);
         return taskDetail != null ? taskDetail.getInitialParameter() : null;
     }
 
     default TaskStatus getTaskStatus(TaskId taskId) throws ChaconneException {
-        TaskDetail taskDetail = getTaskDetail(taskId);
+        TaskDetail taskDetail = getTaskDetail(taskId, false);
         return taskDetail != null ? taskDetail.getTaskStatus() : null;
     }
 

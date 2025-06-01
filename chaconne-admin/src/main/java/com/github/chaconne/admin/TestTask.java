@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.github.chaconne.common.Task;
 
-/**
+/****
  * 
  * @Description: TestTask
  * @Author: Fred Feng
@@ -17,8 +17,7 @@ public class TestTask {
 
     private static final Logger log = LoggerFactory.getLogger(TestTask.class);
 
-    @Task(cron = "0/5 * * * * ?", description = "Just a test!!!",
-            initialParameter = "12311111111111111111")
+    @Task(cron = "0/5 * * * * ?", description = "Just a test!!!", initialParameter = "First Job!!!")
     public void run1(String msg) {
         log.info("Test: " + LocalDateTime.now() + ", Msg: " + msg);
     }

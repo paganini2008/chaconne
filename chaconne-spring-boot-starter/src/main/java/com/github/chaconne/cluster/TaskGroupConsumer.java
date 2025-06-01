@@ -11,8 +11,8 @@ import org.springframework.util.ClassUtils;
 import com.github.chaconne.TaskId;
 import com.github.chaconne.TaskInvocationException;
 import com.github.chaconne.TaskReflectionUtils;
+import com.github.chaconne.common.ApplicationContextUtils;
 import com.github.chaconne.common.RunTaskRequest;
-import com.github.chaconne.common.utils.ApplicationContextUtils;
 import com.hazelcast.collection.IQueue;
 import com.hazelcast.core.HazelcastInstance;
 

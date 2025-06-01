@@ -18,4 +18,6 @@ public interface UpcomingTaskQueue {
 
     Collection<TaskId> matchTaskIds(LocalDateTime ldt);
 
+    void clean(LocalDateTime ldt);
+
 }

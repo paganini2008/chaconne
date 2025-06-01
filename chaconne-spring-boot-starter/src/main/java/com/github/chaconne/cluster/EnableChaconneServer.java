@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Import;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Import({ChaconneServerConfiguration.class, TimeWheelAutoConfiguration.class})
+@EnableTaskMemberCluster(mode = ClusterMode.REMOTE)
 public @interface EnableChaconneServer {
 
 }
