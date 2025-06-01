@@ -2,7 +2,6 @@ package com.github.chaconne.cluster;
 
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,7 +34,7 @@ import com.github.chaconne.common.utils.BeanUtils;
 public class TaskManagerEndpoint {
 
     @Autowired
-    private TimeWheelScheduler clockWheelScheduler;
+    private TimeWheelScheduler timeWheelScheduler;
 
     @Autowired
     private TaskManager taskManager;
@@ -44,39 +43,44 @@ public class TaskManagerEndpoint {
     private CustomTaskFactory customTaskFactory;
 
     @PostMapping("/save-task")
-    public ResponseEntity<ApiResponse<Boolean>> saveTask(
-            @RequestBody CreateTaskRequest requestBody) {
+    public ApiResponse<Boolean> saveTask(@RequestBody CreateTaskRequest requestBody) {
         Map<String, Object> beanMap = BeanUtils.bean2Map(requestBody);
         CustomTask customTask = customTaskFactory.createTaskObject(beanMap);
         if (taskManager.hasTask(customTask.getTaskId())) {
-            return ResponseEntity.ok(ApiResponse.ok(false));
+            return ApiResponse.ok(false);
         } else {
             taskManager.saveTask(customTask, requestBody.getInitialParameter());
-            return ResponseEntity.ok(ApiResponse.ok(true));
+            return ApiResponse.ok(true);
         }
     }
 
+    @PostMapping("/update-task")
+    public ApiResponse<Boolean> updateTask(@RequestBody CreateTaskRequest requestBody) {
+        Map<String, Object> beanMap = BeanUtils.bean2Map(requestBody);
+        CustomTask customTask = customTaskFactory.createTaskObject(beanMap);
+        taskManager.saveTask(customTask, requestBody.getInitialParameter());
+        return ApiResponse.ok(true);
+    }
+
     @PostMapping("/schedule-task")
-    public ResponseEntity<ApiResponse<Boolean>> scheduleTask(
-            @RequestBody TaskIdRequest requestBody) {
-        boolean flag = clockWheelScheduler
+    public ApiResponse<Boolean> scheduleTask(@RequestBody TaskIdRequest requestBody) {
+        boolean flag = timeWheelScheduler
                 .schedule(TaskId.of(requestBody.getTaskGroup(), requestBody.getTaskName()));
-        return ResponseEntity.ok(ApiResponse.ok(flag));
+        return ApiResponse.ok(flag);
     }
 
     @PostMapping("/exist-task")
-    public ResponseEntity<ApiResponse<Boolean>> hasTask(@RequestBody TaskIdRequest requestBody) {
+    public ApiResponse<Boolean> hasTask(@RequestBody TaskIdRequest requestBody) {
         boolean flag = taskManager
                 .hasTask(TaskId.of(requestBody.getTaskGroup(), requestBody.getTaskName()));
-        return ResponseEntity.ok(ApiResponse.ok(flag));
+        return ApiResponse.ok(flag);
     }
 
     @DeleteMapping("/remove-task")
-    public ResponseEntity<ApiResponse<TaskDetailVo>> removeTask(
-            @RequestBody TaskIdRequest requestBody) {
+    public ApiResponse<TaskDetailVo> removeTask(@RequestBody TaskIdRequest requestBody) {
         TaskDetail taskDetail = taskManager
                 .removeTask(TaskId.of(requestBody.getTaskGroup(), requestBody.getTaskName()));
-        return ResponseEntity.ok(ApiResponse.ok(new TaskDetailVo(taskDetail)));
+        return ApiResponse.ok(new TaskDetailVo(taskDetail));
     }
 
     @PostMapping("/query-task")
